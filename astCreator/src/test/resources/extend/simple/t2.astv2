@@ -1,0 +1,17 @@
+Packages
+base org.overture.interpreter.ast.node;
+analysis org.overture.interpreter.ast.analysis;
+
+Tokens
+  int = 'int';
+  
+
+Abstract Syntax Tree
+exp {-> package='org.overture.ast.expressions'}
+    =   {unary}
+    ;
+Aspect Declaration
+/* This section allows fields of root types to be declared e.g. exp*/
+//exp = [type]:type*
+//    ;
+    
