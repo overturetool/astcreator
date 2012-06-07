@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.methods.Argument;
 import com.lausdahl.ast.creator.methods.Method;
 
 public class CopyNode2ExtendedNodeListHelper extends Method

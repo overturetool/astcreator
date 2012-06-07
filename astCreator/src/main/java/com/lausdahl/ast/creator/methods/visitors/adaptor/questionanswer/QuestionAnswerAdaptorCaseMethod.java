@@ -1,6 +1,7 @@
 package com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer;
 
 import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.methods.Argument;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 

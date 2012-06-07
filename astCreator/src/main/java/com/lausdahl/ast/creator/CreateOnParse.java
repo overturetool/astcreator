@@ -78,7 +78,7 @@ public class CreateOnParse
 
 	private void generateInterfacesForPAndSNodes(Environment env)
 	{
-		for (Entry<IClassDefinition, ClassType> entry : env.classToType.entrySet())
+		for (Entry<IClassDefinition, ClassType> entry : env.getClassToTypeMap().entrySet())
 		{
 			switch (entry.getValue())
 			{
@@ -90,7 +90,7 @@ public class CreateOnParse
 		}
 
 		Set<IClassDefinition> rest = new HashSet<IClassDefinition>();
-		for (Entry<IClassDefinition, ClassType> entry : env.classToType.entrySet())
+		for (Entry<IClassDefinition, ClassType> entry : env.getClassToTypeMap().entrySet())
 		{// FIXME need to continou untill no false is returned such that all S interfaces are made
 			switch (entry.getValue())
 			{
@@ -231,7 +231,7 @@ public class CreateOnParse
 			Field f = exstractField((CommonTree) p.getChild(i), env);
 			f.isAspect = true;
 			c.addField(f);
-			addGetSetMethods(env, env.classToType.get(c), c, f);
+			addGetSetMethods(env, env.getClassType(c), c, f);
 		}
 		println("Aspect Decleration: " + p);
 	}
@@ -485,7 +485,7 @@ public class CreateOnParse
 		}
 	}
 
-	protected static void addGetSetMethods(Environment env, ClassType type,
+	public static void addGetSetMethods(Environment env, ClassType type,
 			IClassDefinition c, Field field)
 	{
 		Method setM = new SetMethod(c, field, env);

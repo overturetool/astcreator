@@ -23,14 +23,14 @@ public class KindMethod extends Method
 		{
 			this.isAbstract = true;
 			this.name = "kind" + env.getInterfaceForCommonTreeNode(classDefinition).getName().getName();
-			this.returnType = EnumUtil.getEnumTypeName(classDefinition,env);
+			this.returnType = EnumUtil.getEnumTypeName(classDefinition,env).getName();
 		} else
 		{
 			IClassDefinition superClass = classDefinition.getSuperDef();
 			if (env.isTreeNode(superClass ))
 			{
-				String enumerationName = EnumUtil.getEnumTypeName( superClass,env);
-				this.name = "kind" + env.getInterfaceForCommonTreeNode(classDefinition.getSuperDef()).getName().getName();
+				String enumerationName = EnumUtil.getEnumTypeName( superClass,env).getName();
+				this.name = "kind" + env.getInterfaceForCommonTreeNode(superClass).getName().getName();
 
 				// this.arguments.add(new Argument(f.getType(), "value"));
 				this.returnType = enumerationName;

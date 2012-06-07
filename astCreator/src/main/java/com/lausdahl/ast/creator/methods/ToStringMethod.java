@@ -39,7 +39,7 @@ public class ToStringMethod extends Method
 
 		if (classDefinition.getToStringAddOns().isEmpty())
 		{
-			switch (env.classToType.get(classDefinition))
+			switch (env.getClassType(classDefinition))
 			{
 				case Token:
 				case Alternative:

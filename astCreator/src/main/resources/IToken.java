@@ -18,7 +18,7 @@ public interface %IToken% extends %INode% {
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	public %NodeEnum% kindNode();
+	public %NodeEnum% kindNode%ExtendedName%();
 
 	/**
 	 * Returns the text from the input file from which this token was made.

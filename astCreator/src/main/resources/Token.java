@@ -24,7 +24,7 @@ public abstract class %Token% extends %Node% implements %IToken% {
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	@Override public %NodeEnum% kindNode() {
+	@Override public %NodeEnum% kindNode%ExtendedName%() {
 		return %NodeEnum%.TOKEN;
 	}
 

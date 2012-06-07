@@ -3,6 +3,7 @@ package com.lausdahl.ast.creator.methods.visitors;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.methods.Argument;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.utils.NameUtil;
 

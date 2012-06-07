@@ -1,6 +1,7 @@
 package com.lausdahl.ast.creator.methods.visitors.adaptor.question;
 
 import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.methods.Argument;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultNodeMethod;
 
 public class QuestionAdaptorDefaultNodeMethod extends

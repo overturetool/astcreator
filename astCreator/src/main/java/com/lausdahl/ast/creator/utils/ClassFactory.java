@@ -66,13 +66,26 @@ public class ClassFactory
 		}
 		JavaName name = new JavaName(packageName, preFix, NameUtil.firstLetterUpper(rawName), postFix);
 		name.setTag(rawName);
+//		BaseClassDefinition classDef = new BaseClassDefinition(name);
+//		classDef.setSuper(superClass);
+//		classDef.methods.addAll(createMethods(type, classDef, env));
+//		classDef.setAbstract(type ==ClassType.Production || type == ClassType.SubProduction);
+//		classDef.setFinal(type == ClassType.Token);
+//		env.addClass(classDef);
+//		env.classToType.put(classDef, type);
+		IClassDefinition classDef = create(name, superClass, type, env);
+		return classDef;
+	}
+
+	public static IClassDefinition create(JavaName name, IClassDefinition superClass, ClassType type, Environment env)
+	{
 		BaseClassDefinition classDef = new BaseClassDefinition(name);
 		classDef.setSuper(superClass);
 		classDef.methods.addAll(createMethods(type, classDef, env));
 		classDef.setAbstract(type ==ClassType.Production || type == ClassType.SubProduction);
 		classDef.setFinal(type == ClassType.Token);
 		env.addClass(classDef);
-		env.classToType.put(classDef, type);
+		env.setClassType(classDef, type);
 		return classDef;
 	}
 
@@ -86,7 +99,7 @@ public class ClassFactory
 		if (type != ClassType.Token)
 		{
 			methods.add(new DefaultConstructorMethod(classDef, env));
-			methods.add(new RemoveChildMethod(classDef, env));
+			methods.add(new RemoveChildMethod(classDef, classDef.getFields(), env));
 		}
 
 		methods.add(new ToStringMethod(classDef, env));
@@ -124,7 +137,7 @@ public class ClassFactory
 		IClassDefinition c= new ExternalEnumJavaClassDefinition(rawName, null, ClassType.Token, name, env);
 		c.getName().setTag(rawName);
 		env.addClass(c);
-		env.classToType.put(c, ClassType.Token);
+		env.setClassType(c, ClassType.Token);
 		return c;
 	}
 
@@ -134,7 +147,7 @@ public class ClassFactory
 		IClassDefinition c = new ExternalJavaClassDefinition(rawName, null, ClassType.Token, name, nodeType, env);
 		c.getName().setTag(rawName);
 		env.addClass(c);
-		env.classToType.put(c, ClassType.Token);
+		env.setClassType(c, ClassType.Token);
 		return c;
 	}
 	
@@ -144,7 +157,7 @@ public class ClassFactory
 		c.addMethod(new ConstructorMethod(c, env));
 		c.addMethod(new DefaultConstructorMethod(c, env));
 		env.addClass(c);
-		env.classToType.put(c, ClassType.Custom);
+		env.setClassType(c, ClassType.Custom);
 		return c;
 	}
 
@@ -164,7 +177,7 @@ public class ClassFactory
 		String postFix="";
 		if(env.isTreeNode(c))
 		{
-			switch(env.classToType.get(c))
+			switch(env.getClassType(c))
 			{
 				case Production:
 					prefix="P";

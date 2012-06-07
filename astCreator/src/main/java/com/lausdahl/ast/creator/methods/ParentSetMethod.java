@@ -18,7 +18,7 @@ public class ParentSetMethod extends Method
 	protected void prepare()
 	{
 		name = "parent";
-		arguments.add(new Method.Argument(structureClassName, "value"));
+		arguments.add(new Argument(structureClassName, "value"));
 		body = "\t\tthis." + f.getName() + " = value;";
 	}
 

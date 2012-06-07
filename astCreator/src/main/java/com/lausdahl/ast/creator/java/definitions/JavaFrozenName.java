@@ -22,5 +22,10 @@ public class JavaFrozenName extends JavaName
 	public void setPrefix(String prefix)
 	{
 	}
+	
+	@Override
+	public void setExtendedName(String extendedName)
+	{
+	}
 
 }

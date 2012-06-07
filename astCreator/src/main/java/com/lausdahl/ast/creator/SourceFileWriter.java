@@ -98,6 +98,9 @@ public class SourceFileWriter
 		replace.put("%NodeEnum%", "NodeEnum"
 				+ env.node.getName().getName().replace("Node", ""));
 
+		replace.put("%ExtendedName%", env.node.getName().getExtendedName());
+		replace.put("%INodeExtendsTag%", getExtendsString(env.iNode));
+		
 		copy(generated, "INode.java", replace, defaultPackage);
 		copy(generated, "Node.java", replace, defaultPackage);
 		copy(generated, "IToken.java", replace, defaultPackage);
@@ -107,6 +110,23 @@ public class SourceFileWriter
 		copy(generated, "GraphNodeList.java", replace, defaultPackage);
 		copy(generated, "GraphNodeListList.java", replace, defaultPackage);
 		copy(generated, "ExternalNode.java", replace, defaultPackage);
+	}
+
+	private static String getExtendsString(PredefinedClassDefinition iNode)
+	{
+		if(iNode.getSuperDefs().isEmpty())
+		{
+			return "";
+		}
+		StringBuffer sb =new StringBuffer();
+		sb.append(" extends ");
+		StringBuilder intfs = new StringBuilder();
+		for (IInterfaceDefinition intfName : iNode.getSuperDefs())
+		{
+			intfs.append(intfName.getName().getName() + ", ");
+		}
+		sb.append(intfs.subSequence(0, intfs.length() - 2));
+		return sb.toString();
 	}
 
 	private static void copy(File generated, String name,

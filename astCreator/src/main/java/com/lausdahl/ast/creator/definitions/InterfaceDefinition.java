@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.AstCreatorSettings;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
@@ -161,18 +162,25 @@ public class InterfaceDefinition implements IInterfaceDefinition
 
 	public String getJavaSourceCode(StringBuilder sb)
 	{
-
-		sb.append(IInterfaceDefinition.copurightHeader + "\n");
-		sb.append(IClassDefinition.classHeader + "\n");
+		if (AstCreatorSettings.IncludeCopyrightHeader)
+		{
+			sb.append(IInterfaceDefinition.copurightHeader + "\n");
+			sb.append(IClassDefinition.classHeader + "\n");
+		}
 
 		if (getName().getPackageName() != null)
 		{
 			sb.append("\npackage " + getName().getPackageName() + ";\n\n\n");
 		}
 
-		for (String importName : getImports())
+		if (AstCreatorSettings.IncludeImports)
 		{
-			sb.append("import " + importName + ";\n");
+			for (String importName : getImports())
+			{
+				sb.append("import " + importName + ";\n");
+			}
+
+			sb.append("\n\n" + javaDoc);
 		}
 
 		sb.append("\n\n" + javaDoc);

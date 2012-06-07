@@ -12,7 +12,7 @@ public class AnalysisUtil
 	{
 		if (env.isTreeNode(c))
 		{
-			switch (env.classToType.get(c))
+			switch (env.getClassType(c))
 			{
 				case Production:
 				case SubProduction:
@@ -36,7 +36,7 @@ public class AnalysisUtil
 	{
 		if (env.isTreeNode(c))
 		{
-			switch (env.classToType.get(c))
+			switch (env.getClassType(c))
 			{
 				case Production:
 				case SubProduction:

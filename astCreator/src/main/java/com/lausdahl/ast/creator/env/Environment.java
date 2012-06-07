@@ -298,4 +298,22 @@ public class Environment extends BaseEnvironment
 		return "";
 	}
 
+	public ClassType getClassType(IClassDefinition c)
+	{
+		if (isTreeNode(c))
+		{
+			return classToType.get(c);
+		}
+		return ClassType.Unknown;
+	}
+	
+	public void setClassType(IClassDefinition c,ClassType type)
+	{
+		classToType.put(c,type);
+	}
+	
+	public Map<IClassDefinition, ClassType> getClassToTypeMap()
+	{
+		return this.classToType;
+	}
 }

@@ -96,7 +96,7 @@ public class ExtensionGenerator
 		{
 			if (baseEnv.isTreeNode(c))
 			{
-				switch (baseEnv.classToType.get(c))
+				switch (baseEnv.getClassType(c))
 				{
 					case Alternative:
 						c.getName().setPackageName(c.getSuperDef().getName().getPackageName());

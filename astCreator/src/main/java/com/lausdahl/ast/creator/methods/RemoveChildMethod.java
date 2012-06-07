@@ -1,7 +1,6 @@
 package com.lausdahl.ast.creator.methods;
 
 import java.util.List;
-import java.util.Vector;
 
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
@@ -12,20 +11,21 @@ import com.lausdahl.ast.creator.env.Environment;
 
 public class RemoveChildMethod extends Method
 {
-	List<Field> fields = new Vector<Field>();
+	List<Field> fields; // = new Vector<Field>();
 
-	public RemoveChildMethod(IClassDefinition c, Environment env)
+	public RemoveChildMethod(IClassDefinition c, List<Field> fields, Environment env)
 	{
 		super(c, env);
+		this.fields = fields;
 		this.env = env;
 	}
 
 	@Override
 	protected void prepare()
 	{
-		fields.clear();
-		fields.addAll(classDefinition.getInheritedFields());
-		fields.addAll(classDefinition.getFields());
+		//fields.clear();
+		//fields.addAll(classDefinition.getInheritedFields());
+		//fields.addAll(classDefinition.getFields());
 
 		javaDoc = "\t/**\n";
 		javaDoc += "\t * Removes the {@link " + env.iNode.getName().getName()
@@ -84,9 +84,9 @@ public class RemoveChildMethod extends Method
 	@Override
 	protected void prepareVdm()
 	{
-		fields.clear();
-		fields.addAll(classDefinition.getInheritedFields());
-		fields.addAll(classDefinition.getFields());
+		//fields.clear();
+		//fields.addAll(classDefinition.getInheritedFields());
+		//fields.addAll(classDefinition.getFields());
 
 		javaDoc = "\t/**\n";
 		javaDoc += "\t * Removes the {@link Node} {@code child} as a child of this {@link "

@@ -12,6 +12,7 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
 import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.methods.Argument;
 import com.lausdahl.ast.creator.methods.ConvertMethod;
 import com.lausdahl.ast.creator.methods.GetMethod;
 import com.lausdahl.ast.creator.methods.Method;
@@ -62,13 +63,13 @@ public class CopyNode2ExtendedNode extends Method
 		this.returnType = envDest.iNode.getName().getCanonicalName();
 		StringBuilder bodySb = new StringBuilder();
 		if (env.isTreeNode(c)
-				&& env.classToType.get(c) == ClassType.SubProduction)
+				&& env.getClassType(c) == ClassType.SubProduction)
 		{
 			notUsed = true;
 			this.body = "\t\treturn null;//This will never be hit because all subclasses of this has a case implementation.";
 		} else if (env.isTreeNode(c)
 				&& !(c instanceof ExternalJavaClassDefinition)
-				&& env.classToType.get(c) == ClassType.Token)
+				&& env.getClassType(c) == ClassType.Token)
 		{
 			this.body = "\t\treturn new "
 					+ destination.getName().getCanonicalName()

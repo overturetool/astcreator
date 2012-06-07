@@ -8,7 +8,7 @@ import %org.overture.ast.analysis.IAnswer%;
 import %org.overture.ast.analysis.IQuestion%;
 import %org.overture.ast.analysis.IQuestionAnswer%;
 
-public interface %INode%
+public interface %INode% %INodeExtendsTag%
 {
 
 	public abstract Object clone();
@@ -20,7 +20,7 @@ public interface %INode%
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	public abstract %NodeEnum% kindNode();
+	public abstract %NodeEnum% kindNode%ExtendedName%();
 
 	/**
 	 * Returns the parent node of this node.

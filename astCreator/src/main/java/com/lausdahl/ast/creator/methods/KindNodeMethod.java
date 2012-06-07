@@ -29,9 +29,9 @@ public class KindNodeMethod extends Method
 		sb.append("\t * @return the {@link NodeEnum"+env.getInterfaceForCommonTreeNode(classDefinition).getName().getPostfix()+"} for this node\n");
 		sb.append("\t */");
 		this.javaDoc = sb.toString();
-		name = "kindNode";
+		name = "kindNode"+ env.node.getName().getExtendedName();
 		annotation = "@Override";
-		returnType=EnumUtil.getEnumTypeName(env.node,env);
+		returnType=EnumUtil.getEnumTypeName(env.node,env).getName();
 		body = "\t\treturn "+EnumUtil.getEnumTypeName(env.node,env)+"."+EnumUtil.getEnumElementName(classDefinition)+";";
 
 		

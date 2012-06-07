@@ -7,6 +7,7 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.methods.Argument;
 import com.lausdahl.ast.creator.methods.GetMethod;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;

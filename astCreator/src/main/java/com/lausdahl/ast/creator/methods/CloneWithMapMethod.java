@@ -10,12 +10,22 @@ import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class CloneWithMapMethod extends CloneMethod
 {
+	public IInterfaceDefinition argumentType = null;
+	
+	public CloneWithMapMethod(IClassDefinition c, ClassType classType,
+			Environment env)
+	{
+		super(c, classType, env);
+		argumentType=env.iNode;
+	}
+	
 	@Override
 	protected void prepare()
 	{
@@ -25,8 +35,8 @@ public class CloneWithMapMethod extends CloneMethod
 		this.returnType = getSpecializedTypeName(c);
 		this.requiredImports.add("java.util.Map");
 
-		this.arguments.add(new Argument("Map<" + env.iNode.getName().getName() + ","
-				+ env.iNode.getName().getName() + ">", "oldToNewMap"));
+		this.arguments.add(new Argument("Map<" + argumentType.getName().getName() + ","
+				+ argumentType.getName().getName() + ">", "oldToNewMap"));
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");
@@ -140,11 +150,7 @@ public class CloneWithMapMethod extends CloneMethod
 		this.body = sb.toString();
 	}
 
-	public CloneWithMapMethod(IClassDefinition c, ClassType classType,
-			Environment env)
-	{
-		super(c, classType, env);
-	}
+	
 
 	@Override
 	protected void prepareVdm()

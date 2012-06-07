@@ -225,7 +225,7 @@ public class Field
 	{
 		if (t == null)
 		{
-			String msg = ("Unable to resolve type for field: \"" + name
+			String msg = ("Unable to resolve type for field: \"" + getName()
 					+ " : " + unresolvedType + "\" in class %s with raw type " + unresolvedType);
 			String className = "";
 			for (IClassDefinition def : env.getClasses())

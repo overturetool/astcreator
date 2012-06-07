@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.AstCreatorException;
+import com.lausdahl.ast.creator.AstCreatorSettings;
 import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.env.Environment;
@@ -86,19 +87,26 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 	public String getJavaSourceCode(StringBuilder sb)
 	{
-		sb.append(IInterfaceDefinition.copurightHeader + "\n");
-		sb.append(IClassDefinition.classHeader + "\n");
+		if (AstCreatorSettings.IncludeCopyrightHeader)
+		{
+			sb.append(IInterfaceDefinition.copurightHeader + "\n");
+			sb.append(IClassDefinition.classHeader + "\n");
+		}
 
 		if (getName().getPackageName() != null)
 		{
 			sb.append("\npackage " + getName().getPackageName() + ";\n\n\n");
 		}
 
-		for (String importName : getImports())
+		if (AstCreatorSettings.IncludeImports)
 		{
-			sb.append("import " + importName + ";\n");
+			for (String importName : getImports())
+			{
+				sb.append("import " + importName + ";\n");
+			}
+			sb.append("\n\n");
 		}
-		sb.append("\n\n");
+
 		sb.append(javaDoc);
 
 		if (annotation != null && annotation.length() > 0)
@@ -365,13 +373,13 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 	public void addInterface(IInterfaceDefinition intf)
 	{
-		for (IInterfaceDefinition i : interfaces)
-		{
-			if (i.getName().getName().equals(intf.getName().getName()))
-			{
-				return;
-			}
-		}
+//		for (IInterfaceDefinition i : interfaces)
+//		{
+//			if (i.getName().getName().equals(intf.getName().getName()))
+//			{
+//				return;
+//			}
+//		}
 		this.interfaces.add(intf);
 	}
 }

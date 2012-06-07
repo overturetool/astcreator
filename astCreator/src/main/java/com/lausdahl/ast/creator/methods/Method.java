@@ -13,34 +13,13 @@ import com.lausdahl.ast.creator.env.Environment;
 
 public abstract class Method
 {
-	public static class Argument
-	{
-		public Argument()
-		{
-		}
-
-		public Argument(String type, String name)
-		{
-			this.type = type;
-			this.name = name;
-		}
-
-		public String type;
-		public String name;
-
-		@Override
-		public String toString()
-		{
-			return type + " " + name;
-		}
-	}
 
 	public boolean isConstructor = false;
 	public boolean isAbstract = false;
 	protected String javaDoc = "";
 	public String name;
 	public String returnType = "void";
-	public List<Argument> arguments = new Vector<Method.Argument>();
+	public List<Argument> arguments = new Vector<Argument>();
 	public String body;
 	public String annotation;
 	public IClassDefinition classDefinition;
@@ -75,6 +54,8 @@ public abstract class Method
 		// }
 		requiredImports.clear();
 		arguments.clear();
+		body="";
+		javaDoc="";
 		prepare();
 	}
 
@@ -103,7 +84,13 @@ public abstract class Method
 		addImportForType(returnType);
 		for (Argument arg : arguments)
 		{
-			addImportForType(arg.type);
+			if (arg.getTypeDef() == null)
+			{
+				addImportForType(arg.getTypeName());
+			} else
+			{
+				requiredImports.add(arg.getTypeDef().getName().getCanonicalName());
+			}
 		}
 
 		return requiredImports;
@@ -156,7 +143,13 @@ public abstract class Method
 		addImportForType(returnType);
 		for (Argument arg : arguments)
 		{
-			addImportForType(arg.type);
+			if (arg.getTypeDef() == null)
+			{
+				addImportForType(arg.getTypeName());
+			} else
+			{
+				requiredImports.add(arg.getTypeDef().getName().getCanonicalName());
+			}
 		}
 
 		return requiredImports;
@@ -254,7 +247,7 @@ public abstract class Method
 		String tmp = "\t" + "public " + name + ": ";
 		for (Argument a : arguments)
 		{
-			String typeName = a.type;
+			String typeName = a.getTypeName();
 			if (typeName.contains("List<"))
 			{
 				typeName = "seq of "
@@ -321,7 +314,7 @@ public abstract class Method
 			{
 				Argument sourceArg1 = arguments.get(i);
 				Argument basearg1 = m.arguments.get(i);
-				if (!env.isSuperTo(env.lookUpType(basearg1.type), env.lookUpType(sourceArg1.type)))
+				if (!env.isSuperTo(env.lookUpType(basearg1.getTypeName()), env.lookUpType(sourceArg1.getTypeName())))
 				{
 					return false;
 				}
@@ -342,7 +335,7 @@ public abstract class Method
 			{
 				Argument sourceArg1 = arguments.get(i);
 				Argument basearg1 = m.arguments.get(i);
-				if (!basearg1.type.equals(sourceArg1.type))
+				if (!basearg1.getTypeName().equals(sourceArg1.getTypeName()))
 				{
 					return false;
 				}

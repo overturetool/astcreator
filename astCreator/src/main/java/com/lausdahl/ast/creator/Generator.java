@@ -91,7 +91,7 @@ public class Generator
 			throws InstantiationException, IllegalAccessException
 	{
 		System.out.println("Generating enumerations...");
-		createNodeEnum(env);
+		createNodeEnum(env, new JavaName(env.getDefaultPackage(), "NodeEnum"));
 		createProductionEnums(env);
 
 		// System.out.println("Generating interfaces for nodes");
@@ -135,7 +135,7 @@ public class Generator
 		if (env.isTreeNode(c))
 		{
 			// CommonTreeClassDefinition ct = (CommonTreeClassDefinition) c;
-			switch (env.classToType.get(c))
+			switch (env.getClassType(c))
 			{
 				case Alternative:
 					break;
@@ -164,20 +164,21 @@ public class Generator
 		return processedClasses;
 	}
 
-	private static void createNodeEnum(Environment env)
+	private static void createNodeEnum(Environment env, JavaName name)
 	{
-		EnumDefinition eDef = new EnumDefinition(new JavaName(env.getDefaultPackage(), "NodeEnum"));
+		EnumDefinition eDef = new EnumDefinition(name);
 		// eDef.setPackageName(env.getDefaultPackage());
 		env.addClass(eDef);
 		eDef.elements.add("TOKEN");
 		eDef.elements.add("ExternalDefined");
+		eDef.elements.add("Extended");
 		for (IClassDefinition d : env.getClasses())
 		{
 			if (env.isTreeNode(d))
 			{
 				// CommonTreeClassDefinition c = (CommonTreeClassDefinition) d;
 
-				if (env.classToType.get(d) == ClassType.Production)
+				if (env.getClassType(d) == ClassType.Production)
 				{
 					eDef.elements.add(EnumUtil.getEnumElementName(d));
 				}
@@ -194,22 +195,23 @@ public class Generator
 			if (env.isTreeNode(d))
 			{
 				// CommonTreeClassDefinition c = (CommonTreeClassDefinition) d;
-				switch (env.classToType.get(d))
+				switch (env.getClassType(d))
 				{
 					case Production:
 					case SubProduction:
 					{
-						EnumDefinition eDef = new EnumDefinition(new JavaName(d.getName().getPackageName(), "", EnumUtil.getEnumTypeNameNoPostfix(d, env), ""/*
-																																							 * d
-																																							 * .
-																																							 * getName
-																																							 * (
-																																							 * )
-																																							 * .
-																																							 * getPostfix
-																																							 * (
-																																							 * )
-																																							 */));
+						EnumDefinition eDef = new EnumDefinition( EnumUtil.getEnumTypeName(d, env));
+//new JavaName(d.getName().getPackageName(), "", EnumUtil.getEnumTypeNameNoPostfix(d, env), ""/*
+//																																							 * d
+//																																							 * .
+//																																							 * getName
+//																																							 * (
+//																																							 * )
+//																																							 * .
+//																																							 * getPostfix
+//																																							 * (
+//																																							 * )
+//																																							 */));
 						enums.add(eDef);
 
 						for (IClassDefinition sub : getClasses(env.getSubClasses(d), env))
@@ -291,7 +293,7 @@ public class Generator
 			// m.setEnvironment(env);
 			// answerIntf.methods.add(m);
 
-			switch (env.classToType.get(c))
+			switch (env.getClassType(c))
 			{
 				case Alternative:
 				case Token:
@@ -325,7 +327,7 @@ public class Generator
 		{
 			if (env.isTreeNode(c))
 			{
-				switch (env.classToType.get(c))
+				switch (env.getClassType(c))
 				{
 					case Alternative:
 					case Token:
@@ -411,7 +413,7 @@ public class Generator
 //				adaptor.addMethod(m);
 //			}
 
-			switch (source.classToType.get(c))
+			switch (source.getClassType(c))
 			{
 				
 				case Custom:

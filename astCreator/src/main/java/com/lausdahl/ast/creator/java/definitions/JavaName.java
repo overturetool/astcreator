@@ -9,6 +9,7 @@ public class JavaName implements Cloneable
 	private String postfix = "";
 	private String prefix = "";
 	private String tag = "";
+	private String extendedName = "";
 
 	// public JavaName(String packageName, String name)
 	// {
@@ -37,11 +38,17 @@ public class JavaName implements Cloneable
 		{
 			this.setPostfix(name[2]);
 		}
+
+		if (name.length > 3)
+		{
+			this.setExtendedName(name[3]);
+		}
 	}
 
 	public String getName()
 	{
-		return NameUtil.getClassName(getPrefix() + name + getPostfix());
+		return NameUtil.getClassName(getPrefix() + name + getPostfix()
+				+ extendedName);
 	}
 
 	public String getCanonicalName()
@@ -104,6 +111,16 @@ public class JavaName implements Cloneable
 	public String toString()
 	{
 		return getName() + (tag.length() > 0 ? " TAG=" + tag : "");
+	}
+
+	public void setExtendedName(String extendedName)
+	{
+		this.extendedName = NameUtil.firstLetterUpper(extendedName);
+	}
+
+	public String getExtendedName()
+	{
+		return this.extendedName;
 	}
 
 //	@Override

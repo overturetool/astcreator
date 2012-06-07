@@ -26,7 +26,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	public abstract %NodeEnum% kindNode();
+	public abstract %NodeEnum% kindNode%ExtendedName%();
 	
 	/**
 	 * Returns the parent node of this node.
