@@ -404,7 +404,7 @@ public class Generator
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
 		{
-//			if (source.classToType.get(c) != IClassDefinition.ClassType.Production)
+//			if (source.getClassType(c) != IClassDefinition.ClassType.Production)
 //			{
 //				// continue;
 //				Method m = new DepthFirstCaseMethod(c, source);

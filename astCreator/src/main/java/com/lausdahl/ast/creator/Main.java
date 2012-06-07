@@ -11,8 +11,8 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
-import com.lausdahl.ast.creator.extend.ExtensionGenerator;
-import com.lausdahl.ast.creator.extend.ExtensionGenerator.ExtendMode;
+import com.lausdahl.ast.creator.extend.AstMerger;
+import com.lausdahl.ast.creator.extend.ExtensionManager;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.CheckCacheMethod;
 import com.lausdahl.ast.creator.methods.Method;
@@ -196,10 +196,48 @@ public class Main
 	public static void create(File ast1, File ast2, File generated,
 			String extendName) throws Exception
 	{
+//		System.out.println("TESTING...");
+//		test = false;
+//		System.out.println("Generator starting with input: " + ast1);
+//		Environment env1 = create(ast1.getAbsolutePath(), generated, false);
+//		
+////		System.out.println("Source");
+//		
+//		
+//		
+//		System.out.println("Generator starting with input: " + ast2);
+//		Generator generator = new Generator();
+//
+//		Environment env2 = generator.generate(ast1.getAbsolutePath(),"Extension Base");
+//		generator.runPostGeneration(env2);
+//		System.out.println(env2.getInheritanceToString());
+//		
+//		Environment env2Extension = generator.generate(ast2.getAbsolutePath(),"Entension");
+//		test = true;
+//		System.out.println("------------------------------------------------------------------------");
+////		System.out.println("Extended Source");
+//		System.out.println(env2Extension.getInheritanceToString());
+//		// generator.createInterfacesForNodePoints(env2);
+//		env2 =ExtensionGenerator.extendWith(env2,ExtendMode.Standalone, env2Extension);
+//
+//		setExtendName(env2, extendName);
+//		generator.runPostGeneration(env2);
+//		setExtendName(env2, extendName);
+//
+//		if (test)
+//		{
+//			Environment envOrigin = create(ast1.getAbsolutePath(), generated, false);
+//			ExtensionGenerator.extendWith(env2,ExtendMode.Extend, envOrigin);
+//		}
+//
+//		SourceFileWriter.write(generated, env2);
+//
+//		createCopyAdaptor(env1, env2, extendName, generated);
+
 		System.out.println("TESTING...");
 		test = false;
 		System.out.println("Generator starting with input: " + ast1);
-		Environment env1 = create(ast1.getAbsolutePath(), generated, false);
+		Environment envBase = create(ast1.getAbsolutePath(), generated, false);
 		
 //		System.out.println("Source");
 		
@@ -209,30 +247,34 @@ public class Main
 		Generator generator = new Generator();
 
 		Environment env2 = generator.generate(ast1.getAbsolutePath(),"Extension Base");
-		generator.runPostGeneration(env2);
-		System.out.println(env2.getInheritanceToString());
-		
+//		generator.runPostGeneration(env2);
+//		System.out.println(env2.getInheritanceToString());
+//		
 		Environment env2Extension = generator.generate(ast2.getAbsolutePath(),"Entension");
-		test = true;
-		System.out.println("------------------------------------------------------------------------");
-//		System.out.println("Extended Source");
-		System.out.println(env2Extension.getInheritanceToString());
-		// generator.createInterfacesForNodePoints(env2);
-		env2 =ExtensionGenerator.extendWith(env2,ExtendMode.Standalone, env2Extension);
+//		test = true;
+//		System.out.println("------------------------------------------------------------------------");
+////		System.out.println("Extended Source");
+//		System.out.println(env2Extension.getInheritanceToString());
+//		// generator.createInterfacesForNodePoints(env2);
+//		env2 =ExtensionGenerator.extendWith(env2,ExtendMode.Standalone, env2Extension);
+//
+//		setExtendName(env2, extendName);
+//		generator.runPostGeneration(env2);
+//		setExtendName(env2, extendName);
+//
+//		if (test)
+//		{
+//			Environment envOrigin = create(ast1.getAbsolutePath(), generated, false);
+//			ExtensionGenerator.extendWith(env2,ExtendMode.Extend, envOrigin);
+//		}
 
-		setExtendName(env2, extendName);
-		generator.runPostGeneration(env2);
-		setExtendName(env2, extendName);
+		Environment mergedEnv = new AstMerger().merge(env2, env2Extension);
+		generator.runPostGeneration(mergedEnv);
+		
+		Environment extendedEnv = new ExtensionManager().extend(envBase, mergedEnv, extendName);
+		SourceFileWriter.write(generated, extendedEnv);
 
-		if (test)
-		{
-			Environment envOrigin = create(ast1.getAbsolutePath(), generated, false);
-			ExtensionGenerator.extendWith(env2,ExtendMode.Extend, envOrigin);
-		}
-
-		SourceFileWriter.write(generated, env2);
-
-		createCopyAdaptor(env1, env2, extendName, generated);
+//		createCopyAdaptor(env1, env2, extendName, generated);
 
 	}
 
@@ -257,7 +299,7 @@ public class Main
 		List<Method> methods = new Vector<Method>();
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
 		{
-			if (source.classToType.get(c) == IClassDefinition.ClassType.Production
+			if (source.getClassType(c) == IClassDefinition.ClassType.Production
 			/* || c.getType() == ClassType.SubProduction */)
 			{
 				continue;
