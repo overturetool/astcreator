@@ -1,6 +1,6 @@
 @echo off
 echo Deploying Maven Artifacts
-cmd /C mvn deploy
+cmd /C mvn clean deploy -q
 REM http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/
 cd target
 git clone -b mvn-repo git@github.com:overturetool/astcreator.git git
