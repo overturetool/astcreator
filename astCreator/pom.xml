@@ -9,6 +9,18 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
+  <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
+	<distributionManagement>
+		<!--repository>
+			<id>mvn-repo</id>
+			<url>file://${project.build.directory}/../../target/mvn-repo</url>
+		</repository-->
+		
+		<repository>
+        <id>repo</id>
+        <url>https://github.com/overturetool/astcreator/raw/mvn-repo</url>
+    </repository>
+	</distributionManagement>
 
   <artifactId>astCreator</artifactId> 
   <version>1.2.5</version>
@@ -25,6 +37,13 @@
       <artifactId>antlr-runtime</artifactId>
       <version>3.2</version>
     </dependency>
+    
+    <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
   </dependencies>
   
   

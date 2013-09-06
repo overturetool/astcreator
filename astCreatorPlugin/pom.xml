@@ -12,6 +12,14 @@
   <packaging>maven-plugin</packaging>
 
  
+  <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
+	<distributionManagement>
+		<repository>
+			<id>mvn-repo</id>
+			<url>file://${project.build.directory}/../../target/mvn-repo</url>
+		</repository>
+	</distributionManagement>
+ 
   <artifactId>ast-creator-plugin</artifactId>
   <version>1.2.6</version>
   <name>AST Creator Maven plug-in</name>

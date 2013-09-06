@@ -27,6 +27,19 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	 <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
+	<distributionManagement>
+		<repository>
+			<id>mvn-repo</id>
+			<url>file://${project.build.directory}/../../target/mvn-repo</url>
+		</repository>
+		
+		<!--repository>
+        <id>github</id>
+        <url>https://github.com/overturetool/astcreator/raw/mvn-repo</url>
+    </repository-->
+	</distributionManagement>
+
 	<build>
 		<defaultGoal>install</defaultGoal>
 
@@ -84,8 +97,14 @@
 					</configuration>
 				</plugin>
 
+
+
 			</plugins>
 		</pluginManagement>
+
+		<plugins>
+
+		</plugins>
 
 	</build>
 </project>
