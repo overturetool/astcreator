@@ -1,4 +1,4 @@
-grammar AstcToString;
+grammar Astc;
 //http://www.antlr.org/wiki/display/ANTLR3/Tree+construction
 options{
 	language=Java;
@@ -7,15 +7,16 @@ options{
 
 tokens {
 	ASSIGN = '=';
-//	COLON =':';
-//	AST = 'Abstract Syntax Tree';
-//	TOKENS ='Tokens';
-	TOSTRING_DCL='To String Extensions';
-//	FIELD_DCL ='->';
+	COLON =':';
+	PACKAGES='Packages';
+	AST = 'Abstract Syntax Tree';
+	TOKENS ='Tokens';
+	ASPECT_DCL='Aspect Declaration';
+	FIELD_DCL ='->';
 }
 
 @lexer::header{  
-package com.lausdahl.ast.creator.parser;
+package org.overture.tools.astcreator.parser;
 }  
 
 @lexer::members{
@@ -103,7 +104,8 @@ package com.lausdahl.ast.creator.parser;
 } 
 
 @header {
-package com.lausdahl.ast.creator.parser;
+package org.overture.tools.astcreator.parser;
+
 }
 
 @members {
@@ -159,7 +161,7 @@ package com.lausdahl.ast.creator.parser;
      */
      @Override
     public void emitErrorMessage(String pMessage) {
-    mHasErrors=true;
+        mHasErrors=true;
         if (mMessageCollectionEnabled) {
             mMessages.add(pMessage);
         } else {
@@ -188,115 +190,146 @@ package com.lausdahl.ast.creator.parser;
     }
 }
  
- WS  :   ( ' '
+QUOTE   :      '\'';
+    
+COMMENT
+    :   '--' ~('\n'|'\r')* '\r'? '\n'? {$channel=HIDDEN;}
+    |   '//' ~('\n'|'\r')* '\r'? '\n'? {$channel=HIDDEN;}
+    |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    ;
+	
+ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+    ;
+
+JAVANAME 
+  : ID ('.' '#'? ID)*
+  ;    
+
+SUBTYPE
+    : '<:'
+    ;
+
+extendss
+	: SUBTYPE ID
+	;
+  
+//FIELDNAME
+//  : JAVANAME 
+//  | '#' ID ('.' FIELDNAME)*
+//  ;
+ 
+WS  :   ( ' '
         | '\t'
         | '\r'
         | '\n'
         ) {$channel=HIDDEN;}
     ;
- 
- ID  :  ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
-    ;
-
-JAVANAME 
-  : ID ('.' ID)*
-  ;  
-  
-root
-  : top EOF
-  ;
-  
-  
-top
-  : TOSTRING_DCL^ imports* toString_*
-  ;
-  
-imports
-  : 'import'^ JAVANAME ';'!
-  ;
-  
-  
-toString_
-  : '%'^ aspectName ASSIGN ( StringLiteral ('+' RawJava)? | field ('+'? RawJava)? | '+' (StringLiteral|field) )* (';'!?)
-  ;
-  //StringLiteral    | field | StringLiteral '+' RawJava | RawJava '+' StringLiteral | RawJava '+'? field '+'? RawJava | RawJava '+' field ('+'?)!(field |StringLiteral )
-RawJava
-    :  '$' ( EscapeSequence | ~('\\'|'$') )* '$'
-    ; 
-  
-StringLiteral
-    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
-    ;
- 
-field
-  : '['! ID^ ']'!
-  ;
-     
-//SpecialChar
-//    :     '"' | '\\' | '$' 
-//    ;
-//NormalChar
-//    :    ~SpecialChar
-//    ;
-     
-//STRINGLITERAL
-//    :   '"' 
-//        (   EscapeSequence
-//        |   ~( '\\' | '"' | '\r' | '\n' )        
-//        )* 
-//        '"' 
-//    ;
-    
-    
-
-  
-
-  
-aspectName
-  : ID^ ('->' (ID | '#' ID))*
-  ;
 
 fragment
-EscapeSequence
-    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
-//    |   UnicodeEscape
-//    |   OctalEscape
-    ;   
-
-
+ESC_SEQ
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\\')
+    ;
     
-//COMMENT
-//         @init{
-//            boolean isJavaDoc = false;
-//        }
-//    :   '/*'
-//            {
-//                if((char)input.LA(1) == '*'){
-//                    isJavaDoc = true;
-//                }
-//            }
-//        (options {greedy=false;} : . )* 
-//        '*/'
-//            {
-//                if(isJavaDoc==true){
-//                    $channel=HIDDEN;
-//                }else{
-//                    skip();
-//                }
-//            }
-//    ;
-
-LINE_COMMENT
-    :   '//' ~('\n'|'\r')*  ('\r\n' | '\r' | '\n') 
-            {
-                skip();
-            }
-    |   '//' ~('\n'|'\r')*     // a line comment could appear at the end of the file without CR/LF
-            {
-                skip();
-            }
-    ;   
-        
+  
+root
+  : pkg toks? ast aspectdcl?   
+  ;
+  
+pkg
+  : PACKAGES^ ('base' JAVANAME ';'! )? ('analysis' JAVANAME ';'! )?
+  ;
+  
+ast
+  : AST^ ((production)*)
+  ;
+  
+toks
+  : TOKENS^ ((token)*)
+  ;
+  
+aspectdcl
+  : ASPECT_DCL^ (aspectdcla ';'!)*
+  ;
+  
+aspectdcla
+  : '%'^ dd 
+  ;
+  
+dd 
+  :aspectName ASSIGN (definitions)* -> ^(ID["ASPECT"] aspectName (definitions)*)
+  ;
+  
+ddInline 
+  :  (definitions)* -> ^(ID["ASPECT"]  (definitions)*)
+  ;
  
-              
+aspectName
+  : ID^ ('->' name)*
+  ;
 
+
+production
+  : name extendss? productionfields? (ASSIGN alternative ('|' alternative)*)? ';' -> ^(ID["P"] name productionfields? (alternative)*) 
+  ;
+  
+name 
+  : ID^ 
+  | '#' ID->^('#' ID)
+  ;
+
+ 
+   
+productionfields
+  : '{'! FIELD_DCL^ productionfield* ('|'! ddInline)*'}'!
+  ;
+  
+productionfield
+  : ID^ ASSIGN! QUOTE! stringLiteral QUOTE!
+  ; 
+
+//aspectinlinefields
+//  : '{'! FIELD_ASPECT_DCL^ aspectdcl* '}'!
+//  ;
+
+alternative
+  : ('{' ID '}')? (definitions)* -> ^(ID (definitions)*)
+  | '#' ID -> ^(ID["ALTERNATIVE_SUB_ROOT"] ID)
+  ;
+  
+definitions
+  : (('[' ID ']'! ':'!)?| ('(' ID ')'! ':'!)) ( ID |JAVANAME)^ (repeat)?
+  
+  ; 
+   
+//subname
+//  : '.#' ID 
+//  | JAVANAME
+//  | ID
+//  ;
+  
+//typeName
+//  : ID '.' ID
+//  ;
+  
+repeat
+  : '?'
+  | '*'
+  | '**'
+  | '+'
+  ;
+
+
+token
+  : ID^ ASSIGN! QUOTE! stringLiteral QUOTE! ';'!
+  ;
+  
+stringLiteral
+    :     (ID | NormalChar | '+'|'||'|'&&'|(':')!| JAVANAME )*  
+    ;
+    
+SpecialChar
+    :     '"' | '\\' | '$'
+    ;
+NormalChar
+    :    ~SpecialChar
+    ;

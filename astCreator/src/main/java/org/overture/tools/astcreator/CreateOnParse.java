@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Vector;
 
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
-
 import org.overture.tools.astcreator.definitions.ExternalJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.Field;
 import org.overture.tools.astcreator.definitions.Field.AccessSpecifier;
@@ -34,7 +35,7 @@ public class CreateOnParse
 	public Environment parse(InputStream astFile, String envName)
 			throws IOException, AstCreatorException
 
-			{
+	{
 		Environment env = Environment.getInstance(envName);
 
 		ANTLRInputStream input = new ANTLRInputStream(astFile);
@@ -48,20 +49,18 @@ public class CreateOnParse
 			result = parser.root();
 		} catch (Exception e)
 		{
-			e.printStackTrace();			
+			e.printStackTrace();
 			throw new AstCreatorException("Exception in AST parser", e, true);
 		}
 
 		if (lexer.hasErrors() || lexer.hasExceptions())
 		{
-			throw new AstCreatorException("Errors in AST input file", null,
-					true);
+			throw new AstCreatorException("Errors in AST input file", null, true);
 		}
 
 		if (parser.hasErrors() || parser.hasExceptions())
 		{
-			throw new AstCreatorException("Errors in AST input file", null,
-					true);
+			throw new AstCreatorException("Errors in AST input file", null, true);
 		}
 
 		try
@@ -78,42 +77,40 @@ public class CreateOnParse
 		}
 
 		return env;
-			}
+	}
 
 	private void generateInterfacesForPAndSNodes(Environment env)
 	{
-		for (Entry<IClassDefinition, ClassType> entry : env.classToType
-				.entrySet())
+		for (Entry<IClassDefinition, ClassType> entry : env.classToType.entrySet())
 		{
 			switch (entry.getValue())
 			{
 			// case SubProduction:
-			case Production:
-				ClassFactory.createInterface(entry.getKey(), env);
-				break;
-			default:
-				break;
+				case Production:
+					ClassFactory.createInterface(entry.getKey(), env);
+					break;
+				default:
+					break;
 			}
 		}
 
 		Set<IClassDefinition> rest = new HashSet<IClassDefinition>();
-		for (Entry<IClassDefinition, ClassType> entry : env.classToType
-				.entrySet())
+		for (Entry<IClassDefinition, ClassType> entry : env.classToType.entrySet())
 		{// FIXME need to continou untill no false is returned such that all S
 			// interfaces are made
 			switch (entry.getValue())
 			{
-			case SubProduction:
-				// case Production:
-				if (!ClassFactory.createInterface(entry.getKey(), env))
-				{
-					// System.out.println("Faild to create interface for in first attempt: "
-					// + entry.getKey().getName());
-					rest.add(entry.getKey());
-				}
-				break;
-			default:
-				break;
+				case SubProduction:
+					// case Production:
+					if (!ClassFactory.createInterface(entry.getKey(), env))
+					{
+						// System.out.println("Faild to create interface for in first attempt: "
+						// + entry.getKey().getName());
+						rest.add(entry.getKey());
+					}
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -130,7 +127,7 @@ public class CreateOnParse
 
 	private Set<IClassDefinition> createInterfaces(
 			Set<IClassDefinition> classes, Environment env)
-			{
+	{
 		Set<IClassDefinition> rest = new HashSet<IClassDefinition>();
 		for (IClassDefinition c : classes)
 		{
@@ -141,7 +138,7 @@ public class CreateOnParse
 		}
 		return rest;
 
-			}
+	}
 
 	protected void processAst(Environment env, CommonTree t)
 	{
@@ -210,9 +207,9 @@ public class CreateOnParse
 			Object n = node.getChild(p.getChildIndex() + 1);
 			if (n instanceof CommonTree)
 			{
-				String rawPackage = ((CommonTree)n).getText();
+				String rawPackage = ((CommonTree) n).getText();
 				env.setDefaultPackages(rawPackage);
-				return; 
+				return;
 			}
 		} else if (p.getText() != null && p.getText().equals("analysis")
 				&& node.getChildCount() > p.getChildIndex() + 1)
@@ -287,17 +284,14 @@ public class CreateOnParse
 		if (!externalJavaType)
 		{
 
-			c = ClassFactory.create(env.getDefaultPackage() + ".tokens",
-					p.getText(), env.token, ClassType.Token, env);
+			c = ClassFactory.create(env.getDefaultPackage() + ".tokens", p.getText(), env.token, ClassType.Token, env);
 			// c.setPackageName(env.getDefaultPackage() + ".tokens");
 		} else if (enumType)
 		{
-			c = ClassFactory.createExternalJavaEnum(p.getText(),
-					ClassType.Token, idT.getText(), env);
+			c = ClassFactory.createExternalJavaEnum(p.getText(), ClassType.Token, idT.getText(), env);
 		} else
 		{
-			c = ClassFactory.createExternalJava(p.getText(), ClassType.Token,
-					idT.getText(), nodeType, env);
+			c = ClassFactory.createExternalJava(p.getText(), ClassType.Token, idT.getText(), nodeType, env);
 		}
 
 		// TODO
@@ -331,8 +325,8 @@ public class CreateOnParse
 			// initial search with default package, this may be wrong
 			for (IClassDefinition def : env.getClasses())
 			{
-				if (def.getName().getTag()
-						.equals("#" + nameNode.getChild(0).getText()))
+				if (def.getName().getTag().equals("#"
+						+ nameNode.getChild(0).getText()))
 				{
 					c = def;
 					useNonPackageSearchForSubNode = true;
@@ -346,10 +340,11 @@ public class CreateOnParse
 		// }
 		else
 		{
-			c = ClassFactory.create(env.getDefaultPackage(),
-					nameNode.getText(), env.node, ClassType.Production, env);
+			c = ClassFactory.create(env.getDefaultPackage(), nameNode.getText(), env.node, ClassType.Production, env);
 			// c.setPackageName(env.getDefaultPackage());
 		}
+
+		List<Field> aspectFields = new Vector<Field>();
 
 		boolean foundNameNode = true;
 		for (Object a : p.getChildren())
@@ -379,18 +374,11 @@ public class CreateOnParse
 								{
 									// we need to search again since we have a
 									// package to make a better search
-									for (IClassDefinition def : env
-											.getClasses())
+									for (IClassDefinition def : env.getClasses())
 									{
-										if (def
-												.getName()
-												.getTag()
-												.equals(
-														"#"
-																+ nameNode.getChild(0)
-																.getText())
-																&& def.getName().getPackageName()
-																.equals(packageName))
+										if (def.getName().getTag().equals("#"
+												+ nameNode.getChild(0).getText())
+												&& def.getName().getPackageName().equals(packageName))
 										{
 											c = def;
 											useNonPackageSearchForSubNode = false;
@@ -402,6 +390,17 @@ public class CreateOnParse
 									//
 									c.getName().setPackageName(packageName);
 								}
+							} else if (oo.getText().equals("ASPECT")
+									&& oo.getChildCount() > 0)
+							{
+
+								if (oo instanceof CommonTree)
+								{
+									CommonTree aspectDD = (CommonTree) oo;
+									Field f = exstractField((CommonTree) aspectDD.getChildren().iterator().next(), env);
+									aspectFields.add(f);
+								}
+
 							}
 						}
 					}
@@ -409,11 +408,9 @@ public class CreateOnParse
 						&& aa.getText().equals("ALTERNATIVE_SUB_ROOT"))
 				{
 
-					IClassDefinition subAlternativeClassDef = ClassFactory
-							.create(packageName, aa.getChild(0).getText(), c,
-									ClassType.SubProduction, env);
-					subAlternativeClassDef.getName().setTag(
-							"#" + aa.getChild(0).getText());
+					IClassDefinition subAlternativeClassDef = ClassFactory.create(packageName, aa.getChild(0).getText(), c, ClassType.SubProduction, env);
+					subAlternativeClassDef.getName().setTag("#"
+							+ aa.getChild(0).getText());
 				} else
 				{
 					exstractA(c, aa, env, packageName);
@@ -422,10 +419,36 @@ public class CreateOnParse
 		}
 		if (useNonPackageSearchForSubNode)
 		{
-			System.out
-			.println("WARNING: Using SubProduction class found without using package name. "
+			System.out.println("WARNING: Using SubProduction class found without using package name. "
 					+ c.getName().getName());
 		}
+
+		if (c != null && !aspectFields.isEmpty())
+		{
+			System.out.println("Adding aspect fields: "+c.getName().getName()+"."+getFieldNameCollectionString(aspectFields));
+			for (Field f : aspectFields)
+			{
+				f.isAspect = true;
+				c.addField(f);
+				addGetSetMethods(env, env.classToType.get(c), c, f);
+				// println("Aspect Decleration: " + p);
+			}
+		}
+	}
+	
+	private static String getFieldNameCollectionString(List<Field> fields)
+	{
+		String tmp = "{";
+		for (Iterator<Field> iterator = fields.iterator(); iterator.hasNext();)
+		{
+			Field field = (Field) iterator.next();
+			tmp+=field.name;
+			if(iterator.hasNext())
+			{
+				tmp+=",";
+			}
+		}
+		return tmp+"}";
 	}
 
 	public static String unfoldName(CommonTree p)
@@ -476,12 +499,12 @@ public class CreateOnParse
 
 		switch (type)
 		{
-		case Production:
-		case SubProduction:
-			name += "Base";
-			break;
-		default:
-			break;
+			case Production:
+			case SubProduction:
+				name += "Base";
+				break;
+			default:
+				break;
 		}
 		// String name = (topName.startsWith("#") ? "S" : "P");
 		//
@@ -493,8 +516,8 @@ public class CreateOnParse
 		return name;
 	}
 
-	private static void exstractA(IClassDefinition superClass, CommonTree a,
-			Environment env, String thisPackage)
+	private static IClassDefinition exstractA(IClassDefinition superClass,
+			CommonTree a, Environment env, String thisPackage)
 	{
 		// CommonTree nameNode = (CommonTree)a.getChildren().get(0);
 		ClassType type = ClassType.Alternative;
@@ -502,8 +525,7 @@ public class CreateOnParse
 		{
 			type = ClassType.Production;
 		}
-		IClassDefinition c = ClassFactory.create(thisPackage, a.getText(),
-				superClass, type, env);
+		IClassDefinition c = ClassFactory.create(thisPackage, a.getText(), superClass, type, env);
 		// c.setPackageName(thisPackage);
 		if (a.getChildCount() > 0)
 		{
@@ -519,6 +541,8 @@ public class CreateOnParse
 				}
 			}
 		}
+
+		return c;
 	}
 
 	protected static void addGetSetMethods(Environment env, ClassType type,
@@ -556,9 +580,9 @@ public class CreateOnParse
 			field.name = fTree.getChild(NAME_POS).getText();
 			if (fTree.getChild(SYMBOL_POS) != null
 					&& fTree.getChild(SYMBOL_POS).getText().equals("("))
-					{
+			{
 				field.structureType = Field.StructureType.Graph;
-					}
+			}
 		}
 		int REPEAT_POS = 2;
 		if (fTree.getChildCount() > 2)
@@ -581,8 +605,7 @@ public class CreateOnParse
 		for (IClassDefinition cl : env.getClasses())
 		{
 			if (cl instanceof ExternalJavaClassDefinition
-					&& ((ExternalJavaClassDefinition) cl).getName().getTag()
-					.equals(typeName))
+					&& ((ExternalJavaClassDefinition) cl).getName().getTag().equals(typeName))
 			{
 				field.isTokenField = true;
 				field.type = cl;// TODO

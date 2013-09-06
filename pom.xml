@@ -19,7 +19,7 @@
 	<modules>
 		<module>astCreator</module>
 		<module>astCreatorPlugin</module>
-		<!--module>eclipse</module-->
+		<module>eclipse</module>
 	</modules>
 
 

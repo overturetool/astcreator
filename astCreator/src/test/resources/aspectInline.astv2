@@ -1,0 +1,27 @@
+Packages
+base org.overture.ast.node;
+analysis org.overture.ast.analysis;
+Tokens
+
+string = 'java:java.lang.String';
+ 
+Abstract Syntax Tree
+exp {-> package='org.overture.ast.expressions' |  [str2]:string}
+    =   {example1} 
+    //|   {example2}
+    |   #Sub
+    ;   
+    
+#Sub {-> package='org.overture.ast.expressions' |  [ggggg]:string}
+    =   {node1}
+    ; 
+    
+
+Aspect Declaration
+/* This section allows fields of root types to be declared e.g. exp*/
+%exp = [str]:string
+    ;
+    
+%exp->#Sub = [kkkk]:string
+    ;
+    

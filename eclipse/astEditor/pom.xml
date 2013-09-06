@@ -36,14 +36,14 @@
 							<stripVersion>true</stripVersion>
 							<artifactItems>
 								<artifactItem>
-									 <groupId>org.antlr</groupId>
-      <artifactId>antlr-runtime</artifactId>
-      <version>3.2</version>
+									<groupId>org.antlr</groupId>
+									<artifactId>antlr-runtime</artifactId>
+									<version>3.2</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.overture.maven.tools</groupId>
 									<artifactId>astCreator</artifactId>
-									<version>1.2.5</version>
+									<version>1.2.6</version>
 								</artifactItem>
 							</artifactItems>
 						</configuration>

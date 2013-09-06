@@ -23,7 +23,7 @@
 	</distributionManagement>
 
 	<artifactId>astCreator</artifactId> 
-	<version>1.2.5</version>
+	<version>1.2.6</version>
 	<name>AST Creator</name>
 
 	<dependencies>
@@ -45,22 +45,19 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-
-
 	<build>
-	 <resources>
-      
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.pdf</exclude>
-		  <exclude>**/doc/</exclude>
-        </excludes>
-      </resource>
-  
-    </resources>
+		<resources>
+
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.pdf</exclude>
+					<exclude>**/doc/</exclude>
+				</excludes>
+			</resource>
+
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -70,6 +67,38 @@
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
 			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr3-maven-plugin</artifactId>
+				<version>3.2</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>antlr</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>

@@ -7,7 +7,7 @@
             class="com.lausdahl.asteditor.AstEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="false"
-            extensions="astv2 ast"
+            extensions="astv2,ast"
             icon="icons/binary-tree.png"
             id="com.lausdahl.asteditor"
             name="AST Editor">
