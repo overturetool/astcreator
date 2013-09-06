@@ -32,10 +32,13 @@ import org.overture.tools.astcreator.utils.NameUtil;
 
 public class CreateOnParse
 {
+	List<String> usedNames = new Vector<String>();
+
 	public Environment parse(InputStream astFile, String envName)
 			throws IOException, AstCreatorException
 
 	{
+		usedNames.clear();
 		Environment env = Environment.getInstance(envName);
 
 		ANTLRInputStream input = new ANTLRInputStream(astFile);
@@ -318,6 +321,21 @@ public class CreateOnParse
 		CommonTree nameNode = (CommonTree) p.getChildren().get(0);
 		String packageName = env.getDefaultPackage();
 
+		String parseNodeName = nameNode.getText();
+		if (parseNodeName.equals("#"))
+		{
+			parseNodeName = "#" + nameNode.getChild(0).getText();
+		}
+
+		if (usedNames.contains(parseNodeName))
+		{
+			System.err.println("Dublicate name: " + parseNodeName);
+			// return;
+			// FIXME: We have to either change the syntax or refuse this since the only thing preventing it from failing
+			// is the package
+		}
+		usedNames.add(parseNodeName);
+
 		IClassDefinition c = null;
 		boolean useNonPackageSearchForSubNode = false;
 		if (nameNode.getText().equals("#"))
@@ -413,6 +431,12 @@ public class CreateOnParse
 							+ aa.getChild(0).getText());
 				} else
 				{
+					if (c == null)
+					{
+						System.err.println("Error in sub node: " + usedNames
+								+ " it has no parent.");
+						return;
+					}
 					exstractA(c, aa, env, packageName);
 				}
 			}
@@ -425,7 +449,8 @@ public class CreateOnParse
 
 		if (c != null && !aspectFields.isEmpty())
 		{
-			System.out.println("Adding aspect fields: "+c.getName().getName()+"."+getFieldNameCollectionString(aspectFields));
+			System.out.println("Adding aspect fields: " + c.getName().getName()
+					+ "." + getFieldNameCollectionString(aspectFields));
 			for (Field f : aspectFields)
 			{
 				f.isAspect = true;
@@ -435,20 +460,20 @@ public class CreateOnParse
 			}
 		}
 	}
-	
+
 	private static String getFieldNameCollectionString(List<Field> fields)
 	{
 		String tmp = "{";
 		for (Iterator<Field> iterator = fields.iterator(); iterator.hasNext();)
 		{
 			Field field = (Field) iterator.next();
-			tmp+=field.name;
-			if(iterator.hasNext())
+			tmp += field.name;
+			if (iterator.hasNext())
 			{
-				tmp+=",";
+				tmp += ",";
 			}
 		}
-		return tmp+"}";
+		return tmp + "}";
 	}
 
 	public static String unfoldName(CommonTree p)

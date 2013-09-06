@@ -1,0 +1,19 @@
+Packages
+base org.overture.ast.node;
+analysis org.overture.ast.analysis;
+ 
+Abstract Syntax Tree
+exp {-> package='org.overture.ast.expressions'}
+    =   #DD 
+    ;   
+    
+#DD {-> package='org.overture.ast.expressions' }
+    =   {node1}
+    ; 
+    
+    
+#DD {-> package='org.overture.ast.expressions' }
+    =   {node1}
+    ; 
+
+
