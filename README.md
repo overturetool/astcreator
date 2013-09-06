@@ -1,6 +1,15 @@
-astcreator
+Maven repository for AST Creator
 ==========
+URL: https://raw.github.com/overturetool/astcreator/mvn-repo/release
 
-Please note: this is an experimental repository *only*.  Do not do development here — use the sf.net/p/overture repositories.
-
---Joey/10Mar2013
+<repositories>
+    <repository>
+        <id>overture-plugins</id>
+        <url>https://raw.github.com/overturetool/astcreator/mvn-repo/release</url>
+    </repository>
+	
+	 <repository>
+        <id>overture-plugins</id>
+        <url>https://raw.github.com/overturetool/astcreator/mvn-repo/snapshots</url>
+    </repository>
+</repositories>
