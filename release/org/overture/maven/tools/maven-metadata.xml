@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>AST Creator Maven plug-in</name>
+      <prefix>ast-creator</prefix>
+      <artifactId>ast-creator-plugin</artifactId>
+    </plugin>
+  </plugins>
+</metadata>
