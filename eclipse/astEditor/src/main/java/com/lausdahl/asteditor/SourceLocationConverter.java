@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class SourceLocationConverter
 		private void init(String code)
 		{
 			this.codeLines = code.split("\n");
-	 		int count = this.codeLines.length;
+			int count = this.codeLines.length;
 
 			this.codeLineLengths = new int[count];
 

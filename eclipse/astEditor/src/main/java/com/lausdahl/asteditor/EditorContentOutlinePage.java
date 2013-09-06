@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import org.antlr.runtime.tree.CommonTree;
 import org.eclipse.jface.text.IDocument;
@@ -29,8 +29,8 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 	{
 		super.createControl(parent);
 		TreeViewer viewer = getTreeViewer();
-//		outlineContentProvider = new OutlineContentProvider(editor.getDocumentProvider());
-//		viewer.setContentProvider(outlineContentProvider);
+		// outlineContentProvider = new OutlineContentProvider(editor.getDocumentProvider());
+		// viewer.setContentProvider(outlineContentProvider);
 		setContentProvider(viewer);
 		viewer.setContentProvider(outlineContentProvider);
 		outlineLabelProvider = new OutlineLabelProvider();
@@ -40,7 +40,7 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 		if (input != null)
 			viewer.setInput(input);
 	}
-	
+
 	protected void setContentProvider(TreeViewer viewer)
 	{
 		outlineContentProvider = new OutlineContentProvider(editor.getDocumentProvider());
@@ -140,7 +140,7 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 			{
 				control.setRedraw(false);
 				viewer.setInput(input);
-//				viewer.expandAll();
+				// viewer.expandAll();
 				viewer.expandToLevel(2);
 				control.setRedraw(true);
 			}

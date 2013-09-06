@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
@@ -12,23 +12,20 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
-
 public abstract class DestecsBaseSourceViewerConfiguration extends
-SourceViewerConfiguration
+		SourceViewerConfiguration
 {
-	private String[] commentingPrefix = new String[] { "--","//" };
+	private String[] commentingPrefix = new String[] { "--", "//" };
 	public final static String SINGLELINE_COMMENT = "__contract_singleline_comment";
 
 	private ITokenScanner vdmCodeScanner = null;
 	PresentationReconciler reconciler = null;
-	
-	
 
-//	@Override
-//	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer)
-//	{
-//		return null;
-//	}
+	// @Override
+	// public IContentAssistant getContentAssistant(ISourceViewer sourceViewer)
+	// {
+	// return null;
+	// }
 
 	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer,
@@ -45,9 +42,9 @@ SourceViewerConfiguration
 
 		return super.getDefaultPrefixes(sourceViewer, contentType);
 	}
-	
+
 	public final static String MULTILINE_COMMENT = "__vdm_multiline_comment";
-	
+
 	public final static String STRING = "__vdm_string";
 	public final static String LATEX = "__vdm_latex";
 
@@ -82,7 +79,7 @@ SourceViewerConfiguration
 		}
 		return reconciler;
 	}
-	
+
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
 	{
@@ -91,16 +88,16 @@ SourceViewerConfiguration
 
 		return reconciler;
 	}
-	
+
 	protected abstract IReconcilingStrategy getReconcilingStrategy();
-	
+
 	protected ITokenScanner getCodeScanner()
 	{
 		return getCodeScaner(new ColorProvider());
 	}
-	
+
 	protected abstract ITokenScanner getCodeScaner(ColorProvider colorProvider);
-	
+
 	/*
 	 * @see SourceViewerConfiguration#getAnnotationHover(ISourceViewer)
 	 */

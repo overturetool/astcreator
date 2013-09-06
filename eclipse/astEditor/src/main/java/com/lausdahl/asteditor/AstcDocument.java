@@ -1,10 +1,10 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 
-public class AstcDocument  extends Document implements IDocument
+public class AstcDocument extends Document implements IDocument
 {
 
 	private IFile file;
@@ -12,9 +12,9 @@ public class AstcDocument  extends Document implements IDocument
 	public void setFile(IFile file)
 	{
 		this.file = file;
-		
+
 	}
-	
+
 	public IFile getFile()
 	{
 		return this.file;

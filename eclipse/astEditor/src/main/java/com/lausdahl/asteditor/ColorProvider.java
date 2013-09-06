@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.util.HashMap;
 import java.util.Iterator;

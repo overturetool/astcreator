@@ -1,11 +1,10 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import org.antlr.runtime.tree.CommonTree;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-
-import com.lausdahl.ast.creator.CreateOnParse;
+import org.overture.tools.astcreator.CreateOnParse;
 
 public class OutlineLabelProvider implements ILabelProvider
 {
@@ -50,14 +49,15 @@ public class OutlineLabelProvider implements ILabelProvider
 			{
 
 				CommonTree ch = (CommonTree) top;
-				String name = ch.getText(); 
-				String tmp="";
+				String name = ch.getText();
+				String tmp = "";
 				for (int i = 0; i < ch.getChildCount(); i++)
 				{
-					tmp+= ch.getChild(i).getText();
+					tmp += ch.getChild(i).getText();
 				}
-				return name+(tmp.contains("java:")?": external":"");
-			}if(top.getText()==null)
+				return name + (tmp.contains("java:") ? ": external" : "");
+			}
+			if (top.getText() == null)
 			{
 				return "null";
 			}
@@ -78,7 +78,8 @@ public class OutlineLabelProvider implements ILabelProvider
 			if (top.getText().equals("%"))
 			{
 				String tmp = "%";
-				if (top.getChildCount() > 0 && top.getChild(0).getChildCount() > 0)
+				if (top.getChildCount() > 0
+						&& top.getChild(0).getChildCount() > 0)
 				{
 					CommonTree n = (CommonTree) top.getChild(0).getChild(0);
 					tmp += CreateOnParse.unfoldName(n);

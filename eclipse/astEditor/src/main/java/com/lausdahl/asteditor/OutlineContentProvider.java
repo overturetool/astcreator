@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,8 +11,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-
-import com.lausdahl.ast.creator.parser.AstParserWrapper;
+import org.overture.tools.astcreator.parser.AstParserWrapper;
 
 public class OutlineContentProvider implements ITreeContentProvider
 {
@@ -101,7 +100,7 @@ public class OutlineContentProvider implements ITreeContentProvider
 					&& ((CommonTree) parentElement).getText() != null
 					&& (((CommonTree) parentElement).getText().equals("P") || ((CommonTree) parentElement).getText().equals("%")))
 			{
-				return sort( filter(((CommonTree) parentElement).getChildren().subList(1, ((CommonTree) parentElement).getChildren().size()))).toArray();
+				return sort(filter(((CommonTree) parentElement).getChildren().subList(1, ((CommonTree) parentElement).getChildren().size()))).toArray();
 			}
 			return sort(filter(((CommonTree) parentElement).getChildren())).toArray();
 		}
@@ -172,7 +171,6 @@ public class OutlineContentProvider implements ITreeContentProvider
 		Collections.sort(list, new Comparator<CommonTree>()
 		{
 
-			
 			public int compare(CommonTree o1, CommonTree o2)
 			{
 				String s1 = pl.getText(o1);

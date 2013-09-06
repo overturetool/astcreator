@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AstEditor
-Bundle-SymbolicName: astEditor;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: asteditor.Activator
+Bundle-SymbolicName: org.overture.maven.tools.eclipse.asteditor;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.lausdahl.asteditor.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.editors;bundle-version="3.6.1",
@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views;bundle-version="3.5.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: libs/astc.jar,
- .,
- libs/antlr-runtime-3.2.jar
+Bundle-ClassPath: .,
+ jars/antlr-runtime.jar,
+ jars/astCreator.jar

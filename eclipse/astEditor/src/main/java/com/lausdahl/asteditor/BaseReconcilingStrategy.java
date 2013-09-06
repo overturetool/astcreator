@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.io.IOException;
 
@@ -7,9 +7,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
-
-import com.lausdahl.ast.creator.parser.IError;
-import com.lausdahl.ast.creator.parser.ParserWrapper;
+import org.overture.tools.astcreator.parser.IError;
+import org.overture.tools.astcreator.parser.ParserWrapper;
 
 public abstract class BaseReconcilingStrategy implements IReconcilingStrategy
 {
@@ -30,7 +29,7 @@ public abstract class BaseReconcilingStrategy implements IReconcilingStrategy
 				{
 					for (Object err : parser.getErrors())
 					{
-						com.lausdahl.ast.creator.parser.IError e = (IError) err;						
+						IError e = (IError) err;
 						FileUtility.addMarker(currentDocument.getFile(), e.getMessage(), e.getLine(), e.getCharPositionInLine(), IMarker.SEVERITY_ERROR, currentDocument.get());
 					}
 				}

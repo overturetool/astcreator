@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,13 +6,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
 
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-
-import asteditor.Activator;
 
 public class FileUtility
 {
@@ -33,7 +30,7 @@ public class FileUtility
 					return;
 
 			}
-	 		IMarker marker = file.createMarker(IMarker.PROBLEM);
+			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, IAstEditorConstants.PLUGIN_ID);
@@ -115,7 +112,8 @@ public class FileUtility
 			if (lineNumber == 0 && columnNumber == -1)
 			{
 				marker.setAttribute(IMarker.LINE_NUMBER, converter.getLineCount());
-				marker.setAttribute(IMarker.LOCATION, "line: " + converter.getLineCount());
+				marker.setAttribute(IMarker.LOCATION, "line: "
+						+ converter.getLineCount());
 			} else
 			{
 				marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));

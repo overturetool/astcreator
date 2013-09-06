@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public abstract class BaseCodeScanner extends RuleBasedScanner
 
 		List<IRule> rules = new ArrayList<IRule>();
 		// Add rule for single line comments.
-//		rules.add(new EndOfLineRule("--", comment));
+		// rules.add(new EndOfLineRule("--", comment));
 		rules.add(new EndOfLineRule("//", comment));
 		// Multi line comment
 		rules.add(new MultiLineRule("/*", "*/", comment));

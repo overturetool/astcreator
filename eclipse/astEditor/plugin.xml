@@ -4,17 +4,17 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="com.lausdahl.AstEditor"
+            class="com.lausdahl.asteditor.AstEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="false"
-            extensions="astv2"
+            extensions="astv2 ast"
             icon="icons/binary-tree.png"
             id="com.lausdahl.asteditor"
             name="AST Editor">
       </editor>
       
       <editor
-            class="com.lausdahl.AstToStringEditor"
+            class="com.lausdahl.asteditor.AstToStringEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="false"
             extensions="tostring"

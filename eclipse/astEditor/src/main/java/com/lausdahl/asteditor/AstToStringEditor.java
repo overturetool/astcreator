@@ -1,4 +1,4 @@
-package com.lausdahl;
+package com.lausdahl.asteditor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +27,8 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-
-import com.lausdahl.ast.creator.parser.AstToStringParserWrapper;
-import com.lausdahl.ast.creator.parser.ParserWrapper;
+import org.overture.tools.astcreator.parser.AstToStringParserWrapper;
+import org.overture.tools.astcreator.parser.ParserWrapper;
 
 public class AstToStringEditor extends TextEditor
 {
@@ -61,6 +60,7 @@ public class AstToStringEditor extends TextEditor
 		{
 			return new AstToStringParserWrapper();
 		}
+
 		@Override
 		public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion)
 		{
@@ -70,7 +70,7 @@ public class AstToStringEditor extends TextEditor
 
 	public static class AstCodeScanner extends BaseCodeScanner
 	{
-		
+
 		public AstCodeScanner(ColorProvider provider)
 		{
 			super(provider);
@@ -85,14 +85,14 @@ public class AstToStringEditor extends TextEditor
 		@Override
 		protected String[] getKeywords()
 		{
-			return new String[] { "=", ":", "To",
-					"String", "Extensions", "->","import" };
+			return new String[] { "=", ":", "To", "String", "Extensions", "->",
+					"import" };
 		}
 
 		@Override
 		protected String[] getTypeWords()
 		{
-			return new String[] { "->","%" };
+			return new String[] { "->", "%" };
 		}
 
 		protected void setup(ColorProvider provider)
@@ -104,11 +104,10 @@ public class AstToStringEditor extends TextEditor
 			IToken other = new Token(new TextAttribute(provider.getColor(ColorProvider.DEFAULT)));
 			IToken java = new Token(new TextAttribute(provider.getColor(ColorProvider.VDMDOC_DEFAULT)));
 			IToken graph = new Token(new TextAttribute(provider.getColor(ColorProvider.GRAPH)));
-			
 
 			List<IRule> rules = new ArrayList<IRule>();
 			// Add rule for single line comments.
-//			rules.add(new EndOfLineRule("--", comment));
+			// rules.add(new EndOfLineRule("--", comment));
 			rules.add(new EndOfLineRule("//", comment));
 			// Multi line comment
 			rules.add(new MultiLineRule("/*", "*/", comment));
@@ -118,7 +117,7 @@ public class AstToStringEditor extends TextEditor
 			rules.add(new MultiLineRule("$", "$", java));
 			rules.add(new SingleLineRule("(", ")", graph, '\\'));
 			rules.add(new SingleLineRule("[", "]", keyword, '\\'));
-//			rules.add(new SingleLineRule("{", "}", type, '\\'));
+			// rules.add(new SingleLineRule("{", "}", type, '\\'));
 			// rules.add(new SingleLineRule("{->", "}", comment, '\\'));
 			// Add generic whitespace rule.
 			rules.add(new WhitespaceRule(new WhitespaceDetector()));
@@ -169,42 +168,45 @@ public class AstToStringEditor extends TextEditor
 		return new AstSourceViewerConfiguration();
 	}
 
-	public Object getAdapter(Class required)
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
 	{
-	    if (IContentOutlinePage.class.equals(required))
-	    {
-	        if (outlinePage == null)
-	        {
-	            outlinePage = new EditorToStringContentOutlinePage(this);
-	            if (getEditorInput() != null)
-	                outlinePage.setInput(getEditorInput());
-	        }
-	        return outlinePage;
-	    }
-	    return super.getAdapter(required);
+		if (IContentOutlinePage.class.equals(required))
+		{
+			if (outlinePage == null)
+			{
+				outlinePage = new EditorToStringContentOutlinePage(this);
+				if (getEditorInput() != null)
+					outlinePage.setInput(getEditorInput());
+			}
+			return outlinePage;
+		}
+		return super.getAdapter(required);
 	}
-	
-	public static class EditorToStringContentOutlinePage extends EditorContentOutlinePage
+
+	public static class EditorToStringContentOutlinePage extends
+			EditorContentOutlinePage
 	{
 
 		public EditorToStringContentOutlinePage(ITextEditor editor)
 		{
 			super(editor);
 		}
-		
+
 		@Override
 		protected void setContentProvider(TreeViewer viewer)
 		{
 			outlineContentProvider = new ToStringContentOutlineProvider(editor.getDocumentProvider());
 		}
-		public static class ToStringContentOutlineProvider extends OutlineContentProvider
+
+		public static class ToStringContentOutlineProvider extends
+				OutlineContentProvider
 		{
 
 			public ToStringContentOutlineProvider(IDocumentProvider provider)
 			{
 				super(provider);
 			}
-			
+
 			@Override
 			protected CommonTree parseRootElement(IDocument document)
 			{
@@ -224,18 +226,18 @@ public class AstToStringEditor extends TextEditor
 				}
 				return null;
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	public void dispose()
 	{
 		if (outlinePage != null)
 			outlinePage.setInput(null);
 		super.dispose();
 	}
-	
+
 	protected void doSetInput(IEditorInput newInput) throws CoreException
 	{
 		super.doSetInput(newInput);
@@ -243,21 +245,19 @@ public class AstToStringEditor extends TextEditor
 
 		if (outlinePage != null)
 			outlinePage.setInput(input);
-		
-		
+
 	}
+
 	protected void editorSaved()
 	{
 		super.editorSaved();
 
-
 		if (outlinePage != null)
-			outlinePage.update();	
-	
-		//we validate and mark document here
-//		validateAndMark();
+			outlinePage.update();
+
+		// we validate and mark document here
+		// validateAndMark();
 
 	}
-	
 
 }
