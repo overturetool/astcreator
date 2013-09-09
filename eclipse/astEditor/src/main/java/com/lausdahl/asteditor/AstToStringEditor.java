@@ -19,7 +19,8 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IEditorInput;
@@ -193,9 +194,15 @@ public class AstToStringEditor extends TextEditor
 		}
 
 		@Override
-		protected void setContentProvider(TreeViewer viewer)
+		protected IContentProvider getContentProvider()
 		{
-			outlineContentProvider = new ToStringContentOutlineProvider(editor.getDocumentProvider());
+			return new ToStringContentOutlineProvider(editor.getDocumentProvider());
+		}
+
+		@Override
+		protected ILabelProvider getLabelProvider()
+		{
+			return new ToStringLabelProvider();
 		}
 
 		public static class ToStringContentOutlineProvider extends

@@ -1,7 +1,10 @@
 package com.lausdahl.asteditor;
 
+import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.tree.CommonTree;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -16,8 +19,6 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 {
 	protected ITextEditor editor;
 	private IEditorInput input;
-	protected OutlineContentProvider outlineContentProvider;
-	private OutlineLabelProvider outlineLabelProvider;
 
 	public EditorContentOutlinePage(ITextEditor editor)
 	{
@@ -31,19 +32,23 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 		TreeViewer viewer = getTreeViewer();
 		// outlineContentProvider = new OutlineContentProvider(editor.getDocumentProvider());
 		// viewer.setContentProvider(outlineContentProvider);
-		setContentProvider(viewer);
-		viewer.setContentProvider(outlineContentProvider);
-		outlineLabelProvider = new OutlineLabelProvider();
-		viewer.setLabelProvider(outlineLabelProvider);
+		// setContentProvider(viewer);
+		viewer.setContentProvider(getContentProvider());
+		viewer.setLabelProvider(getLabelProvider());
 		viewer.addSelectionChangedListener(this);
 		// control is created after input is set
 		if (input != null)
 			viewer.setInput(input);
 	}
 
-	protected void setContentProvider(TreeViewer viewer)
+	protected IContentProvider getContentProvider()
 	{
-		outlineContentProvider = new OutlineContentProvider(editor.getDocumentProvider());
+		return new OutlineContentProvider(editor.getDocumentProvider());
+	}
+
+	protected ILabelProvider getLabelProvider()
+	{
+		return new OutlineLabelProvider();
 	}
 
 	/**
@@ -70,35 +75,17 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 		else
 		{
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (element instanceof CommonTree && converter != null)
+			if (element instanceof CommonTree)
 			{
 				CommonTree tree = (CommonTree) element;
-				// int start = element.getPosition().getOffset();
-				//
-				// int length = element.getPosition().getLength();
-				int start = 0;
-				if (tree.token.getLine() == 0
-						&& tree.token.getCharPositionInLine() == -1
-						&& tree.getChildCount() > 0)
-				{
-					int charPos = tree.getChild(0).getCharPositionInLine();
-					// if(charPos>0)
-					{
-						charPos++;
-					}
-					start = converter.convert(tree.getChild(0).getLine() + 1, charPos);
-				} else
-				{
-					int charPos = tree.getCharPositionInLine();
-					// if(charPos>0)
-					{
-						charPos++;
-					}
-					start = converter.convert(tree.getLine() + 1, charPos);
-				}
-				int length = ((CommonTree) element).getText().length();
 				try
 				{
+					int length = 0;
+					int start = ((CommonToken) tree.token).getStartIndex();
+					if (start == 0 && tree.getChildCount() > 0)
+					{
+						start = ((CommonToken) ((CommonTree) tree.getChild(0)).token).getStartIndex();
+					}
 					editor.setHighlightRange(start, length, true);
 
 				} catch (IllegalArgumentException x)
@@ -109,8 +96,6 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 
 		}
 	}
-
-	SourceLocationConverter converter = null;
 
 	/**
 	 * The editor is saved, so we should refresh representation
@@ -124,7 +109,7 @@ public class EditorContentOutlinePage extends ContentOutlinePage
 			IDocument document = editor.getDocumentProvider().getDocument(input);
 			if (document != null)
 			{
-				converter = new SourceLocationConverter(document.get().toCharArray());
+				// converter = new SourceLocationConverter(document.get().toCharArray());
 			}
 		} catch (Exception e)
 		{

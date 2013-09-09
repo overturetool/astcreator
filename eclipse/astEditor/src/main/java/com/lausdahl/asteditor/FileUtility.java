@@ -73,9 +73,9 @@ public class FileUtility
 			marker.setAttribute(IMarker.SOURCE_ID, IAstEditorConstants.PLUGIN_ID);
 			marker.setAttribute(IMarker.LOCATION, "line: " + lineNumber);
 
-			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
-			marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));
-			marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(lineNumber, columnNumber));
+			// SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
+			// marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));
+			// marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(lineNumber, columnNumber));
 		} catch (CoreException e)
 		{
 			Activator.log("FileUtility addMarker", e);
@@ -108,17 +108,17 @@ public class FileUtility
 			marker.setAttribute(IMarker.SOURCE_ID, IAstEditorConstants.PLUGIN_ID);
 			marker.setAttribute(IMarker.LOCATION, "line: " + lineNumber);
 
-			SourceLocationConverter converter = new SourceLocationConverter(content.toCharArray());
-			if (lineNumber == 0 && columnNumber == -1)
-			{
-				marker.setAttribute(IMarker.LINE_NUMBER, converter.getLineCount());
-				marker.setAttribute(IMarker.LOCATION, "line: "
-						+ converter.getLineCount());
-			} else
-			{
-				marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));
-				marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(lineNumber, columnNumber));
-			}
+			// SourceLocationConverter converter = new SourceLocationConverter(content.toCharArray());
+			// if (lineNumber == 0 && columnNumber == -1)
+			// {
+			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+			// marker.setAttribute(IMarker.LOCATION, "line: "
+			// + converter.getLineCount());
+			// } else
+			// {
+			// marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));
+			// marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(lineNumber, columnNumber));
+			// }
 		} catch (CoreException e)
 		{
 			Activator.log("FileUtility addMarker", e);

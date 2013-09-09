@@ -9,14 +9,13 @@ import org.antlr.runtime.tree.CommonTree;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.overture.tools.astcreator.parser.AstParserWrapper;
+import org.overture.tools.astcreator.parser.AstcParser.root_return;
 
 public class OutlineContentProvider implements ITreeContentProvider
 {
 	private CommonTree root = null;
-	private IEditorInput input;
 	private IDocumentProvider documentProvider;
 
 	public OutlineContentProvider(IDocumentProvider provider)
@@ -39,16 +38,11 @@ public class OutlineContentProvider implements ITreeContentProvider
 
 			}
 		}
-		input = (IEditorInput) newInput;
 		if (newInput != null)
 		{
 			IDocument document = documentProvider.getDocument(newInput);
 			if (document != null)
 			{
-				// document.addPositionCategory(TAG_POSITIONS);
-				//
-				// document.addPositionUpdater(positionUpdater);
-
 				CommonTree rootElement = parseRootElement(document);
 
 				if (rootElement != null)
@@ -68,7 +62,9 @@ public class OutlineContentProvider implements ITreeContentProvider
 			AstcDocument currentDocument = (AstcDocument) document;
 			try
 			{
-				return (CommonTree) parser.parse(currentDocument.getFile().getLocation().toFile(), currentDocument.get()).getTree();
+				root_return tmp = parser.parse(currentDocument.getFile().getLocation().toFile(), currentDocument.get());
+				if (tmp != null)
+					return (CommonTree) tmp.getTree();
 
 			} catch (Exception e)
 			{
@@ -86,28 +82,56 @@ public class OutlineContentProvider implements ITreeContentProvider
 
 		if (root instanceof CommonTree)
 		{
-			CommonTree top = (CommonTree) root;
 			return removeNulls(((CommonTree) root).getChildren()).toArray();
 		}
 		return new Object[0];
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object[] getChildren(Object parentElement)
 	{
 		if (parentElement instanceof CommonTree)
 		{
-			if (parentElement instanceof CommonTree
-					&& ((CommonTree) parentElement).getText() != null
-					&& (((CommonTree) parentElement).getText().equals("P") || ((CommonTree) parentElement).getText().equals("%")))
+			CommonTree parent = (CommonTree) parentElement;
+
+			if (parent.getText() != null)
 			{
-				return sort(filter(((CommonTree) parentElement).getChildren().subList(1, ((CommonTree) parentElement).getChildren().size()))).toArray();
+				if (parent.getText().equals("P")
+						|| parent.getText().equals("%"))
+				{
+					return sort(filter(parent.getChildren().subList(1, parent.getChildren().size()))).toArray();
+				} else if (parent.getText().equals("Packages"))
+				{
+					return sort(filterPackages(parent.getChildren())).toArray();
+				}
 			}
-			return sort(filter(((CommonTree) parentElement).getChildren())).toArray();
+			return sort(filter(parent.getChildren())).toArray();
 		}
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
+	private List<CommonTree> filterPackages(
+			@SuppressWarnings("rawtypes") List children)
+	{
+		List<CommonTree> tree = new Vector<CommonTree>();
+
+		for (Object object : children)
+		{
+			if (object instanceof CommonTree)
+			{
+				CommonTree n = (CommonTree) object;
+				if (n.getText().equals("base")
+						|| n.getText().equals("analysis"))
+				{
+					tree.add(n);
+				}
+			}
+		}
+		return filter(tree);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List filter(List list)
 	{
 		List newList = new Vector();
@@ -151,6 +175,7 @@ public class OutlineContentProvider implements ITreeContentProvider
 		return false;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected List removeNulls(List list)
 	{
 		for (int i = 0; i < list.size(); i++)
@@ -164,6 +189,7 @@ public class OutlineContentProvider implements ITreeContentProvider
 		return list;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected List sort(List<CommonTree> list)
 	{
 
