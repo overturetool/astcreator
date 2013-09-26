@@ -26,6 +26,8 @@ public interface IInterfaceDefinition {
 	public String getAstPackage();
 
 	public abstract JavaName getName();
+	
+	public abstract  String getNameWithGenericArguments();
 
 	public abstract Set<String> getImports(Environment env);
 

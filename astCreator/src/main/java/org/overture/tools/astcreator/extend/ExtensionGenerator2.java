@@ -22,11 +22,6 @@ import org.overture.tools.astcreator.java.definitions.JavaName;
 import org.overture.tools.astcreator.methods.KindMethod;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
-import org.overture.tools.astcreator.methods.visitors.AnalysisAcceptMethod;
-import org.overture.tools.astcreator.methods.visitors.AnalysisUtil;
-import org.overture.tools.astcreator.methods.visitors.AnswerAcceptMethod;
-import org.overture.tools.astcreator.methods.visitors.QuestionAcceptMethod;
-import org.overture.tools.astcreator.methods.visitors.QuestionAnswerAcceptMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.answer.AnswerAdaptorCaseMethod;
@@ -37,17 +32,20 @@ import org.overture.tools.astcreator.methods.visitors.adaptor.questionanswer.Que
 import org.overture.tools.astcreator.methods.visitors.adaptor.questionanswer.QuestionAnswerAdaptorDefaultMethod;
 import org.overture.tools.astcreator.utils.ClassFactory;
 
-public class ExtensionGenerator2 {
+public class ExtensionGenerator2
+{
 
 	private static final String COMPASS_JAVA_DOC_STRING = "*\n* Extensions by the COMPASS Project\n* @author Rasmus Winther Lauritsen, Anders Kaels Malmos\n";
 	private final Environment base;
 
-	public ExtensionGenerator2(Environment base) {
+	public ExtensionGenerator2(Environment base)
+	{
 		this.base = base;
 	}
 
 	private static boolean isTemplateClass(IInterfaceDefinition def,
-			Environment ext) {
+			Environment ext)
+	{
 		if (ext.node == def)
 			return true;
 		if (ext.iNode == def)
@@ -82,7 +80,8 @@ public class ExtensionGenerator2 {
 	// 1) Include all class definition and interfaces from the base tree
 	// - Create function: void addBaseAstClassAndInterfaces(result, baseEnv);
 	private static void addBaseAstClassesAndInterfaces(Environment result,
-			Environment baseEnv) {
+			Environment baseEnv)
+	{
 		// Copy over all class definitions
 		for (IClassDefinition cdef : baseEnv.getClasses())
 			if (!isUtilityOrTemplateClass(cdef, baseEnv))
@@ -105,27 +104,34 @@ public class ExtensionGenerator2 {
 	// - Create function: boolean isUtilityOrTemplateClass(iDef, env)
 	// - Create function: void includeClassesFromExtension(result, extEnv)
 	private static boolean willGenerateExtensionFor(IInterfaceDefinition iDef,
-			Environment base) {
-		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef
-				.getName().getName());
-		boolean hasSameTag = overtureEquivalent == null ? false : iDef
-				.getName().getTag()
-				.equals(overtureEquivalent.getName().getTag());
+			Environment base)
+	{
+		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef.getName().getName());
+		boolean hasSameTag = overtureEquivalent == null ? false
+				: iDef.getName().getTag().equals(overtureEquivalent.getName().getTag());
 		return hasSameTag && !isUtilityOrTemplateClass(iDef, base);
 	}
 
 	private static boolean isUtilityOrTemplateClass(IInterfaceDefinition def,
-			Environment env) {
+			Environment env)
+	{
 		return isTemplateClass(def, env)
 				|| (def instanceof PredefinedClassDefinition);
 	}
 
 	private static void includeClassesFromExtension(Environment result,
-			Environment ext, Environment base) {
-		for (IClassDefinition cDef : ext.getClasses()) {
-			if (!willGenerateExtensionFor(cDef, base)) {
+			Environment ext, Environment base)
+	{
+		for (IClassDefinition cDef : ext.getClasses())
+		{
+			if (!willGenerateExtensionFor(cDef, base))
+			{
 				if (!isUtilityOrTemplateClass(cDef, ext))
+				{
+					System.out.println("Including extension class: "+cDef);
+					cDef.setIsExtTree(true);
 					result.getClasses().add(cDef);
+				}
 			}
 		}
 	}
@@ -134,16 +140,22 @@ public class ExtensionGenerator2 {
 	// extended
 	// - Create function: void includeInterfacesFromExtension(result, extEnv);
 	private static void includeInterfacesFromExtension(Environment result,
-			Environment extEnv, Environment base) {
+			Environment extEnv, Environment base)
+	{
 		for (IInterfaceDefinition iDef : extEnv.getInterfaces())
+		{
 			if (!willGenerateExtensionFor(iDef, base))
+			{
+				iDef.setIsExtTree(true);
 				result.getInterfaces().add(iDef);
-
+			}
+		}
 	}
 
 	private static JavaName makeExtensionJavaName(
 			IInterfaceDefinition baseProduction, Environment ext,
-			Environment base, String extensionTargetPackage) {
+			Environment base, String extensionTargetPackage)
+	{
 		String newNameStr = ext.getName()
 				+ baseProduction.getName().getRawName();
 		JavaName newName = new JavaName(ext.getDefaultPackage(), newNameStr);
@@ -169,21 +181,21 @@ public class ExtensionGenerator2 {
 	// - Create function: Map<String, IClassDefinition>
 	// generateExtensionClasses(extEnv, baseEnv)
 	private static Map<String, IInterfaceDefinition> generateExtensionInterfaces(
-			Environment result, Environment ext, Environment base) {
+			Environment result, Environment ext, Environment base)
+	{
 		Map<String, IInterfaceDefinition> replacementMap = new HashMap<String, IInterfaceDefinition>();
-		for (IInterfaceDefinition iDef : ext.getInterfaces()) {
-			if (willGenerateExtensionFor(iDef, base)) {
+		for (IInterfaceDefinition iDef : ext.getInterfaces())
+		{
+			if (willGenerateExtensionFor(iDef, base))
+			{
 				// Lookup base production in the base environment, e.g. the one
 				// to extend
-				IInterfaceDefinition baseProduction = base.lookUpType(iDef
-						.getName().getName());
+				IInterfaceDefinition baseProduction = base.lookUpType(iDef.getName().getName());
 
 				// Create the new Cml Production as a sub-interface of the base
 				// production
-				JavaName newName = makeExtensionJavaName(baseProduction, ext,
-						base, iDef.getName().getPackageName());
-				InterfaceDefinition extProduction = new InterfaceDefinition(
-						newName, result.getAstPackage());
+				JavaName newName = makeExtensionJavaName(baseProduction, ext, base, iDef.getName().getPackageName());
+				InterfaceDefinition extProduction = new InterfaceDefinition(newName, result.getAstPackage());
 				extProduction.supers.add(baseProduction);
 
 				// Update mapping, in the result environment the new extension
@@ -216,8 +228,7 @@ public class ExtensionGenerator2 {
 				// ext environment is its parent hierarchy currently. The
 				// replacement map
 				// will help us fix this later.
-				replacementMap.put(baseProduction.getName().getName(),
-						extProduction);
+				replacementMap.put(baseProduction.getName().getName(), extProduction);
 			}
 		}
 		return replacementMap;
@@ -225,14 +236,15 @@ public class ExtensionGenerator2 {
 
 	private static Map<String, IClassDefinition> generateExtensionClasses(
 			Environment result, Environment ext, Environment base,
-			Map<String, IInterfaceDefinition> replacementMap) {
+			Map<String, IInterfaceDefinition> replacementMap)
+	{
 		Map<String, IClassDefinition> classReplacementMap = new HashMap<String, IClassDefinition>();
 		final String extentionName = ext.getName();
 		// Generate the base classes
-		for (Entry<String, IInterfaceDefinition> e : replacementMap.entrySet()) {
-			final IInterfaceDefinition baseProduction = base.lookUpType(e
-					.getKey());
-			
+		for (Entry<String, IInterfaceDefinition> e : replacementMap.entrySet())
+		{
+			final IInterfaceDefinition baseProduction = base.lookUpType(e.getKey());
+
 			// Lookup the base production base class e.g. PExpBase that will be
 			// the super class
 			// for out to be created PCmlExpBase. Examplified of course
@@ -241,7 +253,8 @@ public class ExtensionGenerator2 {
 			String baseProductionBaseName2 = null;
 
 			IInterfaceDefinition c = baseProduction;
-			while (c.getSuperDefs().size() > 0) {
+			while (c.getSuperDefs().size() > 0)
+			{
 				IInterfaceDefinition tmp = c.getSuperDefs().iterator().next();
 				if (tmp instanceof PredefinedClassDefinition)
 					break;
@@ -250,8 +263,7 @@ public class ExtensionGenerator2 {
 			JavaName basePName = baseProduction.getName();
 			baseProductionBaseName1 = basePName.getPrefix()
 					+ basePName.getRawName() + basePName.getPostfix();
-			baseProductionBaseName2 = baseProductionBaseName1.replace(c
-					.getName().getRawName(), "Base");
+			baseProductionBaseName2 = baseProductionBaseName1.replace(c.getName().getRawName(), "Base");
 			baseProductionBaseName1 += "Base";
 
 			IInterfaceDefinition extProduction = e.getValue();
@@ -264,104 +276,104 @@ public class ExtensionGenerator2 {
 
 			// In our running example let us Create the PCmlExpBase class
 			String cmlPackage = e.getValue().getName().getPackageName();
-			JavaName newName = makeExtensionJavaName(baseProductionBase, ext,
-					base, cmlPackage);
-			IClassDefinition extensionProductionBase = ClassFactory.create(
-					cmlPackage, newName.getRawName(), baseProductionBase,
-					base.classToType.get(baseProductionBase), result);
+			JavaName newName = makeExtensionJavaName(baseProductionBase, ext, base, cmlPackage);
+			IClassDefinition extensionProductionBase = ClassFactory.create(cmlPackage, newName.getRawName(), baseProductionBase, base.classToType.get(baseProductionBase), result);
 			extensionProductionBase.setIsExtTree(true);
-			extensionProductionBase.getName().setTag(
-					baseProductionBase.getName().getTag());
+			extensionProductionBase.getName().setTag(baseProductionBase.getName().getTag());
 			extensionProductionBase.addInterface(extProduction);
-			class LocalKindMethod extends KindMethod {
+			class LocalKindMethod extends KindMethod
+			{
 
 				public LocalKindMethod(IClassDefinition c,
-						boolean isAbstractKind) {
+						boolean isAbstractKind)
+				{
 					super(c, isAbstractKind);
 
 				}
 
 				@Override
-				public String getJavaSourceCode(Environment env) {
+				public String getJavaSourceCode(Environment env)
+				{
 					StringBuilder result = new StringBuilder();
 
 					returnType = "String";
-					name = "kind" + baseProduction.getName().getPrefix() + baseProduction.getName().getRawName();
+					name = "kind" + baseProduction.getName().getPrefix()
+							+ baseProduction.getName().getRawName();
 
 					result.append("public " + returnType + " " + name + "()");
-					//result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
-					String nodeNameString = "\"" + extentionName + baseProduction.getName().getRawName() + "\"";
-					result.append("{ return " + name +"; }\n");
-					result.append("public static final " + returnType + " " + name + " = " + nodeNameString +";\n");
+					// result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
+					String nodeNameString = "\"" + extentionName
+							+ baseProduction.getName().getRawName() + "\"";
+					result.append("{ return " + name + "; }\n");
+					result.append("public static final " + returnType + " "
+							+ name + " = " + nodeNameString + ";\n");
 					return result.toString();
 				}
 
 			}
 
-			if (!"S".equals(newName.getPrefix())) {
+			if (!"S".equals(newName.getPrefix()))
+			{
 				// Add kindMethod that throw RuntimeException
-				Method kindMethod = new LocalKindMethod(baseProductionBase,
-						false);
+				Method kindMethod = new LocalKindMethod(baseProductionBase, false);
 				extensionProductionBase.addMethod(kindMethod);
 			}
 			// Add mapping from the extensionProductionBase production to the
 			// extProduction
-			result.treeNodeInterfaces.put(extensionProductionBase,
-					extProduction);
+			result.treeNodeInterfaces.put(extensionProductionBase, extProduction);
 
 			// This is actually a bit ugly (baseProductionBase should come from
 			// the extension environment)
-			classReplacementMap.put(baseProductionBase.getName().getName(),
-					extensionProductionBase);
+			classReplacementMap.put(baseProductionBase.getName().getName(), extensionProductionBase);
 		}
 		return classReplacementMap;
 	}
 
 	/*
-	 * UpdateFieldsWithUnresolvedTypes
-	 * 
-	 * -------------------------------
-	 * 
-	 * We allow the extension environment (ext) to be created with unresolved
-	 * types pointing into the base environment. Now it is time to resolve
-	 * these.
-	 * 
-	 * For every definition in the result environment so far we check all fields
-	 * if they have an unresolvedtype. If so we look up in the base environment
-	 * what type it should have.
+	 * UpdateFieldsWithUnresolvedTypes ------------------------------- We allow the extension environment (ext) to be
+	 * created with unresolved types pointing into the base environment. Now it is time to resolve these. For every
+	 * definition in the result environment so far we check all fields if they have an unresolvedtype. If so we look up
+	 * in the base environment what type it should have.
 	 */
 	private void updateFieldsWithUnresolvedTypes(Environment result,
-			Environment ext, Environment base) throws AstCreatorException {
+			Environment ext, Environment base) throws AstCreatorException
+	{
 		// Path node, token, inode and itoken
-		for (IInterfaceDefinition def : result.getAllDefinitions()) {
+		for (IInterfaceDefinition def : result.getAllDefinitions())
+		{
 
 			if (def instanceof InterfaceDefinition)
-				((InterfaceDefinition) def)
-						.setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
+				((InterfaceDefinition) def).setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
 
-			if (def instanceof BaseClassDefinition) {
+			if (def instanceof BaseClassDefinition)
+			{
 				BaseClassDefinition bcdef = (BaseClassDefinition) def;
-				for (Field f : bcdef.getFields()) {
+				for (Field f : bcdef.getFields())
+				{
 					String rawTypeToResolved = f.getUnresolvedType();
 					IInterfaceDefinition type = null;
 					if (f.type != null)
 						type = f.type;
-					else {
+					else
+					{
 						type = result.lookupTagPath(rawTypeToResolved, false);
 						if (type == null)
-						    {
-							System.out.println(""+rawTypeToResolved+" cannot be found"); 
+						{
+							System.out.println("" + rawTypeToResolved
+									+ " cannot be found");
 							System.exit(-1);
-						    }
+						}
 						if (result.treeNodeInterfaces.containsKey(type))
 							type = result.treeNodeInterfaces.get(type);
 					}
 					if (result.treeNodeInterfaces.containsKey(type))
 						type = result.treeNodeInterfaces.get(type);
 
-					if (type != null) {
+					if (type != null)
+					{
 						f.type = type;
-						if (type instanceof ExternalJavaClassDefinition) {
+						if (type instanceof ExternalJavaClassDefinition)
+						{
 							ExternalJavaClassDefinition ejcd = (ExternalJavaClassDefinition) type;
 							if (ejcd.getFields() != null
 									&& ejcd.getFields().size() > 0
@@ -380,33 +392,31 @@ public class ExtensionGenerator2 {
 	}
 
 	/*
-	 * Tree node to interface mappings from the base environment are copied
-	 * blindly, for the extension we copy over the ones that are only in the
-	 * extension and make sure that any extension-interface that are created are
-	 * used instead of the base interface.
+	 * Tree node to interface mappings from the base environment are copied blindly, for the extension we copy over the
+	 * ones that are only in the extension and make sure that any extension-interface that are created are used instead
+	 * of the base interface.
 	 */
 	private void updateTreeNodeToInterface(Environment result, Environment ext,
-			Environment base, Map<String, IInterfaceDefinition> iReplacementMap) {
+			Environment base, Map<String, IInterfaceDefinition> iReplacementMap)
+	{
 
 		// Copy tree nodes to interfaces mapping
-		Set<Entry<IInterfaceDefinition, IInterfaceDefinition>> tn2i = base.treeNodeInterfaces
-				.entrySet();
-		for (Entry<IInterfaceDefinition, IInterfaceDefinition> e : tn2i) {
+		Set<Entry<IInterfaceDefinition, IInterfaceDefinition>> tn2i = base.treeNodeInterfaces.entrySet();
+		for (Entry<IInterfaceDefinition, IInterfaceDefinition> e : tn2i)
+		{
 			result.treeNodeInterfaces.put(e.getKey(), e.getValue());
 		}
 
 		tn2i = ext.treeNodeInterfaces.entrySet();
-		for (Entry<IInterfaceDefinition, IInterfaceDefinition> e : tn2i) {
+		for (Entry<IInterfaceDefinition, IInterfaceDefinition> e : tn2i)
+		{
 			// is it not a templated type
-			if (!isTemplateClass(e.getKey(), ext)) {
+			if (!isTemplateClass(e.getKey(), ext))
+			{
 				// do we have a replacement e.g. PExp replace for PExtExp
-				if (iReplacementMap.containsKey(e.getValue().getName()
-						.getName()))
+				if (iReplacementMap.containsKey(e.getValue().getName().getName()))
 					// yes! okay lookup the replacement and use that one instead
-					result.treeNodeInterfaces.put(
-							e.getKey(),
-							iReplacementMap.get(e.getValue().getName()
-									.getName()));
+					result.treeNodeInterfaces.put(e.getKey(), iReplacementMap.get(e.getValue().getName().getName()));
 				else
 					// no! fine we take whatever was created for the extension
 					// environment
@@ -426,14 +436,16 @@ public class ExtensionGenerator2 {
 	//
 	private void updateSuperDefinitions(Environment result, Environment ext,
 			Map<String, IClassDefinition> cReplacementMap,
-			Map<String, IInterfaceDefinition> iReplacementMap) {
-		for (IClassDefinition cdef : ext.getClasses()) {
+			Map<String, IInterfaceDefinition> iReplacementMap)
+	{
+		for (IClassDefinition cdef : ext.getClasses())
+		{
 			IClassDefinition superDef = cdef.getSuperDef();
-			if (superDef != null) {
+			if (superDef != null)
+			{
 
 				// Update super to be newly generated production if necessary
-				IClassDefinition replacementSuperDef = cReplacementMap
-						.get(superDef.getName().getName());
+				IClassDefinition replacementSuperDef = cReplacementMap.get(superDef.getName().getName());
 				if (replacementSuperDef != null)
 					cdef.setSuper(replacementSuperDef);
 
@@ -444,14 +456,16 @@ public class ExtensionGenerator2 {
 				// RWL: Hmm, node is not an interface and should not be present
 				// in supers, right?
 				if (cdef.getSuperDefs().contains(base.node)
-						|| cdef.getSuperDefs().contains(ext.node)) {
+						|| cdef.getSuperDefs().contains(ext.node))
+				{
 					cdef.getSuperDefs().remove(base.node);
 					cdef.getSuperDefs().remove(ext.node);
 					cdef.getSuperDefs().add(result.node);
 				}
 
 				if (cdef.getSuperDefs().contains(base.iNode)
-						|| cdef.getSuperDefs().contains(ext.iNode)) {
+						|| cdef.getSuperDefs().contains(ext.iNode))
+				{
 					cdef.getSuperDefs().remove(base.iNode);
 					cdef.getSuperDefs().remove(ext.iNode);
 					cdef.getSuperDefs().add(result.iNode);
@@ -461,9 +475,9 @@ public class ExtensionGenerator2 {
 				List<IInterfaceDefinition> tbr = new LinkedList<IInterfaceDefinition>();
 				List<IInterfaceDefinition> tba = new LinkedList<IInterfaceDefinition>();
 				for (IInterfaceDefinition idef : cdef.getSuperDefs())
-					if (cReplacementMap.containsKey(idef.getName().getName())) {
-						IClassDefinition newDef = cReplacementMap.get(idef
-								.getName().getName());
+					if (cReplacementMap.containsKey(idef.getName().getName()))
+					{
+						IClassDefinition newDef = cReplacementMap.get(idef.getName().getName());
 						tbr.add(idef);
 						tba.add(newDef);
 					}
@@ -474,9 +488,11 @@ public class ExtensionGenerator2 {
 
 		}
 
-		for (IInterfaceDefinition idef : ext.getInterfaces()) {
+		for (IInterfaceDefinition idef : ext.getInterfaces())
+		{
 			if (idef.getSuperDefs().contains(base.iNode)
-					|| idef.getSuperDefs().contains(ext.iNode)) {
+					|| idef.getSuperDefs().contains(ext.iNode))
+			{
 				idef.getSuperDefs().remove(base.iNode);
 				idef.getSuperDefs().remove(ext.iNode);
 				idef.getSuperDefs().add(result.iNode);
@@ -484,10 +500,11 @@ public class ExtensionGenerator2 {
 
 			List<IInterfaceDefinition> tbr = new LinkedList<IInterfaceDefinition>();
 			List<IInterfaceDefinition> tba = new LinkedList<IInterfaceDefinition>();
-			for (IInterfaceDefinition sidef : idef.getSuperDefs()) {
-				if (iReplacementMap.containsKey(sidef.getName().getName())) {
-					IInterfaceDefinition replacement = iReplacementMap
-							.get(sidef.getName().getName());
+			for (IInterfaceDefinition sidef : idef.getSuperDefs())
+			{
+				if (iReplacementMap.containsKey(sidef.getName().getName()))
+				{
+					IInterfaceDefinition replacement = iReplacementMap.get(sidef.getName().getName());
 					tbr.add(sidef);
 					tba.add(replacement);
 				}
@@ -499,11 +516,11 @@ public class ExtensionGenerator2 {
 	}
 
 	private void updateClassToType(Environment result, Environment ext,
-			Environment base) {
+			Environment base)
+	{
 
 		// Copy classToType mapping
-		Set<Entry<IClassDefinition, ClassType>> c2t = base.classToType
-				.entrySet();
+		Set<Entry<IClassDefinition, ClassType>> c2t = base.classToType.entrySet();
 		for (Entry<IClassDefinition, ClassType> e : c2t)
 			result.classToType.put(e.getKey(), e.getValue());
 
@@ -517,28 +534,20 @@ public class ExtensionGenerator2 {
 	}
 
 	/**
-	 * Given an extension environment use the base environment in this instance
-	 * to resolve any unresolved types.
-	 * 
-	 * The extension (ext parameter) will be destructively updated, the
-	 * environment will no longer function after this invocation. Also, the
-	 * result environment returned will be entangled with the base environment
-	 * in this instance.
+	 * Given an extension environment use the base environment in this instance to resolve any unresolved types. The
+	 * extension (ext parameter) will be destructively updated, the environment will no longer function after this
+	 * invocation. Also, the result environment returned will be entangled with the base environment in this instance.
 	 * 
 	 * @param ext
 	 *            - an extension environment
-	 * 
-	 * @return A fresh environment entangled with ext and base. (Things are NOT
-	 *         cloned)
-	 * 
+	 * @return A fresh environment entangled with ext and base. (Things are NOT cloned)
 	 * @throws AstCreatorException
-	 *             - An AstCreatorException is thrown if an unresolved symbol in
-	 *             the extension environment cannot be resolved in the base
-	 *             environment of this instance.
+	 *             - An AstCreatorException is thrown if an unresolved symbol in the extension environment cannot be
+	 *             resolved in the base environment of this instance.
 	 */
-	public Environment extend(Environment ext) throws AstCreatorException {
-		Environment result = Environment.getFromBase(base,
-				ext.getAnalysisPackage(), ext.getDefaultPackage());
+	public Environment extend(Environment ext) throws AstCreatorException
+	{
+		Environment result = Environment.getFromBase(base, ext.getAnalysisPackage(), ext.getDefaultPackage(),ext.getName());
 
 		result.setTemplateAnalysisPackage(base.getAnalysisPackage());
 		result.setTemplateDefaultPackage(base.getDefaultPackage());
@@ -558,13 +567,11 @@ public class ExtensionGenerator2 {
 		includeInterfacesFromExtension(result, ext, base);
 
 		// 4a generate new extension productions that is P and S interface
-		Map<String, IInterfaceDefinition> iReplacementMap = generateExtensionInterfaces(
-				result, ext, base);
+		Map<String, IInterfaceDefinition> iReplacementMap = generateExtensionInterfaces(result, ext, base);
 
 		// 4b generate new base classes for the P and S interface generated in
 		// 4a
-		Map<String, IClassDefinition> cReplacementMap = generateExtensionClasses(
-				result, ext, base, iReplacementMap);
+		Map<String, IClassDefinition> cReplacementMap = generateExtensionClasses(result, ext, base, iReplacementMap);
 
 		// 5 Update classToType
 		updateClassToType(result, ext, base);
@@ -583,24 +590,19 @@ public class ExtensionGenerator2 {
 	}
 
 	/**
-	 * Create Analysis interfaces and adaptors for the extensions alone.
-	 * 
-	 * It is a precondition that the Generator.generator method has been run on
-	 * the given result environment. The extEnv remains as it were after
+	 * Create Analysis interfaces and adaptors for the extensions alone. It is a precondition that the
+	 * Generator.generator method has been run on the given result environment. The extEnv remains as it were after
 	 * invoking the extend method.
 	 * 
 	 * @param extEnv
 	 *            - the extension environment
 	 * @param result
-	 *            - an extended environment for which analysis classes should be
-	 *            generated.
-	 * 
-	 *            Notice: The analysis created will have cases for the classes
-	 *            that exists in both result and extEnv such that the case maps
-	 *            to either an Alternative or a Token in the extended
-	 *            environment.
+	 *            - an extended environment for which analysis classes should be generated. Notice: The analysis created
+	 *            will have cases for the classes that exists in both result and extEnv such that the case maps to
+	 *            either an Alternative or a Token in the extended environment.
 	 */
-	public void runPostGeneration(Environment extEnv, Environment result) {
+	public void runPostGeneration(Environment extEnv, Environment result)
+	{
 
 		createIAnalysisInterface(result, extEnv);
 
@@ -614,158 +616,171 @@ public class ExtensionGenerator2 {
 	}
 
 	private void createIQuestionAnswerInterface(final Environment result,
-			Environment extEnv) {
+			Environment extEnv)
+	{
 
 		List<String> genericArguments = new LinkedList<String>();
 		genericArguments.add("Q");
 		genericArguments.add("A");
 		String name = "QuestionAnswer";
 		String tag = result.TAG_IQuestionAnswer;
-		MethodFactory extMf = new MethodFactory() {
+		MethodFactory extMf = new MethodFactory()
+		{
 
 			@Override
-			public Method createCaseMethod(IClassDefinition cdef) {
+			public Method createCaseMethod(IClassDefinition cdef)
+			{
 				QuestionAnswerAdaptorCaseMethod qaacm = new QuestionAnswerAdaptorCaseMethod();
 				qaacm.setClassDefinition(cdef);
 				return qaacm;
 			}
 
+//			@Override
+//			public void updateApplyMethod(IClassDefinition cdef,
+//					String newAnalysisName)
+//			{
+//
+////				QuestionAnswerAcceptMethod qaam = findMethodType(QuestionAnswerAcceptMethod.class, cdef);
+////				if (qaam != null)
+////				{
+////					String newBody = "\t\treturn (A)(("
+////							+ newAnalysisName
+////							+ "<Q,A>)caller).case"
+////							+ AnalysisUtil.getCaseClass(result, cdef).getName().getName()
+////							+ "(this, question);";
+////					
+////					qaam.setPrivilegedBody(newBody);
+//////					qaam.setPrivilegedBody(createIf(2, "caller instanceof "+newAnalysisName, newBody, elseStm));
+////				}
+//
+//			}
+
 			@Override
-			public void updateApplyMethod(IClassDefinition cdef,
-					String newAnalysisName) {
-
-				QuestionAnswerAcceptMethod qaam = findMethodType(
-						QuestionAnswerAcceptMethod.class, cdef);
-				if (qaam != null)
-					qaam.setPrivilegedBody("\t\treturn (A)(("
-							+ newAnalysisName
-							+ "<Q,A>)caller).case"
-							+ AnalysisUtil.getCaseClass(result, cdef).getName()
-									.getName() + "(this, question);");
-
-			}
-
-			@Override
-			public Method createDefaultCaseMethod(IClassDefinition cdef) {
+			public Method createDefaultCaseMethod(IClassDefinition cdef)
+			{
 				QuestionAnswerAdaptorDefaultMethod qaadm = new QuestionAnswerAdaptorDefaultMethod();
 				qaadm.setClassDefinition(cdef);
 				return qaadm;
 			}
 
 		};
-		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv,
-				result, base);
+		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv, result, base);
 	}
 
 	/*
-	 * Create the Question interface e.g.
-	 * eu.compassresearch.ast.analysis.intf.IQuestion for the extension.
+	 * Create the Question interface e.g. eu.compassresearch.ast.analysis.intf.IQuestion for the extension.
 	 */
 	private void createIQuestionInterface(final Environment result,
-			Environment extEnv) {
+			Environment extEnv)
+	{
 
 		List<String> genericArguments = new LinkedList<String>();
 		genericArguments.add("Q");
 		String name = "Question";
 		String tag = result.TAG_IQuestion;
-		MethodFactory extMf = new MethodFactory() {
+		MethodFactory extMf = new MethodFactory()
+		{
+
+//			@Override
+//			public void updateApplyMethod(IClassDefinition cdef,
+//					String newAnalysisName)
+//			{
+////				QuestionAcceptMethod qam = findMethodType(QuestionAcceptMethod.class, cdef);
+////				if (qam != null)
+////					qam.setPrivilegedBody("\t\t(("
+////							+ newAnalysisName
+////							+ "<Q>)caller).case"
+////							+ AnalysisUtil.getCaseClass(result, cdef).getName().getName()
+////							+ "(this, question);");
+//			}
 
 			@Override
-			public void updateApplyMethod(IClassDefinition cdef,
-					String newAnalysisName) {
-				QuestionAcceptMethod qam = findMethodType(
-						QuestionAcceptMethod.class, cdef);
-				if (qam != null)
-					qam.setPrivilegedBody("\t\t(("
-							+ newAnalysisName
-							+ "<Q>)caller).case"
-							+ AnalysisUtil.getCaseClass(result, cdef).getName()
-									.getName() + "(this, question);");
-			}
-
-			@Override
-			public Method createCaseMethod(IClassDefinition cdef) {
+			public Method createCaseMethod(IClassDefinition cdef)
+			{
 				QuestionAdaptorCaseMethod caseM = new QuestionAdaptorCaseMethod();
 				caseM.setClassDefinition(cdef);
 				return caseM;
 			}
 
 			@Override
-			public Method createDefaultCaseMethod(IClassDefinition cdef) {
+			public Method createDefaultCaseMethod(IClassDefinition cdef)
+			{
 				QuestionAdaptorDefaultMethod qadm = new QuestionAdaptorDefaultMethod();
 				qadm.setClassDefinition(cdef);
 				return qadm;
 			}
 		};
-		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv,
-				result, base);
+		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv, result, base);
 	}
 
 	/*
 	 * Create the IAnswer interface for the extension.
 	 */
 	private void createIAnswerInterface(final Environment result,
-			Environment extEnv) {
+			Environment extEnv)
+	{
 
 		List<String> genericArguments = new LinkedList<String>();
 		genericArguments.add("A");
 		String name = "Answer";
 		String tag = result.TAG_IAnswer;
-		MethodFactory extMf = new MethodFactory() {
+		MethodFactory extMf = new MethodFactory()
+		{
+
+//			@Override
+//			public void updateApplyMethod(IClassDefinition cdef,
+//					String newAnalysisName) {
+//				AnswerAcceptMethod aam = findMethodType(
+//						AnswerAcceptMethod.class, cdef);
+//				if (aam != null)
+//					aam.setPrivilegedBody("\t\treturn (A)(("
+//							+ newAnalysisName
+//							+ "<A>)caller).case"
+//							+ AnalysisUtil.getCaseClass(result, cdef).getName()
+//									.getName() + "(this);");
+//			}
 
 			@Override
-			public void updateApplyMethod(IClassDefinition cdef,
-					String newAnalysisName) {
-				AnswerAcceptMethod aam = findMethodType(
-						AnswerAcceptMethod.class, cdef);
-				if (aam != null)
-					aam.setPrivilegedBody("\t\treturn (A)(("
-							+ newAnalysisName
-							+ "<A>)caller).case"
-							+ AnalysisUtil.getCaseClass(result, cdef).getName()
-									.getName() + "(this);");
-			}
-
-			@Override
-			public Method createCaseMethod(IClassDefinition cdef) {
+			public Method createCaseMethod(IClassDefinition cdef)
+			{
 				AnswerAdaptorCaseMethod caseM = new AnswerAdaptorCaseMethod();
 				caseM.setClassDefinition(cdef);
 				return caseM;
 			}
 
 			@Override
-			public Method createDefaultCaseMethod(IClassDefinition cdef) {
+			public Method createDefaultCaseMethod(IClassDefinition cdef)
+			{
 				AnswerAdaptorDefaultMethod aadm = new AnswerAdaptorDefaultMethod();
 				aadm.setClassDefinition(cdef);
 				return aadm;
 			}
 		};
-		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv,
-				result, base);
+		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv, result, base);
 	}
 
 	/*
 	 * Helper class adding an extra level of indirection for Method creation.
 	 */
-	private static abstract class MethodFactory {
+	private static abstract class MethodFactory
+	{
 		public abstract Method createCaseMethod(IClassDefinition cdef);
 
-		public abstract void updateApplyMethod(IClassDefinition cdef,
-				String newAnalysisName);
+//		public abstract void updateApplyMethod(IClassDefinition cdef,
+//				String newAnalysisName);
 
 		public abstract Method createDefaultCaseMethod(IClassDefinition cdef);
+		
+		
 	}
 
 	/*
-	 * Find the first occurrence in the list of methods for cdef that is of
-	 * class c.
-	 * 
-	 * Returns null if no method is found
-	 * 
+	 * Find the first occurrence in the list of methods for cdef that is of class c. Returns null if no method is found
 	 * Throws NullPointerException it either argument is null.
 	 */
 	private static <T extends Method> T findMethodType(Class<T> c,
-			IClassDefinition cdef) {
+			IClassDefinition cdef)
+	{
 		for (Method m : cdef.getMethods())
 			if (c.isInstance(m))
 				return c.cast(m);
@@ -776,7 +791,9 @@ public class ExtensionGenerator2 {
 	 * Create the IExtAnalysis interface.
 	 */
 	private void createIAnalysisInterface(final Environment result,
-			final Environment ext) {
+			final Environment ext)
+	{
+
 
 		MethodFactory extMf = new MethodFactory() {
 
@@ -788,18 +805,18 @@ public class ExtensionGenerator2 {
 
 			}
 
-			@Override
-			public void updateApplyMethod(final IClassDefinition cdef,
-					final String newAnalysisName) {
-				AnalysisAcceptMethod aam = findMethodType(
-						AnalysisAcceptMethod.class, cdef);
-				if (aam != null)
-					aam.setPrivilegedBody("\t\t ( ("
-							+ newAnalysisName
-							+ ") analysis).case"
-							+ AnalysisUtil.getCaseClass(result, cdef).getName()
-									.getName() + "(this);");
-			}
+//			@Override
+//			public void updateApplyMethod(final IClassDefinition cdef,
+//					final String newAnalysisName) {
+//				AnalysisAcceptMethod aam = findMethodType(
+//						AnalysisAcceptMethod.class, cdef);
+//				if (aam != null)
+//					aam.setPrivilegedBody("\t\t ( ("
+//							+ newAnalysisName
+//							+ ") analysis).case"
+//							+ AnalysisUtil.getCaseClass(result, cdef).getName()
+//									.getName() + "(this);");
+//			}
 
 			@Override
 			public Method createDefaultCaseMethod(IClassDefinition cdef) {
@@ -809,36 +826,38 @@ public class ExtensionGenerator2 {
 			}
 
 		};
-		createAnalysisInterface(Arrays.asList(new String[0]), "Analysis",
-				result.TAG_IAnalysis, extMf, ext, result, base);
+		
+		createAnalysisInterface(Arrays.asList(new String[0]), "Analysis", result.TAG_IAnalysis, extMf, ext, result, base);
 	}
 
 	/***
-	 * Get the list of classes from classList that are in env. If a class has
-	 * been replaced due to extending base classes the replaced class will be
-	 * included.
+	 * Get the list of classes from classList that are in env. If a class has been replaced due to extending base
+	 * classes the replaced class will be included.
 	 * 
 	 * @param classList
 	 * @param extensionName
-	 *            Name of the extension, which helps to identify replaced
-	 *            classes
+	 *            Name of the extension, which helps to identify replaced classes
 	 * @param env
 	 *            Environment to check for the existence
 	 * @return
 	 */
 	private static List<IClassDefinition> getExtClasses(
 			List<IClassDefinition> classList, String extensionName,
-			Environment env) {
+			Environment env)
+	{
 		List<IClassDefinition> classes = new LinkedList<IClassDefinition>();
 
-		for (IClassDefinition c : classList) {
+		for (IClassDefinition c : classList)
+		{
 			// Check for the existing of the classdef directly.
-			if (env.isTreeNode(c)) {
+			if (env.isTreeNode(c))
+			{
 				classes.add(c);
 			}
 			// else if it does not exist in env, check if the class has been
 			// replaced and add this instead.
-			else {
+			else
+			{
 
 				String newName = c.getName().getPrefix() + extensionName
 						+ c.getName().getRawName() + c.getName().getPostfix();
@@ -856,30 +875,29 @@ public class ExtensionGenerator2 {
 	 * Creates the DepthFistAnalysisAdaptor for the extension
 	 * 
 	 * @param result
-	 *            The environment of the result of merging the base with the
-	 *            extension environment
+	 *            The environment of the result of merging the base with the extension environment
 	 * @param extEnv
 	 *            The extension environment only
 	 */
 	private static void createDepthFirstAdaptor(Environment result,
-			Environment extEnv) {
+			Environment extEnv)
+	{
 
 		// Create a extended depth first analysis adapter and add it to extEnv
-		JavaName jname = new JavaName(result.getAstPackage() + ".analysis",
-				"DepthFirstAnalysis" + extEnv.getName() + "Adaptor");
+		JavaName jname = new JavaName(result.getAstPackage() + ".analysis", "DepthFirstAnalysis"
+				+ extEnv.getName() + "Adaptor");
 		IClassDefinition extAdaptor = ClassFactory.createCustom(jname, result);
 
 		// Find the base DepthFirstAnalysisAdaptor and set it as super to the
 		// newly created one
-		IClassDefinition baseAdaptor = result
-				.lookUp("DepthFirstAnalysisAdaptor");
+		IClassDefinition baseAdaptor = result.lookUp("DepthFirstAnalysisAdaptor");
 		extAdaptor.setSuper(baseAdaptor);
-		
+
 		// Find the interface I<extensions name>Analysis interface and implement it
-		IInterfaceDefinition extensionAnalysisInterface = result
-				.lookUpInterface("I"+ extEnv.getName()+"Analysis");
+		IInterfaceDefinition extensionAnalysisInterface = result.lookUpInterface("I"
+				+ extEnv.getName() + "Analysis");
 		extAdaptor.addInterface(extensionAnalysisInterface);
-				
+
 		// Find the base visitedNode field
 		// FIXME "".get(0) is not the best way of getting the field :)
 		Field queue = baseAdaptor.getFields().get(0);
@@ -889,46 +907,47 @@ public class ExtensionGenerator2 {
 		((InterfaceDefinition) extAdaptor).imports.add(queue.type);
 
 		/**
-		 * Go Through all the classes in the extension and add the corresponding
-		 * methods in the extended analysis and remove them in the base analysis
+		 * Go Through all the classes in the extension and add the corresponding methods in the extended analysis and
+		 * remove them in the base analysis
 		 */
-		for (IClassDefinition c : getExtClasses(result.getClasses(),
-				extEnv.getName(), result)) {
-			switch (result.classToType.get(c)) {
+		for (IClassDefinition c : getExtClasses(result.getClasses(), extEnv.getName(), result))
+		{
+			switch (result.classToType.get(c))
+			{
 
-			case Custom:
-				break;
-			case Production:
-			case SubProduction: {
-				AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(
-						c);
-				mIn.setDefaultPostfix("In");
-				mIn.setClassDefinition(c);
+				case Custom:
+					break;
+				case Production:
+				case SubProduction:
+				{
+					AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(c);
+					mIn.setDefaultPostfix("In");
+					mIn.setClassDefinition(c);
 
-				extAdaptor.addMethod(mIn);
-				AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(
-						c);
-				mOut.setDefaultPostfix("Out");
-				mOut.setClassDefinition(c);
+					extAdaptor.addMethod(mIn);
+					AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(c);
+					mOut.setDefaultPostfix("Out");
+					mOut.setClassDefinition(c);
 
-				extAdaptor.addMethod(mOut);
+					extAdaptor.addMethod(mOut);
 
-			}
-				break;
-			case Alternative:
-			case Token: {
+				}
+					break;
+				case Alternative:
+				case Token:
+				{
 
-				// IClassDefinition superDef = c.getSuperDef();
-				
-				AnalysisDepthFirstAdaptorCaseMethod m =new AnalysisDepthFirstAdaptorCaseMethod();  
-				m.setVisitedNodesField(queue);
-				m.setClassDefinition(c);
-				extAdaptor.addMethod(m);
+					// IClassDefinition superDef = c.getSuperDef();
 
-			}
-				break;
-			case Unknown:
-				break;
+					AnalysisDepthFirstAdaptorCaseMethod m = new AnalysisDepthFirstAdaptorCaseMethod();
+					m.setVisitedNodesField(queue);
+					m.setClassDefinition(c);
+					extAdaptor.addMethod(m);
+
+				}
+					break;
+				case Unknown:
+					break;
 
 			}
 
@@ -948,8 +967,10 @@ public class ExtensionGenerator2 {
 
 			// Remove the case for the existing adaptor
 			List<Method> toBeRemoved = new LinkedList<Method>();
-			for (Method method : baseAdaptor.getMethods()) {
-				if (method.classDefinition == c) {
+			for (Method method : baseAdaptor.getMethods())
+			{
+				if (method.classDefinition == c)
+				{
 					toBeRemoved.add(method);
 				}
 			}
@@ -990,14 +1011,13 @@ public class ExtensionGenerator2 {
 
 	private static void createAnalysisInterface(List<String> genericArguments,
 			String name, String tag, MethodFactory extMf, Environment extEnv,
-			Environment result, Environment base) {
+			Environment result, Environment base)
+	{
 
 		// Create a extended analysis interface and add it to result
-		JavaName jname = new JavaName(
-				result.getAstPackage() + ".analysis.intf", "I"
-						+ extEnv.getName() + name);
-		InterfaceDefinition extNewDef = new InterfaceDefinition(jname,
-				result.getAstPackage());
+		JavaName jname = new JavaName(result.getAstPackage() + ".analysis.intf", "I"
+				+ extEnv.getName() + name);
+		InterfaceDefinition extNewDef = new InterfaceDefinition(jname, result.getAstPackage());
 		extNewDef.setTag(tag);
 		extNewDef.setGenericArguments(genericArguments);
 		result.addInterface(extNewDef);
@@ -1007,14 +1027,16 @@ public class ExtensionGenerator2 {
 
 		extNewDef.setIsExtTree(true);
 		extNewDef.setIsBaseTree(false);
-		
+
 		// Add methods for the analysis and apply functions for the classes
-		for (IClassDefinition cdef : result.getClasses()) {
+		for (IClassDefinition cdef : result.getClasses())
+		{
 			Environment env = null;
 			IInterfaceDefinition newDef = null;
 			MethodFactory mf = null;
 			if (!base.classToType.containsKey(cdef)
-					&& result.classToType.containsKey(cdef)) {
+					&& result.classToType.containsKey(cdef))
+			{
 				mf = extMf;
 				newDef = extNewDef;
 				env = result;
@@ -1022,26 +1044,29 @@ public class ExtensionGenerator2 {
 
 			// Should it have an apply method and a case in the analysis?
 			if (mf != null)
-				switch (env.classToType.get(cdef)) {
-				case Alternative:
-				case Token: {
-					mf.updateApplyMethod(cdef, jname.getCanonicalName());
+				switch (env.classToType.get(cdef))
+				{
+					case Alternative:
+					case Token:
+					{
+//						mf.updateApplyMethod(cdef, jname.getCanonicalName());
 
-					Method caseMethod = mf.createCaseMethod(cdef);
-					newDef.addMethod(caseMethod);
+						Method caseMethod = mf.createCaseMethod(cdef);
+						newDef.addMethod(caseMethod);
 
-					// remove this case from IAnalysis
-					List<Method> toBeRemoved = new LinkedList<Method>();
-					for (Method m : iAnalysis.getMethods()) {
-						if (m.classDefinition == cdef)
-							toBeRemoved.add(m);
+						// remove this case from IAnalysis
+						List<Method> toBeRemoved = new LinkedList<Method>();
+						for (Method m : iAnalysis.getMethods())
+						{
+							if (m.classDefinition == cdef)
+								toBeRemoved.add(m);
+						}
+						iAnalysis.getMethods().removeAll(toBeRemoved);
+
 					}
-					iAnalysis.getMethods().removeAll(toBeRemoved);
-
-				}
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
 				}
 		}
 
@@ -1050,50 +1075,56 @@ public class ExtensionGenerator2 {
 		IClassDefinition answerClass = result.lookUp(adaptorName);
 
 		// Create adaptor class
-		IClassDefinition extAnswerClass = ClassFactory.createCustom(
-				new JavaName(result.getAstPackage() + ".analysis", name
-						+ extEnv.getName() + "Adaptor"), result);
+		IClassDefinition extAnswerClass = ClassFactory.createCustom(new JavaName(result.getAstPackage()
+				+ ".analysis", name + extEnv.getName() + "Adaptor"), result);
 		extAnswerClass.setGenericArguments(extNewDef.getGenericArguments());
 		extAnswerClass.addInterface(extNewDef);
 		extAnswerClass.setSuper(answerClass);
 
-		for (IClassDefinition cdef : result.getClasses()) {
+		for (IClassDefinition cdef : result.getClasses())
+		{
 			if (result.classToType.containsKey(cdef)
-					&& !base.classToType.containsKey(cdef)) {
-				switch (result.classToType.get(cdef)) {
-				case Alternative:
-				case Token:
+					&& !base.classToType.containsKey(cdef))
+			{
+				switch (result.classToType.get(cdef))
+				{
+					case Alternative:
+					case Token:
 
-					Method caseMethod = extMf.createCaseMethod(cdef);
-					extAnswerClass.addMethod(caseMethod);
+						Method caseMethod = extMf.createCaseMethod(cdef);
+						extAnswerClass.addMethod(caseMethod);
 
-					// Remove the case for the existing adaptor
-					List<Method> toBeRemoved = new LinkedList<Method>();
-					for (Method m : answerClass.getMethods()) {
-						if (m.classDefinition == cdef) {
-							toBeRemoved.add(m);
+						// Remove the case for the existing adaptor
+						List<Method> toBeRemoved = new LinkedList<Method>();
+						for (Method m : answerClass.getMethods())
+						{
+							if (m.classDefinition == cdef)
+							{
+								toBeRemoved.add(m);
+							}
 						}
-					}
-					answerClass.getMethods().removeAll(toBeRemoved);
-					break;
-				case Production:
-				case SubProduction:
+						answerClass.getMethods().removeAll(toBeRemoved);
+						break;
+					case Production:
+					case SubProduction:
 
-					Method defaultCase = extMf.createDefaultCaseMethod(cdef);
-					defaultCase.setClassDefinition(cdef);
-					extAnswerClass.addMethod(defaultCase);
+						Method defaultCase = extMf.createDefaultCaseMethod(cdef);
+						defaultCase.setClassDefinition(cdef);
+						extAnswerClass.addMethod(defaultCase);
 
-					// Remove the case for the existing adaptor
-					toBeRemoved = new LinkedList<Method>();
-					for (Method m : answerClass.getMethods()) {
-						if (m.classDefinition == cdef) {
-							toBeRemoved.add(m);
+						// Remove the case for the existing adaptor
+						toBeRemoved = new LinkedList<Method>();
+						for (Method m : answerClass.getMethods())
+						{
+							if (m.classDefinition == cdef)
+							{
+								toBeRemoved.add(m);
+							}
 						}
-					}
-					answerClass.getMethods().removeAll(toBeRemoved);
-					break;
-				default:
-					break;
+						answerClass.getMethods().removeAll(toBeRemoved);
+						break;
+					default:
+						break;
 				}
 			}
 		}

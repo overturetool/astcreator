@@ -18,7 +18,7 @@ public class Field {
 	}
 
 	public static enum StructureType {
-		Tree, Graph
+		Tree, Graph,Java
 	}
 
 	public boolean isTokenField = false;
@@ -32,6 +32,7 @@ public class Field {
 	public boolean isDoubleList = false;
 	public StructureType structureType = StructureType.Tree;
 	private String customInitializer = "";
+	public boolean isFinal = false;
 
 	public Field() {
 	}
@@ -101,6 +102,11 @@ public class Field {
 	}
 
 	public String getName(Environment env) {
+		if(structureType==StructureType.Java)
+		{
+			return name;
+		}
+		
 		if (type == null) {
 			type = getInternalType(unresolvedType, env);
 		}
@@ -114,7 +120,7 @@ public class Field {
 			type = getInternalType(unresolvedType, env);
 		}
 		checkType(type, env);
-		String internaalType = type.getName().getName();
+		String internaalType = type.getNameWithGenericArguments();//.getName().getName();
 		if (isList && !isDoubleList) {
 			if (isTypeExternalNotNode()) {
 				internaalType = "List<? extends " + internaalType + ">";
@@ -190,7 +196,7 @@ public class Field {
 			type = getInternalType(unresolvedType, env);
 		}
 		checkType(type, env);
-		String internaalType = type.getName().getName();
+		String internaalType = type.getNameWithGenericArguments();//getName().getName();
 		if (isList && !isDoubleList) {
 
 			return "List<? extends " + internaalType + ">";

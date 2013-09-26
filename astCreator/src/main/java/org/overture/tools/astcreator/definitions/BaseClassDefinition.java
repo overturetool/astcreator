@@ -140,7 +140,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 				sb.append("\n\t/**\n\t* Graph field, parent will not be removed when added and parent \n\t*  of this field may not be this node. Also excluded for visitor.\n\t*/");
 			}
 
-			sb.append("\n\t" + f.accessspecifier.syntax + " " + f.getType(env)
+			sb.append("\n\t" +(f.isFinal?"final ":"")+ f.accessspecifier.syntax + " " + f.getType(env)
 					+ " " + f.getName(env));
 			if (f.isList) {
 				if (f.isTypeExternalNotNode()) {

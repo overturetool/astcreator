@@ -68,12 +68,24 @@ public class ConstructorMethod extends Method
 			String name = f.getName(env).replaceAll("_", "");
 			this.arguments.add(new Argument(f.getMethodArgumentType(env), name
 					+ "_"));
+			
 			sb.append("\t\t");
-			sb.append("this.set");
-			sb.append(NameUtil.javaClassName(f.getName(env)));
-			sb.append("(");
-			sb.append(name + "_");
-			sb.append(");\n");
+
+			if (f.structureType == StructureType.Java)
+			{
+				sb.append("this."+f.getName(env) +" = ");
+				sb.append(name + "_");
+				sb.append(";\n");
+			} else
+			{
+
+				sb.append("this.set");
+				sb.append(NameUtil.javaClassName(f.getName(env)));
+				sb.append("(");
+				sb.append(name + "_");
+				sb.append(");\n");
+			}
+			
 			if (f.structureType == StructureType.Tree)
 			{
 				sbDoc.append("\t* @param " + name + "_ the {@link "

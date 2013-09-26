@@ -144,4 +144,27 @@ public class GenericArgumentedIInterfceDefinition implements
 		return false;
 	}
 
+	@Override
+	public String getNameWithGenericArguments()
+	{
+		return this.def.getName().getName()+getGenericsString();
+	}
+
+
+	
+	public static String[] generateWildcardArguments(List<String> arguments)
+	{
+		List<String> relaxedGenericArguments = new Vector<String>();
+		for (String string : arguments)
+		{
+			relaxedGenericArguments.add("? extends " + string);
+		}
+		
+		return relaxedGenericArguments.toArray(new String[relaxedGenericArguments.size()]);
+	}
+	
+	@Override
+	public String toString() {
+		return getName().getName();
+	}
 }

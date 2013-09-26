@@ -6,6 +6,7 @@ import java.util.Set;
 import org.overture.tools.astcreator.definitions.BaseClassDefinition;
 import org.overture.tools.astcreator.definitions.ExternalEnumJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.ExternalJavaClassDefinition;
+import org.overture.tools.astcreator.definitions.Field;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.IClassDefinition.ClassType;
 import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
@@ -149,6 +150,17 @@ public class ClassFactory {
 		c.addMethod(new DefaultConstructorMethod(c));
 		env.addClass(c);
 		env.classToType.put(c, ClassType.Custom);
+		return c;
+	}
+	
+	
+	public static IClassDefinition createCustom(JavaName name, Environment env,Field... fields) {
+		IClassDefinition c = createCustom( name,  env);
+		
+		for (Field field : fields)
+		{
+			c.addField(field);
+		}
 		return c;
 	}
 

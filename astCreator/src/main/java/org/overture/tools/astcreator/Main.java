@@ -249,7 +249,9 @@ public class Main {
 
 		// Create the extended tree with loose ends so do not test for integrity
 		Environment envExtOnly = generator.generate(ast2ToString, ast2,
-				extendName, false,false);	
+				extendName, false,false);
+		
+		// Mark all new stuff to be an extension
 		for(IInterfaceDefinition idef : envExtOnly.getAllDefinitions()) {
 			idef.setIsExtTree(true);
 		}
@@ -258,6 +260,7 @@ public class Main {
 		// new extension nodes.
 		ExtensionGenerator2 extGen = new ExtensionGenerator2(base);
 		Environment envResolvedExt = extGen.extend(envExtOnly);
+
 		generator.runPostGeneration(envResolvedExt,true);
 		extGen.runPostGeneration(envExtOnly, envResolvedExt);
 
@@ -276,81 +279,81 @@ public class Main {
 		}
 	}
 
-	public static void createCopyAdaptor(Environment source,
-			Environment destination, String namePostfix, File outputFolder)
-			throws Exception {
-		IClassDefinition convertFactory = ClassFactory.createCustom(
-				new JavaName(destination.getDefaultPackage(), "",
-						"ConvertFactory", namePostfix), destination);
-		// convertFactory.getName().setPostfix(namePostfix);
-		// convertFactory.getName().setPackageName(destination.getDefaultPackage());
-		convertFactory.setAbstract(true);
-
-		List<Method> methods = new Vector<Method>();
-		for (IClassDefinition c : Generator.getClasses(source.getClasses(),
-				source)) {
-			if (source.classToType.get(c) == IClassDefinition.ClassType.Production
-			/* || c.getType() == ClassType.SubProduction */) {
-				continue;
-			}
-			IClassDefinition destDef = null;
-			for (IClassDefinition def : destination.getClasses()) {
-				if (def.getName().getName()
-						.replace(def.getName().getPostfix(), "")
-						.equals(c.getName())) {
-					destDef = def;
-				}
-			}
-			if (destDef == null) {
-				System.err.println("Source class: " + c.getName()
-						+ " has no match in target environment.");
-				System.err.println("Target Environment:");
-				System.err.println(destination);
-				throw new Exception("Tree match error on copy");
-			}
-			Method m = new CopyNode2ExtendedNode(c, destDef, destination,
-					convertFactory);
-			m.setClassDefinition(c);
-			// m.setEnvironment(source);
-			methods.add(m);
-
-		}
-
-		IClassDefinition copyAdaptor = ClassFactory.createCustom(
-				new JavaName(destination.getDefaultPackage(), "",
-						"CopyAdaptor", namePostfix), destination);
-		Field converFactoryField = new Field();
-		converFactoryField.name = "factory";
-		converFactoryField.type = convertFactory;
-		copyAdaptor.addField(converFactoryField);
-
-		Field cacheField = new Field();
-		cacheField.name = "cache";
-		cacheField.setType("Hashtable");
-		destination.addClass(new PredefinedClassDefinition("java.util",
-				"Hashtable", true));
-		copyAdaptor.addField(cacheField);
-
-		copyAdaptor
-				.setAnnotation("@SuppressWarnings({\"unused\",\"unchecked\",\"rawtypes\"})");
-		// copyAdaptor.setPackageName(destination.getDefaultPackage());
-		copyAdaptor.addInterface(new GenericArgumentedIInterfceDefinition(
-				source.getTaggedDef(destination.TAG_IAnswer), destination.node
-						.getName().getName()));
-		copyAdaptor.getMethods().addAll(methods);
-		copyAdaptor.addMethod(new CopyNode2ExtendedNodeListHelper(destination));
-		copyAdaptor.addMethod(new CopyNode2ExtendedNodeListListHelper(
-				destination));
-		copyAdaptor.addMethod(new CheckCacheMethod(copyAdaptor));
-		// copyAdaptor.methods.add(new
-		// ConstructorMethod(copyAdaptor,destination));
-		// copyAdaptor.imports.addAll(source.getAllDefinitions());
-		// copyAdaptor.imports.addAll(destination.getAllDefinitions());
-		// copyAdaptor.setNamePostfix(namePostfix);
-		// destination.addClass(copyAdaptor);
-		SourceFileWriter.write(outputFolder, copyAdaptor, source);
-		SourceFileWriter.write(outputFolder, convertFactory, source);
-
-	}
+//	public static void createCopyAdaptor(Environment source,
+//			Environment destination, String namePostfix, File outputFolder)
+//			throws Exception {
+//		IClassDefinition convertFactory = ClassFactory.createCustom(
+//				new JavaName(destination.getDefaultPackage(), "",
+//						"ConvertFactory", namePostfix), destination);
+//		// convertFactory.getName().setPostfix(namePostfix);
+//		// convertFactory.getName().setPackageName(destination.getDefaultPackage());
+//		convertFactory.setAbstract(true);
+//
+//		List<Method> methods = new Vector<Method>();
+//		for (IClassDefinition c : Generator.getClasses(source.getClasses(),
+//				source)) {
+//			if (source.classToType.get(c) == IClassDefinition.ClassType.Production
+//			/* || c.getType() == ClassType.SubProduction */) {
+//				continue;
+//			}
+//			IClassDefinition destDef = null;
+//			for (IClassDefinition def : destination.getClasses()) {
+//				if (def.getName().getName()
+//						.replace(def.getName().getPostfix(), "")
+//						.equals(c.getName())) {
+//					destDef = def;
+//				}
+//			}
+//			if (destDef == null) {
+//				System.err.println("Source class: " + c.getName()
+//						+ " has no match in target environment.");
+//				System.err.println("Target Environment:");
+//				System.err.println(destination);
+//				throw new Exception("Tree match error on copy");
+//			}
+//			Method m = new CopyNode2ExtendedNode(c, destDef, destination,
+//					convertFactory);
+//			m.setClassDefinition(c);
+//			// m.setEnvironment(source);
+//			methods.add(m);
+//
+//		}
+//
+//		IClassDefinition copyAdaptor = ClassFactory.createCustom(
+//				new JavaName(destination.getDefaultPackage(), "",
+//						"CopyAdaptor", namePostfix), destination);
+//		Field converFactoryField = new Field();
+//		converFactoryField.name = "factory";
+//		converFactoryField.type = convertFactory;
+//		copyAdaptor.addField(converFactoryField);
+//
+//		Field cacheField = new Field();
+//		cacheField.name = "cache";
+//		cacheField.setType("Hashtable");
+//		destination.addClass(new PredefinedClassDefinition("java.util",
+//				"Hashtable", true));
+//		copyAdaptor.addField(cacheField);
+//
+//		copyAdaptor
+//				.setAnnotation("@SuppressWarnings({\"unused\",\"unchecked\",\"rawtypes\"})");
+//		// copyAdaptor.setPackageName(destination.getDefaultPackage());
+//		copyAdaptor.addInterface(new GenericArgumentedIInterfceDefinition(
+//				source.getTaggedDef(destination.TAG_IAnswer), destination.node
+//						.getName().getName()));
+//		copyAdaptor.getMethods().addAll(methods);
+//		copyAdaptor.addMethod(new CopyNode2ExtendedNodeListHelper(destination));
+//		copyAdaptor.addMethod(new CopyNode2ExtendedNodeListListHelper(
+//				destination));
+//		copyAdaptor.addMethod(new CheckCacheMethod(copyAdaptor));
+//		// copyAdaptor.methods.add(new
+//		// ConstructorMethod(copyAdaptor,destination));
+//		// copyAdaptor.imports.addAll(source.getAllDefinitions());
+//		// copyAdaptor.imports.addAll(destination.getAllDefinitions());
+//		// copyAdaptor.setNamePostfix(namePostfix);
+//		// destination.addClass(copyAdaptor);
+//		SourceFileWriter.write(outputFolder, copyAdaptor, source);
+//		SourceFileWriter.write(outputFolder, convertFactory, source);
+//
+//	}
 
 }

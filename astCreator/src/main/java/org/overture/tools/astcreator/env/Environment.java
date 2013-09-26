@@ -21,8 +21,7 @@ import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 
 public class Environment extends BaseEnvironment {
-	public PredefinedClassDefinition iNode;
-	public InterfaceDefinition iToken;
+	
 
 	public final String TAG_IAnalysis = "IAnalysis";
 	public final String TAG_IAnswer = "IAnswer";
@@ -39,6 +38,8 @@ public class Environment extends BaseEnvironment {
 	private String analysisPackage = "org.overture.ast.analysis";
 
 	private String templateAnalysisPackage;
+	
+	
 
 	public String getTemplateDefaultPackage() {
 		return templateDefaultPackage;
@@ -56,17 +57,20 @@ public class Environment extends BaseEnvironment {
 		this.templateAnalysisPackage = templateAnalysisPackage;
 	}
 
-	private Environment(String name) {
+	protected Environment(String name) {
 		super(name);
+		addCommonTreeInterface(node, iNode);
+		addCommonTreeInterface(token, iToken);
 	}
 
 	public static Environment getFromBase(Environment base,
-			String extAnalysisPackage, String extDefaultPackage) {
-		Environment res = new Environment("extended_" + base.name);
+			String extAnalysisPackage, String extDefaultPackage, String extensionName) {
+		Environment res = new ExtendedEnvironment("extended_" + base.name,base,extensionName);
 		res.toStringAddOn = base.toStringAddOn;
 		res.setAnalysisPackages(extAnalysisPackage);
-		res.setDefaultPackages(extDefaultPackage);
+		res.setDefaultPackages(extDefaultPackage,true);
 		res.classes.clear();
+		res.interfaces.clear();
 		res.iNode = base.iNode;
 		res.iToken = base.iToken;
 		res.node = base.node;
@@ -98,16 +102,16 @@ public class Environment extends BaseEnvironment {
 
 	public static Environment getInstance(String name) {
 		Environment res = new Environment(name);
-		res.iNode = new PredefinedClassDefinition(res.defaultPackage, "INode");
-		res.iToken = new PredefinedClassDefinition(res.defaultPackage, "IToken");
-		// iToken.addInterface(iNode);
-		res.iToken.supers.add(res.iNode);
-		res.node.addInterface(res.iNode);
-		res.token.addInterface(res.iToken);
+//		res.iNode = new PredefinedClassDefinition(res.defaultPackage, "INode");
+//		res.iToken = new PredefinedClassDefinition(res.defaultPackage, "IToken");
+//		// iToken.addInterface(iNode);
+//		res.iToken.supers.add(res.iNode);
+//		res.node.addInterface(res.iNode);
+//		res.token.addInterface(res.iToken);
 		res.analysisException = new AnalysisExceptionDefinition(
 				res.analysisPackage, "AnalysisException", res);
-		res.addCommonTreeInterface(res.node, res.iNode);
-		res.addCommonTreeInterface(res.token, res.iToken);
+//		res.addCommonTreeInterface(res.node, res.iNode);
+//		res.addCommonTreeInterface(res.token, res.iToken);
 		res.addClass(res.analysisException);
 		return res;
 	}
