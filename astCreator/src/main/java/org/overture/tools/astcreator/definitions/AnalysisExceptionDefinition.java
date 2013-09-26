@@ -24,8 +24,4 @@ public class AnalysisExceptionDefinition extends BaseClassDefinition {
 		this(new JavaName(packageName, name), env);
 	}
 
-	public String toString() {
-		return "I should die";
-	}
-
 }
