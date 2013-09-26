@@ -1,0 +1,15 @@
+Packages
+base org.simple.ast.node;
+analysis org.simple.ast.analysis;
+
+Tokens
+LexToken = 'java:node:org.overture.ast.intf.lex.ILexToken';
+ java_Boolean = 'java:java.lang.Boolean';
+  Pass = 'java:enum:org.overture.ast.typechecker.Pass'; 
+ 
+Abstract Syntax Tree
+exp {-> package='org.simple.ast.expressions'}
+    =   {aa} [fNode]:LexToken [fJava]:java_Boolean [fEnum]:Pass
+    ;
+ 
+

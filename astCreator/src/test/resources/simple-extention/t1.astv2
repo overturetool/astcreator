@@ -1,0 +1,13 @@
+Packages
+base org.simple.ast.node;
+analysis org.simple.ast.analysis;
+ 
+Abstract Syntax Tree
+exp {-> package='org.simple.ast.expressions'}
+    =   {aa} [type]:stm.st1
+    |   {ex} [exp]:exp
+    ;
+ 
+stm {-> package='org.simple.ast.statement'}
+    =   {st1} 
+    ;

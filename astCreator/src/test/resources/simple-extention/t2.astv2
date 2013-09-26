@@ -1,0 +1,25 @@
+Packages
+base org.simple.extended.ast.node;
+analysis org.simple.extended.ast.analysis;
+ 
+Abstract Syntax Tree
+exp {-> package='org.simple.extended.ast.expressions'}
+    =  
+      {ex} [exp]:exp [fExtended]:exp
+    ;
+ 
+stm {-> package='org.simple.extended.ast.statement'}
+    =   {st1} 
+    |	{st2Extended}
+    |	#sub
+    ;
+    
+#sub {-> package='org.simple.extended.ast.statement'}
+    =   {st1} 
+    |	{s2Extension}
+    ;
+    
+    
+newP {-> package='org.simple.extended.ast.newp'}
+    =   {p} [f]:exp
+	;

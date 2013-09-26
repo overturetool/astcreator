@@ -1,0 +1,11 @@
+Packages
+base org.simple.smallextended.ast.node;
+analysis org.simple.smallextended.ast.analysis;
+ 
+Abstract Syntax Tree
+
+    
+    
+newP {-> package='org.simple.smallextended.ast.newp'}
+    =   {p} [f]:exp
+	;
