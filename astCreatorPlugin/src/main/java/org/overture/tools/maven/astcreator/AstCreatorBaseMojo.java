@@ -13,15 +13,20 @@ import org.apache.maven.plugin.MojoFailureException;
  * @phase generate-sources
  * @requiresDependencyResolution compile
  */
-public abstract class AstCreatorBaseMojo extends AbstractMojo {
-	
-	/** The prefix of the generated classes.
+public abstract class AstCreatorBaseMojo extends AbstractMojo
+{
+
+	protected final String PLUGIN_GROUPID = "org.overture.maven.tools";
+	protected final String PLUGIN_ARTIFACTID = "ast-creator-plugin";
+
+	/**
+	 * The prefix of the generated classes.
 	 * 
 	 * @parameter
 	 * @optional
 	 */
 	protected boolean extendedTreeOnly = false;
-	
+
 	/**
 	 * The prefix of the generated classes.
 	 * 
@@ -29,21 +34,21 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	 * @required
 	 */
 	protected String ast;
- 
+
 	/**
 	 * The prefix of the generated classes.
 	 * 
 	 * @parameter
 	 */
 	protected String extendedAst;
-	
+
 	/**
 	 * The extended tree dependency groupid.
 	 * 
 	 * @parameter
 	 */
 	protected String extendedAstGroupId;
-	
+
 	/**
 	 * The extended tree dependency artifactid.
 	 * 
@@ -73,17 +78,14 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	protected Boolean useSrcOutput;
 
 	/**
-	 * Name of the directory into which the astCreatorPlugin should dump the ast
-	 * files.
+	 * Name of the directory into which the astCreatorPlugin should dump the ast files.
 	 * 
-	 * @parameter 
-	 *            expression="${project.build.directory}/generated-sources/astCreator"
+	 * @parameter expression="${project.build.directory}/generated-sources/astCreator"
 	 */
 	protected File outputDirectory;
 
 	/**
-	 * Enables generation of vDM source code corresponding to the Java generated
-	 * tree.
+	 * Enables generation of vDM source code corresponding to the Java generated tree.
 	 * 
 	 * @parameter
 	 */
@@ -117,9 +119,11 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	 */
 	private File projectOutputDirectory;
 
-	protected File getProjectOutputDirectory() {
+	protected File getProjectOutputDirectory()
+	{
 		if (projectOutputDirectory == null
-				|| projectOutputDirectory.length() == 0) {
+				|| projectOutputDirectory.length() == 0)
+		{
 			File output = new File(project.getFile().getParentFile(), "target");
 			if (!output.exists())
 				output.mkdirs();
@@ -130,21 +134,21 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 			return projectOutputDirectory;
 	}
 
-	protected File getProjectJavaSrcDirectory() {
-		File output = new File(project.getFile().getParentFile(),
-				"src/main/java".replace('/', File.separatorChar));
+	protected File getProjectJavaSrcDirectory()
+	{
+		File output = new File(project.getFile().getParentFile(), "src/main/java".replace('/', File.separatorChar));
 		return output;
 	}
 
-	protected File getProjectVdmSrcDirectory() {
-		File output = new File(project.getFile().getParentFile(),
-				"src/main/vpp".replace('/', File.separatorChar));
+	protected File getProjectVdmSrcDirectory()
+	{
+		File output = new File(project.getFile().getParentFile(), "src/main/vpp".replace('/', File.separatorChar));
 		return output;
 	}
 
-	protected File getResourcesDir() {
-		File resources = new File(project.getFile().getParentFile(),
-				"src/main/resources".replace('/', File.separatorChar));
+	protected File getResourcesDir()
+	{
+		File resources = new File(project.getFile().getParentFile(), "src/main/resources".replace('/', File.separatorChar));
 		return resources;
 	}
 

@@ -384,6 +384,7 @@ public class Generator
 		thisField.type = relaxedAnswerIntf;
 		thisField.structureType = StructureType.Java;
 		thisField.isFinal = true;
+		thisField.accessspecifier = AccessSpecifier.Protected;
 
 		IClassDefinition answerClass = ClassFactory.createCustom(new JavaName(env.getTemplateAnalysisPackage(), intfName
 				+ "Adaptor"), env, thisField);
@@ -483,6 +484,7 @@ public class Generator
 		thisField.type = relaxedAnswerIntf;
 		thisField.structureType = StructureType.Java;
 		thisField.isFinal = true;
+		thisField.accessspecifier = AccessSpecifier.Protected;
 
 		adaptor.addField(thisField);
 

@@ -10,6 +10,7 @@ import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
 import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.overture.tools.astcreator.Main;
@@ -91,13 +92,15 @@ public class GenerateTree extends AstCreatorBaseMojo
 		}
 
 		getLog().info("Checking if generation required.");
-		if (isCrcEqual(baseAstFile) && isCrcEqual(baseAsttoStringFile))
+		if (isCrcEqual(baseAstFile) && isCrcEqual(baseAsttoStringFile)
+				&& isVersionEqual(getDeclaredPluginVersion()))
 		{
 
 			if (extendedAst != null && !extendedAst.isEmpty())
 			{
 				if (isCrcEqual(new File(getResourcesDir(), extendedAst))
-						&& isCrcEqual(new File(getResourcesDir(), extendedAst)))
+						&& isCrcEqual(new File(getResourcesDir(), extendedAst))
+						&& isVersionEqual(project.getVersion()))
 				{
 					getLog().info("Extended AST unchanged");
 					getLog().info("Nothing to generate, source already up-to-date");
@@ -183,7 +186,8 @@ public class GenerateTree extends AstCreatorBaseMojo
 			Util.copyFile(astDefinition, new File(getProjectOutputDirectory(), astDefinition.getName()));
 		} catch (IOException e)
 		{
-			throw new MojoExecutionException("Failed to copy AST defintion file from source: "+astDefinition);
+			throw new MojoExecutionException("Failed to copy AST defintion file from source: "
+					+ astDefinition);
 		}
 
 		try
@@ -296,6 +300,25 @@ public class GenerateTree extends AstCreatorBaseMojo
 		return outputDirectory;
 	}
 
+	private String getDeclaredPluginVersion()
+	{
+		for (Object o : project.getModel().getBuild().getPlugins())
+		{
+			if (o instanceof Plugin)
+			{
+				Plugin p = (Plugin) o;
+				System.out.println(p);
+				if (p.getGroupId().equals(PLUGIN_GROUPID)
+						&& p.getArtifactId().equals(PLUGIN_ARTIFACTID))
+				{
+					return p.getVersion();
+				}
+			}
+		}
+
+		return "";
+	}
+
 	public void generateSingleAst(File treeName, File toStringAstFile,
 			File generated, Environment env1)
 	{
@@ -305,6 +328,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 			env1 = Main.create(toStringFileStream, new FileInputStream(treeName.getAbsolutePath()), generated, true, generateVdm());
 			setCrc(treeName);
 			setCrc(toStringAstFile);
+			setVersion(getDeclaredPluginVersion());
 		} catch (Exception e)
 		{
 			getLog().error(e);
@@ -349,6 +373,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 			setCrc(baseAstToStringAstFile);
 			setCrc(extendedAstFile);
 			setCrc(extendedAstToStringFile);
+			setVersion(getDeclaredPluginVersion());
 		} catch (Exception e)
 		{
 			getLog().error(e);
@@ -411,6 +436,35 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		File crcFile = new File(getProjectOutputDirectory(), name + ".crc");
 		Util.writeFile(crcFile, sourceCrc.toString());
+	}
+
+	public boolean isVersionEqual(String version)
+	{
+
+		File crcFile = new File(getProjectOutputDirectory(), "version.crc");
+		if (!crcFile.exists())
+		{
+			return false;
+		}
+
+		String crcString;
+		try
+		{
+			crcString = Util.readFile(crcFile);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+
+		return version.equals(crcString);
+	}
+
+	public void setVersion(String version) throws IOException
+	{
+
+		File crcFile = new File(getProjectOutputDirectory(), "version.crc");
+		Util.writeFile(crcFile, version);
 	}
 
 }
