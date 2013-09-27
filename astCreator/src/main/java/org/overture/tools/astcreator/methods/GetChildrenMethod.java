@@ -8,15 +8,18 @@ import org.overture.tools.astcreator.definitions.Field;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
 
-public class GetChildrenMethod extends Method {
+public class GetChildrenMethod extends Method
+{
 
-	public GetChildrenMethod(IClassDefinition c) {
+	public GetChildrenMethod(IClassDefinition c)
+	{
 		super(c);
 	}
-	
+
 	@Override
-	public Set<String> getRequiredImports(Environment env) {
-		Set<String> imports =  super.getRequiredImports(env);
+	public Set<String> getRequiredImports(Environment env)
+	{
+		Set<String> imports = super.getRequiredImports(env);
 		imports.add("java.util.Map");
 		imports.add("java.util.HashMap");
 		imports.add(env.iNode.getName().getCanonicalName());
@@ -24,7 +27,8 @@ public class GetChildrenMethod extends Method {
 	}
 
 	@Override
-	protected void prepare(Environment env) {
+	protected void prepare(Environment env)
+	{
 		this.name = "getChildren";
 
 		this.returnType = "Map<String,Object>";
@@ -46,19 +50,22 @@ public class GetChildrenMethod extends Method {
 
 		fields.addAll(classDefinition.getFields());
 
-
-		sb.append("\t\t"+this.returnType+" fields = new HashMap<String,Object>();\n");
+		sb.append("\t\t" + this.returnType
+				+ " fields = new HashMap<String,Object>();\n");
 		sb.append("\t\tif(includeInheritedFields)\n");
 		sb.append("\t\t{\n");
-		sb.append("\t\t\tfields.putAll(super."+this.name+"(includeInheritedFields));\n");
+		sb.append("\t\t\tfields.putAll(super." + this.name
+				+ "(includeInheritedFields));\n");
 		sb.append("\t\t}\n");
-		
-		for (Field field : fields) {
-			sb.append("\t\tfields.put(\""+field.getName(env)+"\",this."+field.getName(env)+");\n");
+
+		for (Field field : fields)
+		{
+			sb.append("\t\tfields.put(\"" + field.getName(env) + "\",this."
+					+ field.getName(env) + ");\n");
 		}
-		
+
 		sb.append("\t\treturn fields;");
-		
+
 		this.javaDoc = sbDoc.toString();
 		this.body = sb.toString();
 	}

@@ -96,8 +96,7 @@ public abstract class AbstractAcceptMethod extends Method
 			{
 				superDef = superDef.getSuperDef();
 			}
-			
-				
+
 			String thenStm = null;
 			String elseStm = null;
 

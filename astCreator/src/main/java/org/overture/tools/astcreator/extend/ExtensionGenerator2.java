@@ -148,7 +148,6 @@ public class ExtensionGenerator2
 		}
 	}
 
-	
 	/**
 	 * 3) Include all interfaces from the extension that are not going to be extended
 	 * <ul>
@@ -185,7 +184,6 @@ public class ExtensionGenerator2
 		newName.setTag(baseProduction.getName().getTag());
 		return newName;
 	}
-
 
 	// 4) Generate interfaces and base classes for the interfaces to be extended
 	// in the ext env
@@ -523,7 +521,7 @@ public class ExtensionGenerator2
 	 */
 	public Environment extend(Environment ext) throws AstCreatorException
 	{
-		Environment result = Environment.getFromBase(base, ext.getAnalysisPackage(), ext.getDefaultPackage(),ext.getName());
+		Environment result = Environment.getFromBase(base, ext.getAnalysisPackage(), ext.getDefaultPackage(), ext.getName());
 
 		result.setTemplateAnalysisPackage(base.getAnalysisPackage());
 		result.setTemplateDefaultPackage(base.getDefaultPackage());
@@ -611,7 +609,6 @@ public class ExtensionGenerator2
 				return qaacm;
 			}
 
-
 			@Override
 			public Method createDefaultCaseMethod(IClassDefinition cdef)
 			{
@@ -638,18 +635,18 @@ public class ExtensionGenerator2
 		MethodFactory extMf = new MethodFactory()
 		{
 
-//			@Override
-//			public void updateApplyMethod(IClassDefinition cdef,
-//					String newAnalysisName)
-//			{
-////				QuestionAcceptMethod qam = findMethodType(QuestionAcceptMethod.class, cdef);
-////				if (qam != null)
-////					qam.setPrivilegedBody("\t\t(("
-////							+ newAnalysisName
-////							+ "<Q>)caller).case"
-////							+ AnalysisUtil.getCaseClass(result, cdef).getName().getName()
-////							+ "(this, question);");
-//			}
+			// @Override
+			// public void updateApplyMethod(IClassDefinition cdef,
+			// String newAnalysisName)
+			// {
+			// // QuestionAcceptMethod qam = findMethodType(QuestionAcceptMethod.class, cdef);
+			// // if (qam != null)
+			// // qam.setPrivilegedBody("\t\t(("
+			// // + newAnalysisName
+			// // + "<Q>)caller).case"
+			// // + AnalysisUtil.getCaseClass(result, cdef).getName().getName()
+			// // + "(this, question);");
+			// }
 
 			@Override
 			public Method createCaseMethod(IClassDefinition cdef)
@@ -684,18 +681,18 @@ public class ExtensionGenerator2
 		MethodFactory extMf = new MethodFactory()
 		{
 
-//			@Override
-//			public void updateApplyMethod(IClassDefinition cdef,
-//					String newAnalysisName) {
-//				AnswerAcceptMethod aam = findMethodType(
-//						AnswerAcceptMethod.class, cdef);
-//				if (aam != null)
-//					aam.setPrivilegedBody("\t\treturn (A)(("
-//							+ newAnalysisName
-//							+ "<A>)caller).case"
-//							+ AnalysisUtil.getCaseClass(result, cdef).getName()
-//									.getName() + "(this);");
-//			}
+			// @Override
+			// public void updateApplyMethod(IClassDefinition cdef,
+			// String newAnalysisName) {
+			// AnswerAcceptMethod aam = findMethodType(
+			// AnswerAcceptMethod.class, cdef);
+			// if (aam != null)
+			// aam.setPrivilegedBody("\t\treturn (A)(("
+			// + newAnalysisName
+			// + "<A>)caller).case"
+			// + AnalysisUtil.getCaseClass(result, cdef).getName()
+			// .getName() + "(this);");
+			// }
 
 			@Override
 			public Method createCaseMethod(IClassDefinition cdef)
@@ -723,14 +720,12 @@ public class ExtensionGenerator2
 	{
 		public abstract Method createCaseMethod(IClassDefinition cdef);
 
-//		public abstract void updateApplyMethod(IClassDefinition cdef,
-//				String newAnalysisName);
+		// public abstract void updateApplyMethod(IClassDefinition cdef,
+		// String newAnalysisName);
 
 		public abstract Method createDefaultCaseMethod(IClassDefinition cdef);
-		
-		
-	}
 
+	}
 
 	/*
 	 * Create the IExtAnalysis interface.
@@ -739,27 +734,28 @@ public class ExtensionGenerator2
 			final Environment ext)
 	{
 
-
-		MethodFactory extMf = new MethodFactory() {
+		MethodFactory extMf = new MethodFactory()
+		{
 
 			@Override
-			public Method createCaseMethod(IClassDefinition cdef) {
+			public Method createCaseMethod(IClassDefinition cdef)
+			{
 				AnalysisAdaptorCaseMethod aacm = new AnalysisAdaptorCaseMethod();
 				aacm.setClassDefinition(cdef);
 				return aacm;
 
 			}
 
-
 			@Override
-			public Method createDefaultCaseMethod(IClassDefinition cdef) {
+			public Method createDefaultCaseMethod(IClassDefinition cdef)
+			{
 				AnalysisAdaptorDefaultMethod aadm = new AnalysisAdaptorDefaultMethod();
 				aadm.setClassDefinition(cdef);
 				return aadm;
 			}
 
 		};
-		
+
 		createAnalysisInterface(Arrays.asList(new String[0]), "Analysis", result.TAG_IAnalysis, extMf, ext, result, base);
 	}
 
@@ -953,7 +949,7 @@ public class ExtensionGenerator2
 					case Alternative:
 					case Token:
 					{
-//						mf.updateApplyMethod(cdef, jname.getCanonicalName());
+						// mf.updateApplyMethod(cdef, jname.getCanonicalName());
 
 						Method caseMethod = mf.createCaseMethod(cdef);
 						newDef.addMethod(caseMethod);

@@ -7,7 +7,7 @@ import org.overture.tools.astcreator.utils.NameUtil;
 
 public class QuestionAcceptMethod extends AbstractAcceptMethod
 {
-	
+
 	@Override
 	protected String getAnalysisTag()
 	{
@@ -29,7 +29,8 @@ public class QuestionAcceptMethod extends AbstractAcceptMethod
 	}
 
 	@Override
-	protected String getThenTemplate(IInterfaceDefinition argDefExt, String visitorName)
+	protected String getThenTemplate(IInterfaceDefinition argDefExt,
+			String visitorName)
 	{
 		return "(("
 				+ argDefExt.getName().getName()
@@ -41,14 +42,13 @@ public class QuestionAcceptMethod extends AbstractAcceptMethod
 	@Override
 	protected String getElseTemplate(String visitorName)
 	{
-		return visitorName+".%s%s"+ "(this,question);";
+		return visitorName + ".%s%s" + "(this,question);";
 	}
-	
-	
+
 	@Override
 	protected void prepareVdm(Environment env)
 	{
-		optionalVdmArgument=false;
+		optionalVdmArgument = false;
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");

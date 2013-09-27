@@ -8,27 +8,32 @@ public class PredefinedClassDefinition extends BaseClassDefinition// implements
 {
 	private String tag = "";
 
-	public PredefinedClassDefinition(String packageName, String name) {
+	public PredefinedClassDefinition(String packageName, String name)
+	{
 		super(new JavaName(packageName, name), "");
 
 	}
 
 	public PredefinedClassDefinition(String packageName, String name,
-			boolean frozenName) {
+			boolean frozenName)
+	{
 		super(frozenName ? new JavaFrozenName(packageName, name)
 				: new JavaName(packageName, name), "");
 	}
 
-	public void setTag(String tag) {
+	public void setTag(String tag)
+	{
 		this.tag = tag;
 	}
 
-	public String getTag() {
+	public String getTag()
+	{
 		return this.tag;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return getName().getCanonicalName();
 	}
 

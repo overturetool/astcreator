@@ -7,13 +7,14 @@ public class ParentGetMethod extends Method
 {
 	Field f;
 	String structureClassName;
+
 	public ParentGetMethod(String structureClassName, Field f)
 	{
 		super(null);
 		this.f = f;
 		this.structureClassName = structureClassName;
 	}
-	
+
 	@Override
 	protected void prepare(Environment env)
 	{

@@ -26,7 +26,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		// if(!skip)
 		{
 			List<Field> allFields = new Vector<Field>();
-			if (env.isTreeNode(classDefinition ))
+			if (env.isTreeNode(classDefinition))
 			{
 				allFields.addAll(classDefinition.getInheritedFields());
 			}
@@ -68,10 +68,10 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		skip = skip && fields.isEmpty();
 		for (Field f : fields)
 		{
-			if (classDefinition.refinesField(f.getName(env),env))
+			if (classDefinition.refinesField(f.getName(env), env))
 			{
 				// This field is refined in the sub class, so skip it and null the super class field.
-				sb.append(JavaTypes.getDefaultValue(f.getType(env))+",");
+				sb.append(JavaTypes.getDefaultValue(f.getType(env)) + ",");
 			} else
 			{
 				if (f.structureType == StructureType.Tree)
@@ -81,7 +81,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 					sb.append(name + ",");
 				} else
 				{
-					sb.append(JavaTypes.getDefaultValue(f.getType(env))+",");
+					sb.append(JavaTypes.getDefaultValue(f.getType(env)) + ",");
 				}
 			}
 		}
@@ -106,10 +106,11 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 				sb.append(");\n");
 
 				sbDoc.append("\t* @param " + name + "_ the {@link "
-						+ NameUtil.stripGenerics(f.getType(env)) + "} node for the {@code " + name
-						+ "} child of this {@link " + classDefinition.getName().getName()
-						+ "} node\n");
-			}else if(JavaTypes.isPrimitiveType(f.getType(env)))
+						+ NameUtil.stripGenerics(f.getType(env))
+						+ "} node for the {@code " + name
+						+ "} child of this {@link "
+						+ classDefinition.getName().getName() + "} node\n");
+			} else if (JavaTypes.isPrimitiveType(f.getType(env)))
 			{
 				sb.append("\t\t");
 				sb.append("this.set");
@@ -118,10 +119,10 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 				sb.append(JavaTypes.getDefaultValue(f.getType(env)));
 				sb.append(");\n");
 
-//				sbDoc.append("\t* @param " + name + " the {@link "
-//						+ f.getType() + "} node for the {@code " + name
-//						+ "} child of this {@link " + classDefinition.getName()
-//						+ "} node\n");
+				// sbDoc.append("\t* @param " + name + " the {@link "
+				// + f.getType() + "} node for the {@code " + name
+				// + "} child of this {@link " + classDefinition.getName()
+				// + "} node\n");
 			}
 		}
 

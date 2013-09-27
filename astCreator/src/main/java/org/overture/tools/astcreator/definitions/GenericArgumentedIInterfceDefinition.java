@@ -12,77 +12,95 @@ import org.overture.tools.astcreator.java.definitions.JavaName;
 import org.overture.tools.astcreator.methods.Method;
 
 public class GenericArgumentedIInterfceDefinition implements
-		IInterfaceDefinition {
+		IInterfaceDefinition
+{
 	IInterfaceDefinition def;
 	List<String> arguments = new Vector<String>();
 	private boolean written;
 	private String astPackage;
 
 	public GenericArgumentedIInterfceDefinition(IInterfaceDefinition def,
-			String... arguments) {
+			String... arguments)
+	{
 		this.def = def;
 		setGenericArguments(Arrays.asList(arguments));
 		this.astPackage = def.getAstPackage();
 	}
 
-	public JavaName getName() {
+	public JavaName getName()
+	{
 		return this.def.getName();
 	}
 
-	public Set<String> getImports(Environment env) {
+	public Set<String> getImports(Environment env)
+	{
 		return def.getImports(env);
 	}
 
-	public String getJavaSourceCode(StringBuilder sb, Environment env) {
+	public String getJavaSourceCode(StringBuilder sb, Environment env)
+	{
 		return null;
 	}
 
-	public String getVdmSourceCode(StringBuilder sb) {
+	public String getVdmSourceCode(StringBuilder sb)
+	{
 		return null;
 	}
 
-	public void setTag(String tag) {
+	public void setTag(String tag)
+	{
 	}
 
-	public String getTag() {
+	public String getTag()
+	{
 		return null;
 	}
 
-	public List<String> getGenericArguments() {
+	public List<String> getGenericArguments()
+	{
 		return this.arguments;
 	}
 
-	public void setGenericArguments(List<String> arguments) {
-		if (arguments != null) {
+	public void setGenericArguments(List<String> arguments)
+	{
+		if (arguments != null)
+		{
 			this.arguments.addAll(arguments);
 		}
 	}
 
-	public void setAnnotation(String annotation) {
+	public void setAnnotation(String annotation)
+	{
 
 	}
 
-	public List<Method> getMethods() {
+	public List<Method> getMethods()
+	{
 		return null;
 	}
 
-	public Set<Method> getMethod(String name) {
+	public Set<Method> getMethod(String name)
+	{
 		return null;
 	}
 
-	public void addMethod(Method m) {
+	public void addMethod(Method m)
+	{
 
 	}
 
-	public String getGenericsString() {
+	public String getGenericsString()
+	{
 		StringBuilder sb = new StringBuilder();
-		if (!this.arguments.isEmpty()) {
+		if (!this.arguments.isEmpty())
+		{
 			sb.append("<");
-			for (Iterator<String> itr = this.arguments.iterator(); itr
-					.hasNext();) {
+			for (Iterator<String> itr = this.arguments.iterator(); itr.hasNext();)
+			{
 				String type = itr.next();
 				sb.append(type);
-				if (itr.hasNext()) {
+				if (itr.hasNext())
+				{
 					sb.append(", ");
 				}
 			}
@@ -91,67 +109,77 @@ public class GenericArgumentedIInterfceDefinition implements
 		return sb.toString();
 	}
 
-	public void setFinal(boolean isFinal) {
+	public void setFinal(boolean isFinal)
+	{
 
 	}
 
-	public void setAbstract(boolean isAbstract) {
+	public void setAbstract(boolean isAbstract)
+	{
 
 	}
 
-	public boolean isFinal() {
+	public boolean isFinal()
+	{
 		return false;
 	}
 
-	public boolean isAbstract() {
+	public boolean isAbstract()
+	{
 		return false;
 	}
 
-	public Set<IInterfaceDefinition> getSuperDefs() {
+	public Set<IInterfaceDefinition> getSuperDefs()
+	{
 		return new HashSet<IInterfaceDefinition>();
 	}
 
-	public boolean isJavaSourceWritten() {
+	public boolean isJavaSourceWritten()
+	{
 		return written;
 	}
 
-	public void setJavaSourceWritten(boolean isWritten) {
+	public void setJavaSourceWritten(boolean isWritten)
+	{
 		this.written = isWritten;
 	}
 
-	public String getAstPackage() {
+	public String getAstPackage()
+	{
 		return astPackage;
 	}
 
 	@Override
-	public void setIsBaseTree(boolean b) {
+	public void setIsBaseTree(boolean b)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public boolean isBaseTree() {
+	public boolean isBaseTree()
+	{
 		return false;
 	}
 
 	@Override
-	public void setIsExtTree(boolean b) {
-		
+	public void setIsExtTree(boolean b)
+	{
+
 	}
 
 	@Override
-	public boolean isExtTree() {
+	public boolean isExtTree()
+	{
 		return false;
 	}
 
 	@Override
 	public String getNameWithGenericArguments()
 	{
-		return this.def.getName().getName()+getGenericsString();
+		return this.def.getName().getName() + getGenericsString();
 	}
 
-
-	
 	public static String[] generateWildcardArguments(List<String> arguments)
 	{
 		List<String> relaxedGenericArguments = new Vector<String>();
@@ -159,12 +187,13 @@ public class GenericArgumentedIInterfceDefinition implements
 		{
 			relaxedGenericArguments.add("? extends " + string);
 		}
-		
+
 		return relaxedGenericArguments.toArray(new String[relaxedGenericArguments.size()]);
 	}
-	
+
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return getName().getName();
 	}
 }

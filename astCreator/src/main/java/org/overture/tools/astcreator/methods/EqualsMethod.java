@@ -20,7 +20,8 @@ public class EqualsMethod extends Method
 		this.returnType = "boolean";
 		this.arguments.add(new Argument("Object", "o"));
 		StringBuffer sb = new StringBuffer();
-		sb.append("\t\tif (o != null && o instanceof "	+ classDefinition.getName().getName() + ")");
+		sb.append("\t\tif (o != null && o instanceof "
+				+ classDefinition.getName().getName() + ")");
 		sb.append("\t\t{\n");
 		sb.append("\t\t\t return toString().equals(o.toString());\n");
 		sb.append("\t\t}\n");

@@ -13,8 +13,6 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 		super(null);
 	}
 
-	
-	
 	@Override
 	public Set<String> getRequiredImports(Environment env)
 	{
@@ -23,11 +21,11 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
-	
+
 	@Override
 	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		Set<String> temp =super.getRequiredImportsSignature(env);
+		Set<String> temp = super.getRequiredImportsSignature(env);
 		temp.add(classDefinition.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
@@ -42,17 +40,20 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
 		sb.append("\t* Called by the {@link " + c.getName().getName()
-				+ "} node from {@link " + c.getName().getName() + "#apply("+env.getTaggedDef(env.TAG_IAnalysis).getName().getName()+")}.\n");
+				+ "} node from {@link " + c.getName().getName() + "#apply("
+				+ env.getTaggedDef(env.TAG_IAnalysis).getName().getName()
+				+ ")}.\n");
 		sb.append("\t* @param node the calling {@link " + c.getName().getName()
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "default"+defaultPostFix + NameUtil.getClassName(c.getName().getName());
+		this.name = "default" + defaultPostFix
+				+ NameUtil.getClassName(c.getName().getName());
 		setupArguments(env);
 		// this.annotation="@override";
-		
-		this.body = "\t\t"+ (addReturnToBody ? "return null;" : "")
-					+"//nothing to do";
-		
+
+		this.body = "\t\t" + (addReturnToBody ? "return null;" : "")
+				+ "//nothing to do";
+
 	}
 }

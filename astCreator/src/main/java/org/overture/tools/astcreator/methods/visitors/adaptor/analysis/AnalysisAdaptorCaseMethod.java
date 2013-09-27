@@ -11,7 +11,6 @@ import org.overture.tools.astcreator.utils.NameUtil;
 public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 {
 	private String methodNamePrefix = "case";
-	
 
 	public AnalysisAdaptorCaseMethod()
 	{
@@ -23,7 +22,7 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 		super(c);
 
 	}
-	
+
 	@Override
 	public Set<String> getRequiredImports(Environment env)
 	{
@@ -32,11 +31,11 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
-	
+
 	@Override
 	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		Set<String> temp =super.getRequiredImportsSignature(env);
+		Set<String> temp = super.getRequiredImportsSignature(env);
 		temp.add(AnalysisUtil.getClass(env, classDefinition).getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
@@ -74,13 +73,16 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 			{
 				case Production:
 				case SubProduction:
-					this.body +=defaultPostFix+ AnalysisUtil.getClass(env, c).getSuperDefs().iterator().next().getName().getName();
+					this.body += defaultPostFix
+							+ AnalysisUtil.getClass(env, c).getSuperDefs().iterator().next().getName().getName();
 					break;
 				case Token:
-					this.body +=defaultPostFix+ AnalysisUtil.getClass(env, c).getName().getName();
+					this.body += defaultPostFix
+							+ AnalysisUtil.getClass(env, c).getName().getName();
 					break;
 				case Alternative:
-					this.body +=defaultPostFix+ AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
+					this.body += defaultPostFix
+							+ AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
 					break;
 				default:
 					this.body += c.getSuperDef().getName().getName();
@@ -89,11 +91,13 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 			// + NameUtil.getClassName(c.getSuperDef().getName().getName()
 
 			this.body += "(" + getAdditionalBodyCallArguments() + ");";
-		} else if(c instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)c).extendsNode)
+		} else if (c instanceof ExternalJavaClassDefinition
+				&& ((ExternalJavaClassDefinition) c).extendsNode)
 		{
-			this.body = "\t\t" + (addReturnToBody ? "return " : "") + "default"+defaultPostFix+env.iNode.getName().getName();
+			this.body = "\t\t" + (addReturnToBody ? "return " : "") + "default"
+					+ defaultPostFix + env.iNode.getName().getName();
 			this.body += "(" + getAdditionalBodyCallArguments() + ");";
-		}else
+		} else
 		{
 			this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
 		}
@@ -103,7 +107,5 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 	{
 		this.methodNamePrefix = nm;
 	}
-	
-	
 
 }

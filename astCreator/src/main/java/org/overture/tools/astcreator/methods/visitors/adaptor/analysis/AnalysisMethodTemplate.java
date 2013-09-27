@@ -1,8 +1,8 @@
 package org.overture.tools.astcreator.methods.visitors.adaptor.analysis;
 
-import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
+import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.visitors.AnalysisUtil;
 
@@ -24,7 +24,7 @@ public abstract class AnalysisMethodTemplate extends Method
 		super.setClassDefinition(c);
 		intf = c;
 	}
-	
+
 	@Override
 	protected void prepare(Environment env)
 	{
@@ -58,7 +58,6 @@ public abstract class AnalysisMethodTemplate extends Method
 		}
 	}
 
-	
 	public void setDefaultPostfix(String nm)
 	{
 		this.defaultPostFix = nm;

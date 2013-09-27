@@ -17,11 +17,10 @@ import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.IClassDefinition.ClassType;
 import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.definitions.InterfaceDefinition;
-import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 
-public class Environment extends BaseEnvironment {
-	
+public class Environment extends BaseEnvironment
+{
 
 	public final String TAG_IAnalysis = "IAnalysis";
 	public final String TAG_IAnswer = "IAnswer";
@@ -38,37 +37,42 @@ public class Environment extends BaseEnvironment {
 	private String analysisPackage = "org.overture.ast.analysis";
 
 	private String templateAnalysisPackage;
-	
-	
 
-	public String getTemplateDefaultPackage() {
+	public String getTemplateDefaultPackage()
+	{
 		return templateDefaultPackage;
 	}
 
-	public void setTemplateDefaultPackage(String templateDefaultPackage) {
+	public void setTemplateDefaultPackage(String templateDefaultPackage)
+	{
 		this.templateDefaultPackage = templateDefaultPackage;
 	}
 
-	public String getTemplateAnalysisPackage() {
+	public String getTemplateAnalysisPackage()
+	{
 		return templateAnalysisPackage;
 	}
 
-	public void setTemplateAnalysisPackage(String templateAnalysisPackage) {
+	public void setTemplateAnalysisPackage(String templateAnalysisPackage)
+	{
 		this.templateAnalysisPackage = templateAnalysisPackage;
 	}
 
-	protected Environment(String name) {
+	protected Environment(String name)
+	{
 		super(name);
 		addCommonTreeInterface(node, iNode);
 		addCommonTreeInterface(token, iToken);
 	}
 
 	public static Environment getFromBase(Environment base,
-			String extAnalysisPackage, String extDefaultPackage, String extensionName) {
-		Environment res = new ExtendedEnvironment("extended_" + base.name,base,extensionName);
+			String extAnalysisPackage, String extDefaultPackage,
+			String extensionName)
+	{
+		Environment res = new ExtendedEnvironment("extended_" + base.name, base, extensionName);
 		res.toStringAddOn = base.toStringAddOn;
 		res.setAnalysisPackages(extAnalysisPackage);
-		res.setDefaultPackages(extDefaultPackage,true);
+		res.setDefaultPackages(extDefaultPackage, true);
 		res.classes.clear();
 		res.interfaces.clear();
 		res.iNode = base.iNode;
@@ -95,96 +99,95 @@ public class Environment extends BaseEnvironment {
 		return res;
 	}
 
-	public static Environment getEmptyInstance(String name) {
+	public static Environment getEmptyInstance(String name)
+	{
 		Environment res = new Environment(name);
 		return res;
 	}
 
-	public static Environment getInstance(String name) {
+	public static Environment getInstance(String name)
+	{
 		Environment res = new Environment(name);
-//		res.iNode = new PredefinedClassDefinition(res.defaultPackage, "INode");
-//		res.iToken = new PredefinedClassDefinition(res.defaultPackage, "IToken");
-//		// iToken.addInterface(iNode);
-//		res.iToken.supers.add(res.iNode);
-//		res.node.addInterface(res.iNode);
-//		res.token.addInterface(res.iToken);
-		res.analysisException = new AnalysisExceptionDefinition(
-				res.analysisPackage, "AnalysisException", res);
-//		res.addCommonTreeInterface(res.node, res.iNode);
-//		res.addCommonTreeInterface(res.token, res.iToken);
+		// res.iNode = new PredefinedClassDefinition(res.defaultPackage, "INode");
+		// res.iToken = new PredefinedClassDefinition(res.defaultPackage, "IToken");
+		// // iToken.addInterface(iNode);
+		// res.iToken.supers.add(res.iNode);
+		// res.node.addInterface(res.iNode);
+		// res.token.addInterface(res.iToken);
+		res.analysisException = new AnalysisExceptionDefinition(res.analysisPackage, "AnalysisException", res);
+		// res.addCommonTreeInterface(res.node, res.iNode);
+		// res.addCommonTreeInterface(res.token, res.iToken);
 		res.addClass(res.analysisException);
 		return res;
 	}
 
-	public List<IInterfaceDefinition> getInterfaces() {
+	public List<IInterfaceDefinition> getInterfaces()
+	{
 		return super.interfaces;
 	}
 
 	/**
-	 * Sets the analysis package for this environment.
-	 * 
-	 * Also all interface and class definitions are updated with the package,
-	 * only if they are in the old package name.
+	 * Sets the analysis package for this environment. Also all interface and class definitions are updated with the
+	 * package, only if they are in the old package name.
 	 * 
 	 * @param analysisPackage
 	 */
-	public void setAnalysisPackages(String analysisPackage) {
+	public void setAnalysisPackages(String analysisPackage)
+	{
 		String oldPackage = this.analysisPackage;
 		this.templateAnalysisPackage = this.analysisPackage = analysisPackage;
-		for (IClassDefinition c : classes) {
-			if (c.getName().getPackageName().equals(oldPackage)) {
+		for (IClassDefinition c : classes)
+		{
+			if (c.getName().getPackageName().equals(oldPackage))
+			{
 				c.getName().setPackageName(analysisPackage);
 			}
 		}
 
-		for (IInterfaceDefinition c : interfaces) {
-			if (c.getName().getPackageName().equals(oldPackage)) {
+		for (IInterfaceDefinition c : interfaces)
+		{
+			if (c.getName().getPackageName().equals(oldPackage))
+			{
 				c.getName().setPackageName(analysisPackage);
 			}
 		}
 	}
 
-	public String getAnalysisPackage() {
+	public String getAnalysisPackage()
+	{
 		return this.analysisPackage;
 	}
 
-//FIXME I think the method below is unused anywhere -jwc/23Feb2013
-//	private static List<IClassDefinition> findClassOfType(String name,
-//			List<IClassDefinition> l) {
-//
-//		List<IClassDefinition> res = new LinkedList<IClassDefinition>();
-//
-//		for (IInterfaceDefinition idef : l)
-//			if (IClassDefinition.class.isInstance(idef)
-//					&& idef.getName().toString().contains(name))
-//				res.add(IClassDefinition.class.cast(idef));
-//
-//		return res;
-//	}
+	// FIXME I think the method below is unused anywhere -jwc/23Feb2013
+	// private static List<IClassDefinition> findClassOfType(String name,
+	// List<IClassDefinition> l) {
+	//
+	// List<IClassDefinition> res = new LinkedList<IClassDefinition>();
+	//
+	// for (IInterfaceDefinition idef : l)
+	// if (IClassDefinition.class.isInstance(idef)
+	// && idef.getName().toString().contains(name))
+	// res.add(IClassDefinition.class.cast(idef));
+	//
+	// return res;
+	// }
 
 	/**
-	 * Lookup a path of tag names. E.g. a dot separated list of tags from the
-	 * ast file.
-	 * 
-	 * For example: exp.#Binary.plus
+	 * Lookup a path of tag names. E.g. a dot separated list of tags from the ast file. For example: exp.#Binary.plus
 	 * 
 	 * @param path
 	 *            - the tag path to look up
 	 * @param generalize
-	 *            - if true: lookupTagPath will generalize to the most general
-	 *            class, which must be unique, if not an AstCreatorException is
-	 *            thrown.
-	 * 
-	 *            - if false: lookupTagPath will not generalize however then the
-	 *            result may be ambiguous in which case null is returned.
-	 * 
+	 *            - if true: lookupTagPath will generalize to the most general class, which must be unique, if not an
+	 *            AstCreatorException is thrown. - if false: lookupTagPath will not generalize however then the result
+	 *            may be ambiguous in which case null is returned.
 	 * @return The unique alternative or production pointed out by the path.
 	 * @throws AstCreatorException
-	 *             - when a path look up gives an ambiguous result with
-	 *             generalize true.
+	 *             - when a path look up gives an ambiguous result with generalize true.
 	 */
 	public IInterfaceDefinition lookupTagPath(String path, boolean generalize)
-			throws AstCreatorException {
+			throws AstCreatorException
+	{
 		if (path == null)
 			return null;
 		List<IClassDefinition> possibleResult = null;
@@ -195,11 +198,13 @@ public class Environment extends BaseEnvironment {
 		// Lookup all interface and classes for each a.b.c... and
 		// see if we can build a valid path of object e.g. here a is
 		// the parent of b being the parant of c etc...
-		for (String part : parts) {
+		for (String part : parts)
+		{
 			List<IClassDefinition> current = new LinkedList<IClassDefinition>();
 
 			// search the classes
-			for (IClassDefinition cdef : classes) {
+			for (IClassDefinition cdef : classes)
+			{
 				if (cdef.getName().getTag().equals(part))
 					current.add(cdef);
 			}
@@ -210,20 +215,22 @@ public class Environment extends BaseEnvironment {
 
 			// first iteration, initialize possibleResult rather than search for
 			// a valid parent.
-			if (possibleResult == null) {
+			if (possibleResult == null)
+			{
 				possibleResult = current;
 				List<IClassDefinition> tbr = new LinkedList<IClassDefinition>();
 				for (IClassDefinition d : possibleResult)
 					if (classToType.containsKey(d))
-						switch (classToType.get(d)) {
-						case Alternative:
-							tbr.add(d);
-							break;
-						case SubProduction:
-						case Production:
-							break;
-						default:
-							break;
+						switch (classToType.get(d))
+						{
+							case Alternative:
+								tbr.add(d);
+								break;
+							case SubProduction:
+							case Production:
+								break;
+							default:
+								break;
 						}
 				possibleResult.removeAll(tbr);
 
@@ -235,19 +242,20 @@ public class Environment extends BaseEnvironment {
 			// now only 'b' (not 'b'') has 'a' as parent and therefore the
 			// validContinuation is only 'b'.
 			boolean didSomething = false;
-			if (possibleResult != current || possibleResult.size() > 1) {
+			if (possibleResult != current || possibleResult.size() > 1)
+			{
 				List<IClassDefinition> validContinuation = new LinkedList<IClassDefinition>();
 				for (IClassDefinition parentIdef : possibleResult)
-					for (IClassDefinition childIdef : current) {
+					for (IClassDefinition childIdef : current)
+					{
 
-						if (isSuperTo(parentIdef, childIdef)) {
+						if (isSuperTo(parentIdef, childIdef))
+						{
 							didSomething = true;
 							validContinuation.add(childIdef);
 							if (generalize
 									|| (possibleResult.size() == 2
-											&& parts.length > 1 && !parentIdef
-											.getAstPackage().equals(
-													childIdef.getAstPackage())))
+											&& parts.length > 1 && !parentIdef.getAstPackage().equals(childIdef.getAstPackage())))
 								validContinuation.add(parentIdef);
 						}
 					}
@@ -262,7 +270,8 @@ public class Environment extends BaseEnvironment {
 		List<IClassDefinition> tbr = new LinkedList<IClassDefinition>();
 		if (generalize)
 			for (int i = 0; i < possibleResult.size(); i++)
-				for (int j = i + 1; j < possibleResult.size(); j++) {
+				for (int j = i + 1; j < possibleResult.size(); j++)
+				{
 					IClassDefinition ith = possibleResult.get(i);
 					IClassDefinition jth = possibleResult.get(j);
 					if (ith == jth)
@@ -278,9 +287,11 @@ public class Environment extends BaseEnvironment {
 
 		if (possibleResult.size() == 0)
 			return null;
-		if (possibleResult.size() == 1) {
+		if (possibleResult.size() == 1)
+		{
 			IInterfaceDefinition found = possibleResult.get(0);
-			if (generalize) {
+			if (generalize)
+			{
 
 				if (treeNodeInterfaces.containsKey(found))
 					return treeNodeInterfaces.get(found);
@@ -301,11 +312,13 @@ public class Environment extends BaseEnvironment {
 		throw new AstCreatorException(message.toString(), null, true);
 	}
 
-	public IInterfaceDefinition lookupByTag(String tag) {
+	public IInterfaceDefinition lookupByTag(String tag)
+	{
 		if ("".equals(tag))
 			return null;
 
-		for (IInterfaceDefinition idef : classes) {
+		for (IInterfaceDefinition idef : classes)
+		{
 			if (tag.equals(idef.getTag()))
 				return idef;
 			JavaName jn = idef.getName();
@@ -315,19 +328,23 @@ public class Environment extends BaseEnvironment {
 		return null;
 	}
 
-	public IInterfaceDefinition lookUpType(String name) {
+	public IInterfaceDefinition lookUpType(String name)
+	{
 		IInterfaceDefinition res = lookUpInterface(name);
-		if (res == null) {
+		if (res == null)
+		{
 			return lookUp(name);
 		}
 		return res;
 	}
 
-	public IClassDefinition lookUpPreferSameContext(String name, String ctxt) {
+	public IClassDefinition lookUpPreferSameContext(String name, String ctxt)
+	{
 
 		// Find all classes designated name
 		List<IClassDefinition> cdefs = new LinkedList<IClassDefinition>();
-		for (IClassDefinition cdef : classes) {
+		for (IClassDefinition cdef : classes)
+		{
 			if (isClassNamesEqual(cdef.getName().getName(), name))
 				cdefs.add(cdef);
 		}
@@ -342,7 +359,8 @@ public class Environment extends BaseEnvironment {
 
 		// More than one, weed out the ones are not in the given context
 		List<IClassDefinition> tbr = new LinkedList<IClassDefinition>();
-		for (IClassDefinition cdef : cdefs) {
+		for (IClassDefinition cdef : cdefs)
+		{
 			if (!cdef.getName().getPackageName().startsWith(ctxt))
 				tbr.add(cdef);
 		}
@@ -359,7 +377,8 @@ public class Environment extends BaseEnvironment {
 
 		// The name we are looking for defined multiple times in the given
 		// context :(
-		if (cdefs.size() > 1) {
+		if (cdefs.size() > 1)
+		{
 			System.out.println("WARNING! \"" + name
 					+ "\" is defined multiple times.");
 			return cdefs.get(0);
@@ -372,43 +391,56 @@ public class Environment extends BaseEnvironment {
 		return null;
 	}
 
-	public IClassDefinition lookUp(String name) {
-		for (IClassDefinition cl : classes) {
-			if (isClassNamesEqual(cl.getName().getName(), name)) {
+	public IClassDefinition lookUp(String name)
+	{
+		for (IClassDefinition cl : classes)
+		{
+			if (isClassNamesEqual(cl.getName().getName(), name))
+			{
 				return cl;
 			}
 		}
 		return null;
 	}
 
-	public IInterfaceDefinition lookUpInterface(String name) {
-		for (IInterfaceDefinition cl : interfaces) {
-			if (isClassNamesEqual(cl.getName().getName(), name)) {
+	public IInterfaceDefinition lookUpInterface(String name)
+	{
+		for (IInterfaceDefinition cl : interfaces)
+		{
+			if (isClassNamesEqual(cl.getName().getName(), name))
+			{
 				return cl;
 			}
 		}
 		return null;
 	}
 
-	private boolean isClassNamesEqual(String a, String b) {
-		if (a.contains("<")) {
+	private boolean isClassNamesEqual(String a, String b)
+	{
+		if (a.contains("<"))
+		{
 			a = a.substring(0, a.indexOf('<'));
 		}
-		if (b.contains("<")) {
+		if (b.contains("<"))
+		{
 			b = b.substring(0, b.indexOf('<'));
 		}
 		return a.equals(b);
 	}
 
 	public boolean isSuperTo(IClassDefinition superClass,
-			IClassDefinition selectedClass) {
+			IClassDefinition selectedClass)
+	{
 		return !selectedClass.equals(superClass) && selectedClass.hasSuper()
 				&& selectedClass.getSuperDef().equals(superClass);
 	}
 
-	public IClassDefinition getSuperClass(IClassDefinition selectedClass) {
-		for (IClassDefinition cl : classes) {
-			if (isSuperTo(cl, selectedClass)) {
+	public IClassDefinition getSuperClass(IClassDefinition selectedClass)
+	{
+		for (IClassDefinition cl : classes)
+		{
+			if (isSuperTo(cl, selectedClass))
+			{
 				return cl;
 			}
 		}
@@ -416,41 +448,49 @@ public class Environment extends BaseEnvironment {
 	}
 
 	public boolean isSuperTo(IInterfaceDefinition superClass,
-			IInterfaceDefinition selectedClass) {
+			IInterfaceDefinition selectedClass)
+	{
 		Set<IInterfaceDefinition> selectedSupers = new HashSet<IInterfaceDefinition>();
-		if (selectedClass instanceof InterfaceDefinition) {
+		if (selectedClass instanceof InterfaceDefinition)
+		{
 			selectedSupers.addAll(((InterfaceDefinition) selectedClass).supers);
-		} else if (selectedClass instanceof IClassDefinition) {
-			selectedSupers.addAll(((IClassDefinition) selectedClass)
-					.getInterfaces());
-			selectedSupers
-					.add(((IClassDefinition) selectedClass).getSuperDef());
+		} else if (selectedClass instanceof IClassDefinition)
+		{
+			selectedSupers.addAll(((IClassDefinition) selectedClass).getInterfaces());
+			selectedSupers.add(((IClassDefinition) selectedClass).getSuperDef());
 		}
 
-		for (IInterfaceDefinition intf : selectedSupers) {
+		for (IInterfaceDefinition intf : selectedSupers)
+		{
 			if (superClass.getName().equals(intf.getName())
-					|| isSuperTo(superClass, intf)) {
+					|| isSuperTo(superClass, intf))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public List<IClassDefinition> getSubClasses(IClassDefinition c) {
+	public List<IClassDefinition> getSubClasses(IClassDefinition c)
+	{
 		List<IClassDefinition> subclasses = new Vector<IClassDefinition>();
-		for (IClassDefinition sub : classes) {
+		for (IClassDefinition sub : classes)
+		{
 			// if (sub.getSuperClassDefinition() != null
 			// && sub.getSuperClassDefinition().equals(c))
 			// {
-			if (isSuperTo(c, sub)) {
+			if (isSuperTo(c, sub))
+			{
 				subclasses.add(sub);
 			}
 		}
 		return subclasses;
 	}
 
-	public IInterfaceDefinition getTaggedDef(String tag) {
-		for (IInterfaceDefinition def : interfaces) {
+	public IInterfaceDefinition getTaggedDef(String tag)
+	{
+		for (IInterfaceDefinition def : interfaces)
+		{
 			if (def.getTag().equals(tag))
 
 			{
@@ -460,63 +500,71 @@ public class Environment extends BaseEnvironment {
 		return null;
 	}
 
-	public void addToStringAddOn(ToStringAddOn addon) {
+	public void addToStringAddOn(ToStringAddOn addon)
+	{
 		toStringAddOn.add(addon);
 	}
 
-	public List<ToStringAddOn> getToStringAddOns() {
+	public List<ToStringAddOn> getToStringAddOns()
+	{
 		return this.toStringAddOn;
 	}
 
 	public void addCommonTreeInterface(IInterfaceDefinition source,
-			IInterfaceDefinition intf) {
+			IInterfaceDefinition intf)
+	{
 		addInterface(intf);
 		treeNodeInterfaces.put(source, intf);
 	}
 
 	public IInterfaceDefinition getInterfaceForCommonTreeNode(
-			IInterfaceDefinition node) {
-		if (treeNodeInterfaces.containsKey(node)) {
+			IInterfaceDefinition node)
+	{
+		if (treeNodeInterfaces.containsKey(node))
+		{
 			return treeNodeInterfaces.get(node);
 		}
 		/*
-		 * System.out.println("Error getting interface for common tree node:\n\t"
-		 * + node.getName() +
-		 * "\nThe mapping is as defined as follows in environment \"" +
-		 * this.name + "\": "); Set<Entry<IInterfaceDefinition,
-		 * IInterfaceDefinition>> l = treeNodeInterfaces .entrySet(); for
-		 * (Entry<IInterfaceDefinition, IInterfaceDefinition> e : l) {
-		 * System.out.println("\t" + e.getKey().getName() + " ==> " +
-		 * e.getValue().getName()); }
+		 * System.out.println("Error getting interface for common tree node:\n\t" + node.getName() +
+		 * "\nThe mapping is as defined as follows in environment \"" + this.name + "\": ");
+		 * Set<Entry<IInterfaceDefinition, IInterfaceDefinition>> l = treeNodeInterfaces .entrySet(); for
+		 * (Entry<IInterfaceDefinition, IInterfaceDefinition> e : l) { System.out.println("\t" + e.getKey().getName() +
+		 * " ==> " + e.getValue().getName()); }
 		 */
 		return null;
 	}
 
-	public boolean isTreeNode(IClassDefinition c) {
-		if (classToType.containsKey(c)) {
-			switch (classToType.get(c)) {
-			case Alternative:
-			case Production:
-			case SubProduction:
-			case Token:
-				return true;
-			default:
-				break;
+	public boolean isTreeNode(IClassDefinition c)
+	{
+		if (classToType.containsKey(c))
+		{
+			switch (classToType.get(c))
+			{
+				case Alternative:
+				case Production:
+				case SubProduction:
+				case Token:
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
 	}
 
-	public String getInheritanceToString() {
+	public String getInheritanceToString()
+	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("* \n* " + name + "\n*\n");
-		for (IInterfaceDefinition cl : interfaces) {
+		for (IInterfaceDefinition cl : interfaces)
+		{
 			sb.append(pad("interface " + cl.getName().getName(), 40)
 					+ pad(cl.getName().getPackageName(), 35)
 					+ inheritanceString(cl) + "\n");
 
 		}
-		for (IClassDefinition cl : classes) {
+		for (IClassDefinition cl : classes)
+		{
 			sb.append(pad("class " + cl.getName().getName(), 40)
 					+ pad(cl.getName().getPackageName(), 35)
 					+ inheritanceString(cl) + "\n");
@@ -525,33 +573,38 @@ public class Environment extends BaseEnvironment {
 		return sb.toString();
 	}
 
-	private String inheritanceString(IInterfaceDefinition def) {
-		if (def instanceof IClassDefinition) {
+	private String inheritanceString(IInterfaceDefinition def)
+	{
+		if (def instanceof IClassDefinition)
+		{
 			String tmp = "";
-			if (!((IClassDefinition) def).getInterfaces().isEmpty()) {
+			if (!((IClassDefinition) def).getInterfaces().isEmpty())
+			{
 				tmp += "(";
-				for (Iterator<IInterfaceDefinition> itr = ((IClassDefinition) def)
-						.getInterfaces().iterator(); itr.hasNext();) {
+				for (Iterator<IInterfaceDefinition> itr = ((IClassDefinition) def).getInterfaces().iterator(); itr.hasNext();)
+				{
 					IInterfaceDefinition type = itr.next();
 					tmp += type.getName().getName();
 				}
 				tmp += ")";
 			}
-			if (((IClassDefinition) def).hasSuper()) {
+			if (((IClassDefinition) def).hasSuper())
+			{
 				return (tmp.length() > 0 ? ": " + tmp : "")
 						+ " <- "
-						+ ((IClassDefinition) def).getSuperDef().getName()
-								.getName()
-						+ inheritanceString(((IClassDefinition) def)
-								.getSuperDef());
+						+ ((IClassDefinition) def).getSuperDef().getName().getName()
+						+ inheritanceString(((IClassDefinition) def).getSuperDef());
 			}
 			return tmp.length() > 0 ? ": " + tmp : "";
 		}
 
-		if (def instanceof InterfaceDefinition) {
-			if (!((InterfaceDefinition) def).supers.isEmpty()) {
+		if (def instanceof InterfaceDefinition)
+		{
+			if (!((InterfaceDefinition) def).supers.isEmpty())
+			{
 				String tmp = "";
-				for (IInterfaceDefinition intf : ((InterfaceDefinition) def).supers) {
+				for (IInterfaceDefinition intf : ((InterfaceDefinition) def).supers)
+				{
 					tmp += " <- " + intf.getName().getName();
 				}
 				return tmp;

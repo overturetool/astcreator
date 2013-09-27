@@ -23,31 +23,31 @@ public class EnumUtil
 			Environment env)
 	{
 		JavaName name = env.getInterfaceForCommonTreeNode(c).getName();
-		
-		if(c==env.node)
+
+		if (c == env.node)
 		{
-			return "NodeEnum"+env.node.getName().getPostfix();
+			return "NodeEnum" + env.node.getName().getPostfix();
 		}
 		if (env.classToType.get(c) == ClassType.Production)
 		{
 
-			return "E"
-					+ NameUtil.getClassName(name.getRawName());
+			return "E" + NameUtil.getClassName(name.getRawName());
 		} else
 		{
-//			String tmp = c.getName().getRawName().startsWith("#") ? c.getName().getRawName().substring(1)
-//					: c.getName().getRawName();
-//			String superTmp = c.getSuperDef().getName().getRawName();
-//			superTmp = superTmp.startsWith("#") ? superTmp.substring(1)
-//					: superTmp;
-//			return "E" + NameUtil.getClassName(tmp)
-//					+ NameUtil.getClassName(superTmp);
-//			String tmp = c.getName().getRawName().startsWith("#") ? c.getName().getRawName().substring(1)
-//					: c.getName().getRawName();
-//			String superTmp = c.getSuperDef().getName().getRawName();
-//			superTmp = superTmp.startsWith("#") ? superTmp.substring(1)
-//					: superTmp;
-			return "E" + NameUtil.getClassName(name.getRawName())
+			// String tmp = c.getName().getRawName().startsWith("#") ? c.getName().getRawName().substring(1)
+			// : c.getName().getRawName();
+			// String superTmp = c.getSuperDef().getName().getRawName();
+			// superTmp = superTmp.startsWith("#") ? superTmp.substring(1)
+			// : superTmp;
+			// return "E" + NameUtil.getClassName(tmp)
+			// + NameUtil.getClassName(superTmp);
+			// String tmp = c.getName().getRawName().startsWith("#") ? c.getName().getRawName().substring(1)
+			// : c.getName().getRawName();
+			// String superTmp = c.getSuperDef().getName().getRawName();
+			// superTmp = superTmp.startsWith("#") ? superTmp.substring(1)
+			// : superTmp;
+			return "E"
+					+ NameUtil.getClassName(name.getRawName())
 					+ NameUtil.getClassName(env.getInterfaceForCommonTreeNode(c.getSuperDef()).getName().getRawName());
 		}
 	}

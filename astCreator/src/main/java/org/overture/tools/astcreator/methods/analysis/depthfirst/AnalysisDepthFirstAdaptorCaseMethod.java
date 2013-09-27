@@ -73,7 +73,8 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
 		this.requiredImports.add(env.analysisException.getName().getCanonicalName());
 
 		StringBuffer bodySb = new StringBuffer();
-		if (!(c instanceof ExternalJavaClassDefinition) ||(c instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition) c).extendsNode))
+		if (!(c instanceof ExternalJavaClassDefinition)
+				|| (c instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition) c).extendsNode))
 		{
 			bodySb.append("\t\t_visitedNodes.add(node);\n");
 		}

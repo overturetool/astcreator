@@ -75,7 +75,8 @@ public class RemoveChildMethod extends Method
 			}
 			if (!field.isList)
 			{
-				sb.append("\t\tif (this." + field.getName(env) + " == child) {\n");
+				sb.append("\t\tif (this." + field.getName(env)
+						+ " == child) {\n");
 				sb.append("\t\t\tthis." + field.getName(env) + " = null;\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t}\n\n");

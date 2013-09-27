@@ -61,50 +61,54 @@ public abstract class ParserWrapper<T>
 		{
 			return message;
 		}
-		
+
 		@Override
 		public String toString()
 		{
-		return file.getName()+" line "+line+":"+charPositionInLine+" "+message;
+			return file.getName() + " line " + line + ":" + charPositionInLine
+					+ " " + message;
 		}
 
 	}
 
 	protected Parser parser;
 	protected Lexer lexer;
-	
+
 	List<IError> errors = new Vector<IError>();
 
-	protected abstract T internalParse(File source, CharStream input) throws IOException;
-	
+	protected abstract T internalParse(File source, CharStream input)
+			throws IOException;
+
 	public T parse(File source) throws IOException
 	{
 		ANTLRFileStream input = new ANTLRFileStream(source.getAbsolutePath());
-		return internalParse(source,input);
+		return internalParse(source, input);
 	}
 
 	public T parse(File source, String data) throws IOException
 	{
 		ANTLRStringStream input = new ANTLRStringStream(data);
-		return internalParse(source,input);
+		return internalParse(source, input);
 	}
-		
-	protected synchronized void addErrorsParser(File source,List<RecognitionException> exps)
+
+	protected synchronized void addErrorsParser(File source,
+			List<RecognitionException> exps)
 	{
 		for (RecognitionException errEx : exps)
 		{
 			addError(new ParseError(source, errEx.line, errEx.charPositionInLine, getErrorMessage(errEx, parser.getTokenNames())));
 		}
 	}
-	
-	protected synchronized void addErrorsLexer(File source,List<RecognitionException> exps)
+
+	protected synchronized void addErrorsLexer(File source,
+			List<RecognitionException> exps)
 	{
 		for (RecognitionException errEx : exps)
 		{
 			addError(new ParseError(source, errEx.line, errEx.charPositionInLine, getErrorMessageLexer(errEx, parser.getTokenNames())));
 		}
 	}
-	
+
 	protected synchronized void addError(IError err)
 	{
 		errors.add(err);
@@ -114,125 +118,143 @@ public abstract class ParserWrapper<T>
 	{
 		return errors.size() != 0;
 	}
-	
+
 	public List<IError> getErrors()
 	{
 		return errors;
 	}
-	
-	public String getErrorMessageLexer(RecognitionException e, String[] tokenNames) {
+
+	public String getErrorMessageLexer(RecognitionException e,
+			String[] tokenNames)
+	{
 		String msg = null;
-		if ( e instanceof MismatchedTokenException ) {
-			MismatchedTokenException mte = (MismatchedTokenException)e;
-			msg = "mismatched character "+lexer.getCharErrorDisplay(e.c)+" expecting "+lexer.getCharErrorDisplay(mte.expecting);
-		}
-		else if ( e instanceof NoViableAltException ) {
-//			NoViableAltException nvae = (NoViableAltException)e;
+		if (e instanceof MismatchedTokenException)
+		{
+			MismatchedTokenException mte = (MismatchedTokenException) e;
+			msg = "mismatched character " + lexer.getCharErrorDisplay(e.c)
+					+ " expecting " + lexer.getCharErrorDisplay(mte.expecting);
+		} else if (e instanceof NoViableAltException)
+		{
+			// NoViableAltException nvae = (NoViableAltException)e;
 			// for development, can add "decision=<<"+nvae.grammarDecisionDescription+">>"
 			// and "(decision="+nvae.decisionNumber+") and
 			// "state "+nvae.stateNumber
-			msg = "no viable alternative at character "+lexer.getCharErrorDisplay(e.c);
-		}
-		else if ( e instanceof EarlyExitException ) {
-//			EarlyExitException eee = (EarlyExitException)e;
+			msg = "no viable alternative at character "
+					+ lexer.getCharErrorDisplay(e.c);
+		} else if (e instanceof EarlyExitException)
+		{
+			// EarlyExitException eee = (EarlyExitException)e;
 			// for development, can add "(decision="+eee.decisionNumber+")"
-			msg = "required (...)+ loop did not match anything at character "+lexer.getCharErrorDisplay(e.c);
-		}
-		else if ( e instanceof MismatchedNotSetException ) {
-			MismatchedNotSetException mse = (MismatchedNotSetException)e;
-			msg = "mismatched character "+lexer.getCharErrorDisplay(e.c)+" expecting set "+mse.expecting;
-		}
-		else if ( e instanceof MismatchedSetException ) {
-			MismatchedSetException mse = (MismatchedSetException)e;
-			msg = "mismatched character "+lexer.getCharErrorDisplay(e.c)+" expecting set "+mse.expecting;
-		}
-		else if ( e instanceof MismatchedRangeException ) {
-			MismatchedRangeException mre = (MismatchedRangeException)e;
-			msg = "mismatched character "+lexer.getCharErrorDisplay(e.c)+" expecting set "+
-			lexer.getCharErrorDisplay(mre.a)+".."+lexer.getCharErrorDisplay(mre.b);
-		}
-		else {
+			msg = "required (...)+ loop did not match anything at character "
+					+ lexer.getCharErrorDisplay(e.c);
+		} else if (e instanceof MismatchedNotSetException)
+		{
+			MismatchedNotSetException mse = (MismatchedNotSetException) e;
+			msg = "mismatched character " + lexer.getCharErrorDisplay(e.c)
+					+ " expecting set " + mse.expecting;
+		} else if (e instanceof MismatchedSetException)
+		{
+			MismatchedSetException mse = (MismatchedSetException) e;
+			msg = "mismatched character " + lexer.getCharErrorDisplay(e.c)
+					+ " expecting set " + mse.expecting;
+		} else if (e instanceof MismatchedRangeException)
+		{
+			MismatchedRangeException mre = (MismatchedRangeException) e;
+			msg = "mismatched character " + lexer.getCharErrorDisplay(e.c)
+					+ " expecting set " + lexer.getCharErrorDisplay(mre.a)
+					+ ".." + lexer.getCharErrorDisplay(mre.b);
+		} else
+		{
 			msg = getErrorMessage(e, tokenNames);
 		}
 		return msg;
 	}
-	
-	protected String getErrorMessage(RecognitionException e, String[] tokenNames) {
+
+	protected String getErrorMessage(RecognitionException e, String[] tokenNames)
+	{
 		String msg = e.getMessage();
-		if ( e instanceof UnwantedTokenException ) {
-			UnwantedTokenException ute = (UnwantedTokenException)e;
-			String tokenName="<unknown>";
-			if ( ute.expecting== Token.EOF ) {
+		if (e instanceof UnwantedTokenException)
+		{
+			UnwantedTokenException ute = (UnwantedTokenException) e;
+			String tokenName = "<unknown>";
+			if (ute.expecting == Token.EOF)
+			{
 				tokenName = "EOF";
-			}
-			else {
+			} else
+			{
 				tokenName = tokenNames[ute.expecting];
 			}
-			msg = "extraneous input "+parser.getTokenErrorDisplay(ute.getUnexpectedToken())+
-				" expecting "+tokenName;
-		}
-		else if ( e instanceof MissingTokenException ) {
-			MissingTokenException mte = (MissingTokenException)e;
-			String tokenName="<unknown>";
-			if ( mte.expecting== Token.EOF ) {
+			msg = "extraneous input "
+					+ parser.getTokenErrorDisplay(ute.getUnexpectedToken())
+					+ " expecting " + tokenName;
+		} else if (e instanceof MissingTokenException)
+		{
+			MissingTokenException mte = (MissingTokenException) e;
+			String tokenName = "<unknown>";
+			if (mte.expecting == Token.EOF)
+			{
 				tokenName = "EOF";
-			}
-			else {
+			} else
+			{
 				tokenName = tokenNames[mte.expecting];
 			}
-			msg = "missing "+tokenName+" at "+parser.getTokenErrorDisplay(e.token);
-		}
-		else if ( e instanceof MismatchedTokenException ) {
-			MismatchedTokenException mte = (MismatchedTokenException)e;
-			String tokenName="<unknown>";
-			if ( mte.expecting== Token.EOF ) {
+			msg = "missing " + tokenName + " at "
+					+ parser.getTokenErrorDisplay(e.token);
+		} else if (e instanceof MismatchedTokenException)
+		{
+			MismatchedTokenException mte = (MismatchedTokenException) e;
+			String tokenName = "<unknown>";
+			if (mte.expecting == Token.EOF)
+			{
 				tokenName = "EOF";
-			}
-			else {
+			} else
+			{
 				tokenName = tokenNames[mte.expecting];
 			}
-			msg = "mismatched input "+parser.getTokenErrorDisplay(e.token)+
-				" expecting "+tokenName;
-		}
-		else if ( e instanceof MismatchedTreeNodeException ) {
-			MismatchedTreeNodeException mtne = (MismatchedTreeNodeException)e;
-			String tokenName="<unknown>";
-			if ( mtne.expecting==Token.EOF ) {
+			msg = "mismatched input " + parser.getTokenErrorDisplay(e.token)
+					+ " expecting " + tokenName;
+		} else if (e instanceof MismatchedTreeNodeException)
+		{
+			MismatchedTreeNodeException mtne = (MismatchedTreeNodeException) e;
+			String tokenName = "<unknown>";
+			if (mtne.expecting == Token.EOF)
+			{
 				tokenName = "EOF";
-			}
-			else {
+			} else
+			{
 				tokenName = tokenNames[mtne.expecting];
 			}
-			msg = "mismatched tree node: "+mtne.node+
-				" expecting "+tokenName;
-		}
-		else if ( e instanceof NoViableAltException ) {
-			//NoViableAltException nvae = (NoViableAltException)e;
+			msg = "mismatched tree node: " + mtne.node + " expecting "
+					+ tokenName;
+		} else if (e instanceof NoViableAltException)
+		{
+			// NoViableAltException nvae = (NoViableAltException)e;
 			// for development, can add "decision=<<"+nvae.grammarDecisionDescription+">>"
 			// and "(decision="+nvae.decisionNumber+") and
 			// "state "+nvae.stateNumber
-			msg = "no viable alternative at input "+parser.getTokenErrorDisplay(e.token);
-		}
-		else if ( e instanceof EarlyExitException ) {
-			//EarlyExitException eee = (EarlyExitException)e;
+			msg = "no viable alternative at input "
+					+ parser.getTokenErrorDisplay(e.token);
+		} else if (e instanceof EarlyExitException)
+		{
+			// EarlyExitException eee = (EarlyExitException)e;
 			// for development, can add "(decision="+eee.decisionNumber+")"
-			msg = "required (...)+ loop did not match anything at input "+
-			parser.getTokenErrorDisplay(e.token);
-		}
-		else if ( e instanceof MismatchedSetException ) {
-			MismatchedSetException mse = (MismatchedSetException)e;
-			msg = "mismatched input "+parser.getTokenErrorDisplay(e.token)+
-				" expecting set "+mse.expecting;
-		}
-		else if ( e instanceof MismatchedNotSetException ) {
-			MismatchedNotSetException mse = (MismatchedNotSetException)e;
-			msg = "mismatched input "+parser.getTokenErrorDisplay(e.token)+
-				" expecting set "+mse.expecting;
-		}
-		else if ( e instanceof FailedPredicateException ) {
-			FailedPredicateException fpe = (FailedPredicateException)e;
-			msg = "rule "+fpe.ruleName+" failed predicate: {"+
-				fpe.predicateText+"}?";
+			msg = "required (...)+ loop did not match anything at input "
+					+ parser.getTokenErrorDisplay(e.token);
+		} else if (e instanceof MismatchedSetException)
+		{
+			MismatchedSetException mse = (MismatchedSetException) e;
+			msg = "mismatched input " + parser.getTokenErrorDisplay(e.token)
+					+ " expecting set " + mse.expecting;
+		} else if (e instanceof MismatchedNotSetException)
+		{
+			MismatchedNotSetException mse = (MismatchedNotSetException) e;
+			msg = "mismatched input " + parser.getTokenErrorDisplay(e.token)
+					+ " expecting set " + mse.expecting;
+		} else if (e instanceof FailedPredicateException)
+		{
+			FailedPredicateException fpe = (FailedPredicateException) e;
+			msg = "rule " + fpe.ruleName + " failed predicate: {"
+					+ fpe.predicateText + "}?";
 		}
 		return msg;
 	}

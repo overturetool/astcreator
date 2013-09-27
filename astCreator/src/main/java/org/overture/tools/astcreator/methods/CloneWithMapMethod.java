@@ -7,8 +7,8 @@ import java.util.Vector;
 
 import org.overture.tools.astcreator.definitions.ExternalEnumJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.Field;
-import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.Field.StructureType;
+import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.IClassDefinition.ClassType;
 import org.overture.tools.astcreator.definitions.JavaTypes;
 import org.overture.tools.astcreator.env.Environment;
@@ -22,29 +22,29 @@ public class CloneWithMapMethod extends CloneMethod
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = getSpecializedTypeName(c,env);
+		this.returnType = getSpecializedTypeName(c, env);
 		this.requiredImports.add("java.util.Map");
 
-		this.arguments.add(new Argument("Map<" + env.iNode.getName().getName() + ","
-				+ env.iNode.getName().getName() + ">", "oldToNewMap"));
+		this.arguments.add(new Argument("Map<" + env.iNode.getName().getName()
+				+ "," + env.iNode.getName().getName() + ">", "oldToNewMap"));
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");
-		sbDoc.append("\t * Creates a deep clone of this {@link " + c.getName().getName()
-				+ "} node while putting all\n");
+		sbDoc.append("\t * Creates a deep clone of this {@link "
+				+ c.getName().getName() + "} node while putting all\n");
 		sbDoc.append("\t * old node-new node relations in the map {@code oldToNewMap}.\n");
 		sbDoc.append("\t * @param oldToNewMap the map filled with the old node-new node relation\n");
-		sbDoc.append("\t * @return a deep clone of this {@link " + c.getName().getName()
-				+ "} node\n");
+		sbDoc.append("\t * @return a deep clone of this {@link "
+				+ c.getName().getName() + "} node\n");
 		sbDoc.append("\t */");
 
 		StringBuilder sb = new StringBuilder();
 
 		List<Field> fields = new Vector<Field>();
 
-		for (Field field :  classDefinition.getInheritedFields())
+		for (Field field : classDefinition.getInheritedFields())
 		{
-			if (!classDefinition.refinesField(field.getName(env),env))
+			if (!classDefinition.refinesField(field.getName(env), env))
 			{
 				fields.add(field);
 			}
@@ -62,8 +62,8 @@ public class CloneWithMapMethod extends CloneMethod
 			case Alternative:
 			case Custom:
 			case Unknown:
-				sb.append("\t\t" + c.getName().getName() + " node = new " + c.getName().getName()
-						+ "(\n");
+				sb.append("\t\t" + c.getName().getName() + " node = new "
+						+ c.getName().getName() + "(\n");
 
 				if (!fields.isEmpty())
 				{
@@ -72,7 +72,7 @@ public class CloneWithMapMethod extends CloneMethod
 					{
 						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f,env))
+						if (classDefinition.isRefinedField(f, env))
 						{
 							name = f.getCast(env) + name;
 						}
@@ -108,8 +108,8 @@ public class CloneWithMapMethod extends CloneMethod
 				sb.append("\t\treturn node;");
 				break;
 			case Token:
-				sb.append("\t\t" + c.getName().getName() + " token = new " + c.getName().getName()
-						+ "( ");
+				sb.append("\t\t" + c.getName().getName() + " token = new "
+						+ c.getName().getName() + "( ");
 
 				if (!fields.isEmpty())
 				{
@@ -118,12 +118,11 @@ public class CloneWithMapMethod extends CloneMethod
 					{
 						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f,env))
+						if (classDefinition.isRefinedField(f, env))
 						{
 							name = f.getCast(env) + name;
 						}
-						tmp += ("get"
-								+ NameUtil.getClassName(name) + "(), ");
+						tmp += ("get" + NameUtil.getClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
@@ -189,7 +188,7 @@ public class CloneWithMapMethod extends CloneMethod
 					{
 						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f,env))
+						if (classDefinition.isRefinedField(f, env))
 						{
 							name = f.getCast(env) + name;
 						}
@@ -217,12 +216,11 @@ public class CloneWithMapMethod extends CloneMethod
 					for (Field f : c.getFields())
 					{
 						String name = f.getName(env);
-						if (classDefinition.isRefinedField(f,env))
+						if (classDefinition.isRefinedField(f, env))
 						{
 							name = f.getCast(env) + name;
 						}
-						tmp += ("get"
-								+ NameUtil.getClassName(name) + "(), ");
+						tmp += ("get" + NameUtil.getClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}

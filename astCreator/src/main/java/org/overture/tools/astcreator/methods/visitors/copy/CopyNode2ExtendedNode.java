@@ -55,8 +55,7 @@ public class CopyNode2ExtendedNode extends Method
 		boolean throwsError = false;
 		boolean notUsed = false;
 
-		this.name = "case"
-				+ NameUtil.getClassName(c.getName().getName());
+		this.name = "case" + NameUtil.getClassName(c.getName().getName());
 		this.arguments.add(new Argument(c.getName().getCanonicalName(), "node"));
 		// this.annotation = "@SuppressWarnings(\"unchecked\")";
 		this.returnType = envDest.iNode.getName().getCanonicalName();
@@ -170,15 +169,15 @@ public class CopyNode2ExtendedNode extends Method
 		this.javaDoc = sb.toString();
 	}
 
-	private void doInset(StringBuilder sb, Field to, Field from,Environment env)
+	private void doInset(StringBuilder sb, Field to, Field from, Environment env)
 	{
 		if (from == null)
 		{
 			sb.append("null," + nl);
 			return;
 		}
-		if (classDefinition.refinesField(from.getName(env),env)
-				&& !classDefinition.isRefinedField(from,env))
+		if (classDefinition.refinesField(from.getName(env), env)
+				&& !classDefinition.isRefinedField(from, env))
 		{
 			return;
 		}
@@ -262,7 +261,7 @@ public class CopyNode2ExtendedNode extends Method
 	{
 		if (!convertArgTypes.contains(from.type.getName().getCanonicalName()))
 		{
-			factory.addMethod(new ConvertMethod(factory,  from, to));
+			factory.addMethod(new ConvertMethod(factory, from, to));
 			convertArgTypes.add(from.type.getName().getCanonicalName());
 		}
 	}

@@ -9,7 +9,7 @@ public class ExternalEnumJavaClassDefinition extends
 			IClassDefinition superClass, ClassType type, String name,
 			Environment env)
 	{
-		super(rawName, superClass, type, name, false,env);
-		
+		super(rawName, superClass, type, name, false, env);
+
 	}
 }

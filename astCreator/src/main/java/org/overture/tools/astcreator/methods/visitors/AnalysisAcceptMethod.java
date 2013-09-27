@@ -25,18 +25,21 @@ public class AnalysisAcceptMethod extends AbstractAcceptMethod
 	}
 
 	@Override
-	protected String getThenTemplate(IInterfaceDefinition argDefExt, String visitorName)
+	protected String getThenTemplate(IInterfaceDefinition argDefExt,
+			String visitorName)
 	{
 		return "(("
 				+ argDefExt.getName().getName()
-				+ ")"+visitorName+").case"
-				+ AnalysisUtil.getCaseClass(environment, classDefinition).getName()
-						.getName() + "(this);";
+				+ ")"
+				+ visitorName
+				+ ").case"
+				+ AnalysisUtil.getCaseClass(environment, classDefinition).getName().getName()
+				+ "(this);";
 	}
 
 	@Override
 	protected String getElseTemplate(String visitorName)
 	{
-		return visitorName+".%s%s"+ "(this);";
+		return visitorName + ".%s%s" + "(this);";
 	}
 }

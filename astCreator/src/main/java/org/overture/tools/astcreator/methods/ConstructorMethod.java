@@ -16,7 +16,7 @@ public class ConstructorMethod extends Method
 	public ConstructorMethod(IClassDefinition c)
 	{
 		super(c);
-		isConstructor=true;
+		isConstructor = true;
 	}
 
 	@Override
@@ -31,7 +31,8 @@ public class ConstructorMethod extends Method
 		sbDoc.append("\t");
 		sbDoc.append("/**\n");
 		sbDoc.append("\t");
-		sbDoc.append("* Creates a new {@code " + classDefinition.getName().getName()
+		sbDoc.append("* Creates a new {@code "
+				+ classDefinition.getName().getName()
 				+ "} node with the given nodes as children.\n");
 		sbDoc.append("\t");
 		sbDoc.append("* @deprecated This method should not be used, use AstFactory instead.\n");
@@ -68,12 +69,12 @@ public class ConstructorMethod extends Method
 			String name = f.getName(env).replaceAll("_", "");
 			this.arguments.add(new Argument(f.getMethodArgumentType(env), name
 					+ "_"));
-			
+
 			sb.append("\t\t");
 
 			if (f.structureType == StructureType.Java)
 			{
-				sb.append("this."+f.getName(env) +" = ");
+				sb.append("this." + f.getName(env) + " = ");
 				sb.append(name + "_");
 				sb.append(";\n");
 			} else
@@ -85,13 +86,14 @@ public class ConstructorMethod extends Method
 				sb.append(name + "_");
 				sb.append(");\n");
 			}
-			
+
 			if (f.structureType == StructureType.Tree)
 			{
 				sbDoc.append("\t* @param " + name + "_ the {@link "
-						+ NameUtil.stripGenerics(f.getType(env)) + "} node for the {@code " + name
-						+ "} child of this {@link " + classDefinition.getName().getName()
-						+ "} node\n");
+						+ NameUtil.stripGenerics(f.getType(env))
+						+ "} node for the {@code " + name
+						+ "} child of this {@link "
+						+ classDefinition.getName().getName() + "} node\n");
 			} else
 			{
 				sbDoc.append("\t* @param "
@@ -129,16 +131,16 @@ public class ConstructorMethod extends Method
 	{
 		Set<String> list = new HashSet<String>();
 		list.addAll(super.getRequiredImports(env));
-		if (env.isTreeNode(classDefinition ))
+		if (env.isTreeNode(classDefinition))
 		{
 
 			List<Field> fields = new Vector<Field>();
 
-			fields.addAll( classDefinition.getInheritedFields());
+			fields.addAll(classDefinition.getInheritedFields());
 			for (Field field : fields)
 			{
 
-				if (classDefinition.refinesField(field.getName(env),env))
+				if (classDefinition.refinesField(field.getName(env), env))
 				{
 					continue;
 				}

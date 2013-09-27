@@ -8,7 +8,8 @@ import org.overture.tools.astcreator.ToStringAddOn;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 
-public interface IClassDefinition extends IInterfaceDefinition {
+public interface IClassDefinition extends IInterfaceDefinition
+{
 	Set<IInterfaceDefinition> getInterfaces();
 
 	JavaName getName();
@@ -34,7 +35,8 @@ public interface IClassDefinition extends IInterfaceDefinition {
 	public void checkFieldTypeHierarchy(Environment e)
 			throws AstCreatorException;
 
-	public enum ClassType {
+	public enum ClassType
+	{
 		Production, Alternative, Token, Custom, Unknown, SubProduction
 	}
 
@@ -47,8 +49,8 @@ public interface IClassDefinition extends IInterfaceDefinition {
 	public void addInterface(IInterfaceDefinition intf);
 
 	public String getAstPackage();
-	
+
 	public void setIsBaseTree(boolean b);
-	
+
 	public boolean isBaseTree();
 }

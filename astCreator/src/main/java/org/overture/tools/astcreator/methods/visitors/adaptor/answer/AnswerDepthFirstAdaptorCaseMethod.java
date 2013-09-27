@@ -4,7 +4,8 @@ import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
 
-public class AnswerDepthFirstAdaptorCaseMethod extends AnalysisDepthFirstAdaptorCaseMethod
+public class AnswerDepthFirstAdaptorCaseMethod extends
+		AnalysisDepthFirstAdaptorCaseMethod
 {
 	public AnswerDepthFirstAdaptorCaseMethod()
 	{

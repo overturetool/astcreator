@@ -1,8 +1,8 @@
 package org.overture.tools.astcreator.methods.visitors.adaptor.answer;
 
+import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
-import org.overture.tools.astcreator.definitions.IClassDefinition;
 
 public class AnswerAdaptorDefaultMethod extends AnalysisAdaptorDefaultMethod
 {
@@ -21,6 +21,6 @@ public class AnswerAdaptorDefaultMethod extends AnalysisAdaptorDefaultMethod
 	{
 		addReturnToBody = true;
 		super.prepare(env);
-		this.returnType="A";
+		this.returnType = "A";
 	}
 }

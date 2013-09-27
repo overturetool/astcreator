@@ -38,7 +38,7 @@ public class ExtendedEnvironment extends Environment
 		this.baseEnv = baseEnvironment;
 		this.extensionName = extensionName;
 	}
-	
+
 	private Set<IInterfaceDefinition> getTaggedDefs(String tag)
 	{
 		Set<IInterfaceDefinition> res = new HashSet<IInterfaceDefinition>();
@@ -52,7 +52,6 @@ public class ExtendedEnvironment extends Environment
 		}
 		return res;
 	}
-	
 
 	public IInterfaceDefinition getTaggedDef(String tag)
 	{
@@ -82,7 +81,7 @@ public class ExtendedEnvironment extends Environment
 		}
 		return null;
 	}
-	
+
 	public IInterfaceDefinition getTaggedBaseDef(String tag)
 	{
 		Set<IInterfaceDefinition> res = getTaggedDefs(tag);

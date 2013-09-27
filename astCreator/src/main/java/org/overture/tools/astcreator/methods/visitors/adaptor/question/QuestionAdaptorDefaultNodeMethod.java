@@ -11,7 +11,6 @@ public class QuestionAdaptorDefaultNodeMethod extends
 
 	}
 
-
 	@Override
 	protected void setupArguments(Environment env)
 	{

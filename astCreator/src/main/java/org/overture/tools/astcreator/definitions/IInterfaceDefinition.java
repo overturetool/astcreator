@@ -7,7 +7,8 @@ import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 import org.overture.tools.astcreator.methods.Method;
 
-public interface IInterfaceDefinition {
+public interface IInterfaceDefinition
+{
 	/**
 	 * Returns whether source code for this has object already be acquired.
 	 * 
@@ -16,8 +17,7 @@ public interface IInterfaceDefinition {
 	public abstract boolean isJavaSourceWritten();
 
 	/**
-	 * Should be invoked with true when the Java source code for this object has
-	 * been written to a file.
+	 * Should be invoked with true when the Java source code for this object has been written to a file.
 	 * 
 	 * @param isWritten
 	 */
@@ -26,8 +26,8 @@ public interface IInterfaceDefinition {
 	public String getAstPackage();
 
 	public abstract JavaName getName();
-	
-	public abstract  String getNameWithGenericArguments();
+
+	public abstract String getNameWithGenericArguments();
 
 	public abstract Set<String> getImports(Environment env);
 
@@ -83,12 +83,11 @@ public interface IInterfaceDefinition {
 			+ "*******************************************************************************/\n";
 
 	public void setIsBaseTree(boolean b);
-	
+
 	public boolean isBaseTree();
 
 	public void setIsExtTree(boolean b);
-	
-	public boolean isExtTree();
 
+	public boolean isExtTree();
 
 }

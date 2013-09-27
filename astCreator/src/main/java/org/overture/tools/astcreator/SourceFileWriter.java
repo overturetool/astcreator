@@ -28,7 +28,7 @@ public class SourceFileWriter
 	public static void write(File outputFolder, Environment env,
 			boolean generateVdm)
 	{
-		write(outputFolder,env,generateVdm,false);
+		write(outputFolder, env, generateVdm, false);
 	}
 
 	public static void write(File outputFolder, Environment env,
@@ -54,15 +54,15 @@ public class SourceFileWriter
 			{
 				continue;
 			}
-			
-			//TODO temporary fix for JWC's fix
+
+			// TODO temporary fix for JWC's fix
 			if (def instanceof EnumDefinition)
 			{
 				continue;
 			}
-			
 
-			if (extOnly && def.isBaseTree() && !def.isExtTree()) {
+			if (extOnly && def.isBaseTree() && !def.isExtTree())
+			{
 				continue;
 			}
 
@@ -70,7 +70,7 @@ public class SourceFileWriter
 			// System.out.println(def.getName());
 			System.out.flush();
 			i++;
-			if (i%72 == 0) // linewrap after column 72
+			if (i % 72 == 0) // linewrap after column 72
 				System.out.println();
 			SourceFileWriter.write(outputFolder, def, env);
 			// SourceFileWriter.write(generatedVdm, def, false);
@@ -205,7 +205,8 @@ public class SourceFileWriter
 		}
 	}
 
-	public static void write(File generated, IInterfaceDefinition def, Environment env)
+	public static void write(File generated, IInterfaceDefinition def,
+			Environment env)
 	{
 		write(generated, def, true, env);
 	}
@@ -213,7 +214,8 @@ public class SourceFileWriter
 	private static void write(File generated, IInterfaceDefinition def,
 			boolean writeJava, Environment env)
 	{
-		if (def.isJavaSourceWritten()) return;
+		if (def.isJavaSourceWritten())
+			return;
 		try
 		{
 			String name = null;
@@ -249,7 +251,7 @@ public class SourceFileWriter
 		{
 			e.printStackTrace();
 		}
-		//def.setJavaSourceWritten(true);
+		// def.setJavaSourceWritten(true);
 	}
 
 	private static File createFolder(File src, String packageName)

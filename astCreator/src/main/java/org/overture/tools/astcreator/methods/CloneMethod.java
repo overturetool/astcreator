@@ -39,7 +39,7 @@ public class CloneMethod extends Method
 
 		for (Field field : classDefinition.getInheritedFields())
 		{
-			if (!classDefinition.refinesField(field.getName(env),env))
+			if (!classDefinition.refinesField(field.getName(env), env))
 			{
 				fields.add(field);
 			}
@@ -67,7 +67,7 @@ public class CloneMethod extends Method
 					{
 						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f,env))
+						if (classDefinition.isRefinedField(f, env))
 						{
 							name = f.getCast(env) + name;
 						}
@@ -111,7 +111,7 @@ public class CloneMethod extends Method
 					{
 						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f,env))
+						if (classDefinition.isRefinedField(f, env))
 						{
 							name = f.getCast(env) + name;
 						}
@@ -144,7 +144,7 @@ public class CloneMethod extends Method
 		imports.addAll(super.getRequiredImports(env));
 		for (Field f : classDefinition.getInheritedFields())
 		{
-			if (classDefinition.isRefinedField(f,env))
+			if (classDefinition.isRefinedField(f, env))
 			{
 				imports.addAll(f.getRequiredImports(env));
 			}

@@ -10,19 +10,20 @@ import org.overture.tools.astcreator.env.Environment;
 
 public class NameUtil
 {
-	public static String getAssembledNamePostFix(Environment env, IClassDefinition c)
+	public static String getAssembledNamePostFix(Environment env,
+			IClassDefinition c)
 	{
 		IClassDefinition tmpSuper = c;
 		String name = "";
 		boolean stop = false;
-		while(tmpSuper!=null && env.isTreeNode(tmpSuper)&& !stop )
+		while (tmpSuper != null && env.isTreeNode(tmpSuper) && !stop)
 		{
-			switch(env.classToType.get(tmpSuper))
+			switch (env.classToType.get(tmpSuper))
 			{
 				case Production:
 					stop = true;
 				case SubProduction:
-					name+=tmpSuper.getName().getRawName();
+					name += tmpSuper.getName().getRawName();
 					break;
 				default:
 					break;
@@ -31,8 +32,7 @@ public class NameUtil
 		}
 		return name;
 	}
-	
-	
+
 	public static String getGenericName(IInterfaceDefinition def)
 	{
 		String name = def.getName().getName();
@@ -53,8 +53,8 @@ public class NameUtil
 
 		return name;
 	}
-	
-	public static String getGenericName(String name,String arguments)
+
+	public static String getGenericName(String name, String arguments)
 	{
 		if (!arguments.isEmpty())
 		{
@@ -73,13 +73,12 @@ public class NameUtil
 
 		return name;
 	}
-	
+
 	public static String getClassName(String name)
 	{
 		return javaClassName(firstLetterUpper(name));
 	}
-	
-	
+
 	public static String firstLetterUpper(String name)
 	{
 		return String.valueOf(name.charAt(0)).toUpperCase() + name.substring(1);
@@ -121,14 +120,13 @@ public class NameUtil
 		return name;
 	}
 
+	public static String stripGenerics(String name)
+	{
 
-public static String stripGenerics(String name)
-{
-
-if(name.contains("<"))
-{
-return name.substring(0,name.indexOf('<'));
-}
-return name;
-}
+		if (name.contains("<"))
+		{
+			return name.substring(0, name.indexOf('<'));
+		}
+		return name;
+	}
 }

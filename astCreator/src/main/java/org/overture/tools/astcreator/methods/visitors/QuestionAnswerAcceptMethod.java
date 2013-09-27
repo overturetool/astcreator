@@ -7,7 +7,7 @@ import org.overture.tools.astcreator.utils.NameUtil;
 
 public class QuestionAnswerAcceptMethod extends AbstractAcceptMethod
 {
-	
+
 	@Override
 	protected String getAnalysisTag()
 	{
@@ -29,11 +29,14 @@ public class QuestionAnswerAcceptMethod extends AbstractAcceptMethod
 	}
 
 	@Override
-	protected String getThenTemplate(IInterfaceDefinition argDefExt, String visitorName)
+	protected String getThenTemplate(IInterfaceDefinition argDefExt,
+			String visitorName)
 	{
 		return "return (%s)(("
 				+ argDefExt.getName().getName()
-				+ "<Q,A>)"+visitorName+").case"
+				+ "<Q,A>)"
+				+ visitorName
+				+ ").case"
 				+ AnalysisUtil.getCaseClass(environment, classDefinition).getName().getName()
 				+ "(this, question);";
 	}
@@ -41,13 +44,13 @@ public class QuestionAnswerAcceptMethod extends AbstractAcceptMethod
 	@Override
 	protected String getElseTemplate(String visitorName)
 	{
-		return "return "+visitorName+".%s%s"+ "(this,question);";
+		return "return " + visitorName + ".%s%s" + "(this,question);";
 	}
-	
+
 	@Override
 	protected void prepareVdm(Environment env)
 	{
-		optionalVdmArgument=false;
+		optionalVdmArgument = false;
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");

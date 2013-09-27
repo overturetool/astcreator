@@ -10,12 +10,12 @@ import java.util.Vector;
 
 import org.overture.tools.astcreator.definitions.EnumDefinition;
 import org.overture.tools.astcreator.definitions.Field;
-import org.overture.tools.astcreator.definitions.Field.StructureType;
-import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.definitions.Field.AccessSpecifier;
+import org.overture.tools.astcreator.definitions.Field.StructureType;
 import org.overture.tools.astcreator.definitions.GenericArgumentedIInterfceDefinition;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.IClassDefinition.ClassType;
+import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.definitions.InterfaceDefinition;
 import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.env.BaseEnvironment;
@@ -365,20 +365,17 @@ public class Generator
 					Method m = Method.newMethod(defaultCase, c);
 					answerIntf.addMethod(m);
 					break;
-				} 
+				}
 				default:
 					break;
 			}
-		} 
-		{
-		Method m = Method.newMethod(defaultNodeMethod, null);
-		answerIntf.addMethod(m);
-		m = Method.newMethod(defaultTokenMethod, null);
-		answerIntf.addMethod(m);
 		}
-
-		
-		
+		{
+			Method m = Method.newMethod(defaultNodeMethod, null);
+			answerIntf.addMethod(m);
+			m = Method.newMethod(defaultTokenMethod, null);
+			answerIntf.addMethod(m);
+		}
 
 		Field thisField = new Field();
 		thisField.name = "THIS";
@@ -464,9 +461,9 @@ public class Generator
 				+ config.type), source);
 		adaptor.setIsBaseTree(isBaseTree);
 		// adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
-		
+
 		IInterfaceDefinition implementingInterface = source.getTaggedDef(config.interfaceTag);
-		
+
 		adaptor.addInterface(implementingInterface);
 		adaptor.setGenericArguments(config.genericArguments);
 		Field queue = new Field();
@@ -479,16 +476,16 @@ public class Generator
 		adaptor.addField(queue);
 		((InterfaceDefinition) adaptor).imports.add(queue.type);
 		adaptor.addMethod(new SetMethod(adaptor, queue));
-		
+
 		Field thisField = new Field();
-		 GenericArgumentedIInterfceDefinition relaxedAnswerIntf = new GenericArgumentedIInterfceDefinition(implementingInterface, GenericArgumentedIInterfceDefinition.generateWildcardArguments(config.genericArguments));
-		 thisField.name = "THIS";
-		 thisField.type = relaxedAnswerIntf;
-         thisField.structureType=StructureType.Java;
-         thisField.isFinal = true;
-		
-         adaptor.addField(thisField);
-		
+		GenericArgumentedIInterfceDefinition relaxedAnswerIntf = new GenericArgumentedIInterfceDefinition(implementingInterface, GenericArgumentedIInterfceDefinition.generateWildcardArguments(config.genericArguments));
+		thisField.name = "THIS";
+		thisField.type = relaxedAnswerIntf;
+		thisField.structureType = StructureType.Java;
+		thisField.isFinal = true;
+
+		adaptor.addField(thisField);
+
 		adaptor.setAnnotation("@SuppressWarnings({\"rawtypes\",\"unchecked\"})");
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
@@ -507,10 +504,9 @@ public class Generator
 					AnalysisMethodTemplate mOut = (AnalysisMethodTemplate) Method.newMethod(config.defaultMethod, c);
 					mOut.setDefaultPostfix("Out");
 					adaptor.addMethod(mOut);
-					
-					
+
 					AnalysisMethodTemplate mDefault = (AnalysisMethodTemplate) Method.newMethod(config.defaultMethod, c);
-//					mOut.setDefaultPostfix("Out");
+					// mOut.setDefaultPostfix("Out");
 					adaptor.addMethod(mDefault);
 				}
 					break;
@@ -544,10 +540,9 @@ public class Generator
 			AnalysisAdaptorDefaultNodeMethod mIn = (AnalysisAdaptorDefaultNodeMethod) Method.newMethod(config.defaultNode, null);
 			mIn.setDefaultPostfix("In");
 			adaptor.addMethod(mIn);
-			
-			
+
 			AnalysisAdaptorDefaultNodeMethod mDefault = (AnalysisAdaptorDefaultNodeMethod) Method.newMethod(config.defaultNode, null);
-//			mIn.setDefaultPostfix("In");
+			// mIn.setDefaultPostfix("In");
 			adaptor.addMethod(mDefault);
 		}
 
@@ -559,10 +554,9 @@ public class Generator
 			AnalysisAdaptorDefaultTokenMethod mIn = (AnalysisAdaptorDefaultTokenMethod) Method.newMethod(config.defaultToken, null);
 			mIn.setDefaultPostfix("In");
 			adaptor.addMethod(mIn);
-			
-			
+
 			AnalysisAdaptorDefaultTokenMethod mDefault = (AnalysisAdaptorDefaultTokenMethod) Method.newMethod(config.defaultToken, null);
-//			mIn.setDefaultPostfix("In");
+			// mIn.setDefaultPostfix("In");
 			adaptor.addMethod(mDefault);
 		}
 

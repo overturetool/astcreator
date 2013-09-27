@@ -11,8 +11,7 @@ public class SuperConstructorMethod extends Method
 {
 	public List<Argument> argumentsToSuper = new Vector<Method.Argument>();
 
-	public SuperConstructorMethod(IClassDefinition c,
-			Argument... arg)
+	public SuperConstructorMethod(IClassDefinition c, Argument... arg)
 	{
 		super(c);
 		if (arg != null)

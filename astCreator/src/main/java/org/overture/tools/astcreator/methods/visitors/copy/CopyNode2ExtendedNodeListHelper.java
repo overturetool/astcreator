@@ -26,17 +26,17 @@ public class CopyNode2ExtendedNodeListHelper extends Method
 	{
 		this.name = "copyList";
 		this.arguments.add(new Argument(Environment.listDef.getName().getCanonicalName()
-				+ "<? extends "
-				+ env.iNode.getName().getCanonicalName() + ">", "list"));
-//		this.annotation = "@SuppressWarnings({ \"rawtypes\"/*, \"unchecked\" */})";
+				+ "<? extends " + env.iNode.getName().getCanonicalName() + ">", "list"));
+		// this.annotation = "@SuppressWarnings({ \"rawtypes\"/*, \"unchecked\" */})";
 		this.returnType = envDest.nodeList.getName().getCanonicalName();
 		StringBuilder bodySb = new StringBuilder();
 
 		bodySb.append("\t\t" + this.returnType + " newList = new "
-				+ this.returnType + "<" + envDest.iNode.getName().getPackageName() + "."
+				+ this.returnType + "<"
+				+ envDest.iNode.getName().getPackageName() + "."
 				+ envDest.iNode.getName().getName() + ">(null);\n");
-		bodySb.append("\t\t" + "for( " + env.iNode.getName().getPackageName() + "."
-				+ env.iNode.getName().getName() + " n : list)\n");
+		bodySb.append("\t\t" + "for( " + env.iNode.getName().getPackageName()
+				+ "." + env.iNode.getName().getName() + " n : list)\n");
 		bodySb.append("\t\t" + "{\n");
 		bodySb.append("\t\t" + "\tnewList.add(checkCache(n,n.apply(this)));\n");
 		bodySb.append("\t\t" + "}\n");

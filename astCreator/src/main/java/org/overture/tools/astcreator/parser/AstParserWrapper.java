@@ -16,19 +16,19 @@ public class AstParserWrapper extends ParserWrapper<AstcParser.root_return>
 	{
 		super.lexer = new AstcLexer(data);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		
+
 		AstcParser thisParser = new AstcParser(tokens);
 		parser = thisParser;
 
-		((AstcLexer)lexer).enableErrorMessageCollection(true);
+		((AstcLexer) lexer).enableErrorMessageCollection(true);
 		thisParser.enableErrorMessageCollection(true);
 		try
 		{
-			AstcParser.root_return result =	thisParser.root();
+			AstcParser.root_return result = thisParser.root();
 
-			if (((AstcLexer)lexer).hasExceptions())
+			if (((AstcLexer) lexer).hasExceptions())
 			{
-				List<RecognitionException> exps = ((AstcLexer)lexer).getExceptions();
+				List<RecognitionException> exps = ((AstcLexer) lexer).getExceptions();
 				addErrorsLexer(source, exps);
 				return null;
 			}
@@ -46,13 +46,13 @@ public class AstParserWrapper extends ParserWrapper<AstcParser.root_return>
 		{
 			errEx.printStackTrace();
 			addError(new ParseError(source, errEx.line, errEx.charPositionInLine, getErrorMessage(errEx, parser.getTokenNames())));
-		}catch(RewriteEmptyStreamException errEx)
+		} catch (RewriteEmptyStreamException errEx)
 		{
-			if (((AstcLexer)lexer).hasExceptions())
+			if (((AstcLexer) lexer).hasExceptions())
 			{
-				List<RecognitionException> exps = ((AstcLexer)lexer).getExceptions();
+				List<RecognitionException> exps = ((AstcLexer) lexer).getExceptions();
 				addErrorsLexer(source, exps);
-				
+
 			}
 			if (thisParser.hasExceptions())
 			{
@@ -60,14 +60,15 @@ public class AstParserWrapper extends ParserWrapper<AstcParser.root_return>
 				List<RecognitionException> exps = thisParser.getExceptions();
 				addErrorsParser(source, exps);
 			}
-			addError(new ParseError(source,lexer.getLine(), lexer.getCharPositionInLine(), "Rewrite error for empty stream at: " +errEx.elementDescription));
-		}catch(Exception e)
+			addError(new ParseError(source, lexer.getLine(), lexer.getCharPositionInLine(), "Rewrite error for empty stream at: "
+					+ errEx.elementDescription));
+		} catch (Exception e)
 		{
-			if (((AstcLexer)lexer).hasExceptions())
+			if (((AstcLexer) lexer).hasExceptions())
 			{
-				List<RecognitionException> exps = ((AstcLexer)lexer).getExceptions();
+				List<RecognitionException> exps = ((AstcLexer) lexer).getExceptions();
 				addErrorsLexer(source, exps);
-				
+
 			}
 			if (thisParser.hasExceptions())
 			{

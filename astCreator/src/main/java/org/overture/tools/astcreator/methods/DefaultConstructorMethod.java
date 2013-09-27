@@ -26,21 +26,21 @@ public class DefaultConstructorMethod extends Method
 
 		StringBuilder sb = new StringBuilder();
 
-//		sb.append("\t\tsuper(");
-//
-//		for (Iterator<Field> iterator = classDefinition.getInheritedFields().iterator(); iterator.hasNext();)
-//		{
-//			Field f = (Field) iterator.next();
-//			if (f.isFinal)
-//			{
-//				sb.append("null");
-//				if (iterator.hasNext())
-//				{
-//					sb.append(",");
-//				}
-//			}
-//		}
-//		sb.append(");\n");
+		// sb.append("\t\tsuper(");
+		//
+		// for (Iterator<Field> iterator = classDefinition.getInheritedFields().iterator(); iterator.hasNext();)
+		// {
+		// Field f = (Field) iterator.next();
+		// if (f.isFinal)
+		// {
+		// sb.append("null");
+		// if (iterator.hasNext())
+		// {
+		// sb.append(",");
+		// }
+		// }
+		// }
+		// sb.append(");\n");
 
 		for (Field f : classDefinition.getFields())
 		{

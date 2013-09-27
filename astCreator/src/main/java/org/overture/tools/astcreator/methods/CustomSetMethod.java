@@ -18,8 +18,7 @@ public class CustomSetMethod extends Method
 	@Override
 	protected void prepare(Environment env)
 	{
-		this.name = "set"
-				+ NameUtil.javaClassName(f.getName(env));
+		this.name = "set" + NameUtil.javaClassName(f.getName(env));
 		this.arguments.add(new Argument(f.getMethodArgumentType(env), "value"));
 
 		/**
@@ -33,9 +32,11 @@ public class CustomSetMethod extends Method
 		sbDoc.append("/**\n");
 		sbDoc.append("\t");
 		sbDoc.append("* Sets the {@code " + f.getName(env)
-				+ "} child of this {@link " + classDefinition.getName().getName() + "} node.\n");
+				+ "} child of this {@link "
+				+ classDefinition.getName().getName() + "} node.\n");
 		sbDoc.append("\t* @param value the new {@code " + f.getName(env)
-				+ "} child of this {@link " + classDefinition.getName().getName() + "} node\n");
+				+ "} child of this {@link "
+				+ classDefinition.getName().getName() + "} node\n");
 
 		StringBuilder sb = new StringBuilder();
 

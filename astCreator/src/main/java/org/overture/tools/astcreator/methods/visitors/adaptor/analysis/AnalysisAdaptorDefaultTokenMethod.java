@@ -13,21 +13,20 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 		super(null);
 	}
 
-	
 	@Override
 	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> temp = super.getRequiredImports(env);
-		temp.add( env.iToken.getName().getCanonicalName());
+		temp.add(env.iToken.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
-	
+
 	@Override
 	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		Set<String> temp =super.getRequiredImportsSignature(env);
-		temp.add( env.iToken.getName().getCanonicalName());
+		Set<String> temp = super.getRequiredImportsSignature(env);
+		temp.add(env.iToken.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}

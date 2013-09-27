@@ -1,8 +1,8 @@
 package org.overture.tools.astcreator.methods.visitors.adaptor.question;
 
+import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
-import org.overture.tools.astcreator.definitions.IClassDefinition;
 
 public class QuestionAdaptorDefaultMethod extends AnalysisAdaptorDefaultMethod
 {

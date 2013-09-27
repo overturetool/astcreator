@@ -26,8 +26,7 @@ public class AnalysisUtil
 		}
 		return c;
 	}
-	
-	
+
 	public static IInterfaceDefinition getCaseClass(Environment env,
 			IClassDefinition c)
 	{
@@ -39,16 +38,17 @@ public class AnalysisUtil
 				case SubProduction:
 					return env.getInterfaceForCommonTreeNode(c);
 				default:
-					break;				
+					break;
 			}
 		}
-		
-		if(c instanceof PredefinedClassDefinition&& !c.getInterfaces().isEmpty())
+
+		if (c instanceof PredefinedClassDefinition
+				&& !c.getInterfaces().isEmpty())
 		{
 			// this will be node and token
 			return c.getInterfaces().iterator().next();
 		}
-		
+
 		return c;
 	}
 

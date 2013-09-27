@@ -7,17 +7,17 @@ public class JavaFrozenName extends JavaName
 	{
 		super(packageName, name);
 	}
-	
+
 	@Override
 	public void setPackageName(String packageName)
 	{
 	}
-	
+
 	@Override
 	public void setPostfix(String postfix)
 	{
 	}
-	
+
 	@Override
 	public void setPrefix(String prefix)
 	{

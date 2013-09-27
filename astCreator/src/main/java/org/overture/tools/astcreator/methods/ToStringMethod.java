@@ -126,7 +126,8 @@ public class ToStringMethod extends Method
 							if (!found)
 							{
 								showError("Faild to find field \"_" + p.content
-										+ "\" in class " + classDefinition.getName());
+										+ "\" in class "
+										+ classDefinition.getName());
 							}
 							break;
 						case RawJava:
@@ -195,12 +196,12 @@ public class ToStringMethod extends Method
 		return ToStringPartType.Unknown;
 	}
 
-//	private boolean isVdmBasicType(String type)
-//	{
-//		return (type.contains("int") || type.contains("real")
-//				|| type.contains("char") || type.contains("String")
-//				|| type.contains("seq") || type.contains("set"));
-//	}
+	// private boolean isVdmBasicType(String type)
+	// {
+	// return (type.contains("int") || type.contains("real")
+	// || type.contains("char") || type.contains("String")
+	// || type.contains("seq") || type.contains("set"));
+	// }
 
 	@Override
 	protected void prepareVdm(Environment env)

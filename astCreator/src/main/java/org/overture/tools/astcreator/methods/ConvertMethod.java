@@ -15,16 +15,15 @@ public class ConvertMethod extends Method
 	IClassDefinition fromCDef;
 	IClassDefinition toCDef;
 
-	public ConvertMethod(IClassDefinition c, Field from,
-			Field to)
+	public ConvertMethod(IClassDefinition c, Field from, Field to)
 	{
 		super(c);
 		this.from = from;
 		this.to = to;
 	}
 
-	public ConvertMethod(IClassDefinition c,
-			IClassDefinition from, IClassDefinition to)
+	public ConvertMethod(IClassDefinition c, IClassDefinition from,
+			IClassDefinition to)
 	{
 		super(c);
 		this.fromCDef = from;
@@ -49,7 +48,8 @@ public class ConvertMethod extends Method
 			if (from.isList)
 			{
 				this.arguments.add(new Argument(Environment.listDef.getName().getCanonicalName()
-						+ "<? extends " + from.type.getName().getCanonicalName() + ">", "node"));
+						+ "<? extends "
+						+ from.type.getName().getCanonicalName() + ">", "node"));
 			} else
 			{
 				this.arguments.add(new Argument(from.type.getName().getCanonicalName(), "node"));

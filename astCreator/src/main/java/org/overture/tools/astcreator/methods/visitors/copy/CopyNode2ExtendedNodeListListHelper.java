@@ -28,15 +28,18 @@ public class CopyNode2ExtendedNodeListListHelper extends Method
 		this.arguments.add(new Argument(Environment.listDef.getName().getCanonicalName()
 				+ "<? extends "
 				+ Environment.listDef.getName().getCanonicalName()
-				+"<? extends "
-				+ env.iNode.getName().getCanonicalName()+ ">>", "list"));
-//		this.annotation = "@SuppressWarnings({ \"rawtypes\"/*, \"unchecked\"*/ })";
+				+ "<? extends " + env.iNode.getName().getCanonicalName() + ">>", "list"));
+		// this.annotation = "@SuppressWarnings({ \"rawtypes\"/*, \"unchecked\"*/ })";
 		this.returnType = envDest.nodeListList.getName().getCanonicalName();
 		StringBuilder bodySb = new StringBuilder();
 
 		bodySb.append("\t\t" + this.returnType + " newList = new "
-				+ this.returnType + "<" + envDest.iNode.getName().getCanonicalName() + ">(null);\n");
-		bodySb.append("\t\t" + "for( "+Environment.listDef.getName().getCanonicalName()+"<? extends " + env.iNode.getName().getCanonicalName()+ "> innerList : list)\n");
+				+ this.returnType + "<"
+				+ envDest.iNode.getName().getCanonicalName() + ">(null);\n");
+		bodySb.append("\t\t" + "for( "
+				+ Environment.listDef.getName().getCanonicalName()
+				+ "<? extends " + env.iNode.getName().getCanonicalName()
+				+ "> innerList : list)\n");
 		bodySb.append("\t\t" + "{\n");
 		bodySb.append("\t\t" + "\tnewList.add(copyList(innerList));\n");
 		bodySb.append("\t\t" + "}\n");

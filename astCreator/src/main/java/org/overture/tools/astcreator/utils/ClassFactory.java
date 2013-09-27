@@ -24,49 +24,50 @@ import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.RemoveChildMethod;
 import org.overture.tools.astcreator.methods.ToStringMethod;
 
-public class ClassFactory {
+public class ClassFactory
+{
 	public static IClassDefinition create(String packageName, String rawName,
-			IClassDefinition superClass, ClassType type, Environment env) {
+			IClassDefinition superClass, ClassType type, Environment env)
+	{
 		String preFix = "";
 		String postFix = "";
-		switch (type) {
-		case Alternative:
-			preFix = "A";
-			postFix += NameUtil.getAssembledNamePostFix(env, superClass);
-			// IClassDefinition tmpSuper = superClass;
-			// boolean stop = false;
-			// while(tmpSuper!=null && env.isTreeNode(tmpSuper)&& !stop )
-			// {
-			// switch(env.classToType.get(tmpSuper))
-			// {
-			// case Production:
-			// stop = true;
-			// case SubProduction:
-			// postFix+=tmpSuper.getName().getRawName();
-			// break;
-			// }
-			// tmpSuper = tmpSuper.getSuperDef();
-			// }
-			break;
-		case Production:
-			preFix = "P";
-			postFix += "Base";
-			break;
-		case SubProduction:
-			preFix = "S";
-			postFix = superClass.getName().getRawName() + "Base";
-			break;
-		case Token:
-			preFix = "T";
-			break;
-		default:
-			break;
+		switch (type)
+		{
+			case Alternative:
+				preFix = "A";
+				postFix += NameUtil.getAssembledNamePostFix(env, superClass);
+				// IClassDefinition tmpSuper = superClass;
+				// boolean stop = false;
+				// while(tmpSuper!=null && env.isTreeNode(tmpSuper)&& !stop )
+				// {
+				// switch(env.classToType.get(tmpSuper))
+				// {
+				// case Production:
+				// stop = true;
+				// case SubProduction:
+				// postFix+=tmpSuper.getName().getRawName();
+				// break;
+				// }
+				// tmpSuper = tmpSuper.getSuperDef();
+				// }
+				break;
+			case Production:
+				preFix = "P";
+				postFix += "Base";
+				break;
+			case SubProduction:
+				preFix = "S";
+				postFix = superClass.getName().getRawName() + "Base";
+				break;
+			case Token:
+				preFix = "T";
+				break;
+			default:
+				break;
 		}
-		JavaName name = new JavaName(packageName, preFix,
-				NameUtil.firstLetterUpper(rawName), postFix);
+		JavaName name = new JavaName(packageName, preFix, NameUtil.firstLetterUpper(rawName), postFix);
 		name.setTag(rawName);
-		BaseClassDefinition classDef = new BaseClassDefinition(name,
-				env.getAstPackage());
+		BaseClassDefinition classDef = new BaseClassDefinition(name, env.getAstPackage());
 		classDef.setSuper(superClass);
 		classDef.methods.addAll(createMethods(type, classDef));
 		classDef.setAbstract(type == ClassType.Production
@@ -78,12 +79,14 @@ public class ClassFactory {
 	}
 
 	private static Set<Method> createMethods(ClassType type,
-			IClassDefinition classDef) {
+			IClassDefinition classDef)
+	{
 		Set<Method> methods = new HashSet<Method>();
 
 		methods.add(new ConstructorMethod(classDef));
 		methods.add(new ConstructorTreeFieldsOnlyMethod(classDef));
-		if (type != ClassType.Token) {
+		if (type != ClassType.Token)
+		{
 			methods.add(new DefaultConstructorMethod(classDef));
 			methods.add(new RemoveChildMethod(classDef));
 		}
@@ -96,34 +99,34 @@ public class ClassFactory {
 
 		methods.add(new EqualsMethod(classDef));
 
-//		switch (type) {
-//		case Alternative:
-//		case Custom:
-//			methods.add(new KindMethod(classDef, false));
-//			methods.add(new KindString(classDef, false));
-//			break;
-//		case Production:
-//			methods.add(new KindNodeMethod(classDef));
-//			methods.add(new KindNodeString(classDef));
-//			methods.add(new KindMethod(classDef, true));
-//			break;
-//		case SubProduction:
-//			methods.add(new KindMethod(classDef, false));
-//			methods.add(new KindString(classDef, false));
-//			methods.add(new KindMethod(classDef, true));
-//			break;
-//		case Token:
-//			break;
-//		default:
-//			break;
-//		}
+		// switch (type) {
+		// case Alternative:
+		// case Custom:
+		// methods.add(new KindMethod(classDef, false));
+		// methods.add(new KindString(classDef, false));
+		// break;
+		// case Production:
+		// methods.add(new KindNodeMethod(classDef));
+		// methods.add(new KindNodeString(classDef));
+		// methods.add(new KindMethod(classDef, true));
+		// break;
+		// case SubProduction:
+		// methods.add(new KindMethod(classDef, false));
+		// methods.add(new KindString(classDef, false));
+		// methods.add(new KindMethod(classDef, true));
+		// break;
+		// case Token:
+		// break;
+		// default:
+		// break;
+		// }
 		return methods;
 	}
 
 	public static IClassDefinition createExternalJavaEnum(String rawName,
-			ClassType token, String name, Environment env) {
-		IClassDefinition c = new ExternalEnumJavaClassDefinition(rawName, null,
-				ClassType.Token, name, env);
+			ClassType token, String name, Environment env)
+	{
+		IClassDefinition c = new ExternalEnumJavaClassDefinition(rawName, null, ClassType.Token, name, env);
 		c.getName().setTag(rawName);
 		env.addClass(c);
 		env.classToType.put(c, ClassType.Token);
@@ -131,16 +134,17 @@ public class ClassFactory {
 	}
 
 	public static IClassDefinition createExternalJava(String rawName,
-			ClassType token, String name, boolean nodeType, Environment env) {
-		IClassDefinition c = new ExternalJavaClassDefinition(rawName, null,
-				ClassType.Token, name, nodeType, env);
+			ClassType token, String name, boolean nodeType, Environment env)
+	{
+		IClassDefinition c = new ExternalJavaClassDefinition(rawName, null, ClassType.Token, name, nodeType, env);
 		c.getName().setTag(rawName);
 		env.addClass(c);
 		env.classToType.put(c, ClassType.Token);
 		return c;
 	}
 
-	public static IClassDefinition createCustom(JavaName name, Environment env) {
+	public static IClassDefinition createCustom(JavaName name, Environment env)
+	{
 		IClassDefinition c = new BaseClassDefinition(name, env.getAstPackage());
 		c.addMethod(new ConstructorMethod(c));
 		c.addMethod(new DefaultConstructorMethod(c));
@@ -148,11 +152,12 @@ public class ClassFactory {
 		env.classToType.put(c, ClassType.Custom);
 		return c;
 	}
-	
-	
-	public static IClassDefinition createCustom(JavaName name, Environment env,Field... fields) {
-		IClassDefinition c = createCustom( name,  env);
-		
+
+	public static IClassDefinition createCustom(JavaName name, Environment env,
+			Field... fields)
+	{
+		IClassDefinition c = createCustom(name, env);
+
 		for (Field field : fields)
 		{
 			c.addField(field);
@@ -160,32 +165,34 @@ public class ClassFactory {
 		return c;
 	}
 
-	public static boolean createInterface(IClassDefinition c, Environment env) {
-		if (env.getInterfaceForCommonTreeNode(c) != null) {
+	public static boolean createInterface(IClassDefinition c, Environment env)
+	{
+		if (env.getInterfaceForCommonTreeNode(c) != null)
+		{
 			return false;
 		}
 
-		InterfaceDefinition intf = new InterfaceDefinition(c.getName().clone(),
-				env.getAstPackage());
+		InterfaceDefinition intf = new InterfaceDefinition(c.getName().clone(), env.getAstPackage());
 		intf.methods.addAll(c.getMethods());
 
 		// intf.getName().setPackageName(c.getName().getPackageName()
 		// + ".intf");
 		String prefix = "I";
 		String postFix = "";
-		if (env.isTreeNode(c)) {
-			switch (env.classToType.get(c)) {
-			case Production:
-				prefix = "P";
-				break;
-			case SubProduction:
-				prefix = "S";
-				// postFix = c.getSuperDef().getName().getRawName();
-				postFix += NameUtil.getAssembledNamePostFix(env,
-						c.getSuperDef());
-				break;
-			default:
-				break;
+		if (env.isTreeNode(c))
+		{
+			switch (env.classToType.get(c))
+			{
+				case Production:
+					prefix = "P";
+					break;
+				case SubProduction:
+					prefix = "S";
+					// postFix = c.getSuperDef().getName().getRawName();
+					postFix += NameUtil.getAssembledNamePostFix(env, c.getSuperDef());
+					break;
+				default:
+					break;
 			}
 		}
 		JavaName name = intf.getName();
@@ -193,10 +200,10 @@ public class ClassFactory {
 		name.setPostfix(postFix);
 		intf.setTag(c.getName().getTag());
 		intf.filterMethodsIfInherited = true;
-		IInterfaceDefinition superClass = env.getInterfaceForCommonTreeNode(c
-				.getSuperDef());
+		IInterfaceDefinition superClass = env.getInterfaceForCommonTreeNode(c.getSuperDef());
 
-		if (superClass == null) {
+		if (superClass == null)
+		{
 			return false;
 		}
 		intf.supers.add(superClass);

@@ -24,8 +24,8 @@ public class BaseEnvironment
 	public static final IInterfaceDefinition vectorDef = new PredefinedClassDefinition("java.util", "Vector", true);
 	public static final IInterfaceDefinition linkedListDef = new PredefinedClassDefinition("java.util", "LinkedList", true);
 	public static final IInterfaceDefinition collectionDef = new PredefinedClassDefinition("java.util", "Collection", true);
-	
-//	public PredefinedClassDefinition iNode;
+
+	// public PredefinedClassDefinition iNode;
 
 	public PredefinedClassDefinition node;
 	public PredefinedClassDefinition token;
@@ -34,7 +34,7 @@ public class BaseEnvironment
 	public PredefinedClassDefinition graphNodeList;
 	public PredefinedClassDefinition graphNodeListList;
 	public PredefinedClassDefinition externalNode;
-	
+
 	public PredefinedClassDefinition iNode;
 	public InterfaceDefinition iToken;
 
@@ -60,11 +60,11 @@ public class BaseEnvironment
 	public BaseEnvironment(String name)
 	{
 		this.name = name;
-		
-//		iNode = new PredefinedClassDefinition(defaultPackage, "INode");
+
+		// iNode = new PredefinedClassDefinition(defaultPackage, "INode");
 		node = new PredefinedClassDefinition(defaultPackage, "Node");
-//		node.addInterface(iNode);
-		
+		// node.addInterface(iNode);
+
 		nodeList = new PredefinedClassDefinition(defaultPackage, "NodeList");
 		nodeListList = new PredefinedClassDefinition(defaultPackage, "NodeListList");
 		graphNodeList = new PredefinedClassDefinition(defaultPackage, "GraphNodeList");
@@ -79,7 +79,7 @@ public class BaseEnvironment
 		addClass(externalNode);
 
 		baseClasses.addAll(classes);
-//		interfaces.add(iNode);
+		// interfaces.add(iNode);
 		interfaces.add(serializableDef);
 		interfaces.add(listDef);
 		interfaces.add(queueDef);
@@ -87,15 +87,14 @@ public class BaseEnvironment
 		interfaces.add(collectionDef);
 		baseClasses.add(vectorDef);
 		baseClasses.add(linkedListDef);
-		
-		
+
 		iNode = new PredefinedClassDefinition(defaultPackage, "INode");
 		iToken = new PredefinedClassDefinition(defaultPackage, "IToken");
 		// iToken.addInterface(iNode);
 		iToken.supers.add(iNode);
 		node.addInterface(iNode);
 		token.addInterface(iToken);
-		
+
 	}
 
 	public String getName()
@@ -150,10 +149,11 @@ public class BaseEnvironment
 
 	public void setDefaultPackages(String defaultNodePackage)
 	{
-		setDefaultPackages(defaultNodePackage,false);
+		setDefaultPackages(defaultNodePackage, false);
 	}
 
-	public void setDefaultPackages(String defaultNodePackage,boolean excludeBaseNodes)
+	public void setDefaultPackages(String defaultNodePackage,
+			boolean excludeBaseNodes)
 	{
 		String astPackage = defaultNodePackage.substring(0, defaultNodePackage.lastIndexOf("."));
 		String nodePackage = defaultNodePackage.substring(defaultNodePackage.lastIndexOf("."));
@@ -161,19 +161,19 @@ public class BaseEnvironment
 		String oldPackage = this.defaultPackage;
 		this.templateDefaultPackage = this.defaultPackage = astPackage
 				+ nodePackage;
-		
-		if(excludeBaseNodes)
+
+		if (excludeBaseNodes)
 		{
-		node.getName().setPackageName(defaultPackage);
-		iNode.getName().setPackageName(defaultPackage);
-		iToken.getName().setPackageName(defaultPackage);
-		nodeList.getName().setPackageName(defaultPackage);
-		nodeListList.getName().setPackageName(defaultPackage);
-		graphNodeList.getName().setPackageName(defaultPackage);
-		graphNodeListList.getName().setPackageName(defaultPackage);
-		token.getName().setPackageName(defaultPackage);
-		externalNode.getName().setPackageName(defaultPackage);
-	}
+			node.getName().setPackageName(defaultPackage);
+			iNode.getName().setPackageName(defaultPackage);
+			iToken.getName().setPackageName(defaultPackage);
+			nodeList.getName().setPackageName(defaultPackage);
+			nodeListList.getName().setPackageName(defaultPackage);
+			graphNodeList.getName().setPackageName(defaultPackage);
+			graphNodeListList.getName().setPackageName(defaultPackage);
+			token.getName().setPackageName(defaultPackage);
+			externalNode.getName().setPackageName(defaultPackage);
+		}
 
 		for (IClassDefinition c : classes)
 		{

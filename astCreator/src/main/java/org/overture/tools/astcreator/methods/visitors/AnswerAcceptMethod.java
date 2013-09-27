@@ -7,7 +7,7 @@ import org.overture.tools.astcreator.utils.NameUtil;
 
 public class AnswerAcceptMethod extends AbstractAcceptMethod
 {
-	
+
 	@Override
 	protected String getAnalysisTag()
 	{
@@ -28,19 +28,19 @@ public class AnswerAcceptMethod extends AbstractAcceptMethod
 	}
 
 	@Override
-	protected String getThenTemplate(IInterfaceDefinition argDefExt, String visitorName)
+	protected String getThenTemplate(IInterfaceDefinition argDefExt,
+			String visitorName)
 	{
-		return "return (%s)((" + argDefExt.getName().getName()
-				+ "<A>)"+visitorName+").%s%s"
-				+ "(this);";
+		return "return (%s)((" + argDefExt.getName().getName() + "<A>)"
+				+ visitorName + ").%s%s" + "(this);";
 	}
 
 	@Override
 	protected String getElseTemplate(String visitorName)
 	{
-		return "return "+visitorName+".%s%s"+ "(this);";
+		return "return " + visitorName + ".%s%s" + "(this);";
 	}
-	
+
 	@Override
 	protected void prepareVdm(Environment env)
 	{
@@ -48,8 +48,9 @@ public class AnswerAcceptMethod extends AbstractAcceptMethod
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link IAnswer<A>#case" + c.getName().getName() + "("
-				+ c.getName().getName() + ")} of the {@link IAnswer<A>} {@code caller}.\n");
+		sb.append("\t* Calls the {@link IAnswer<A>#case"
+				+ c.getName().getName() + "(" + c.getName().getName()
+				+ ")} of the {@link IAnswer<A>} {@code caller}.\n");
 		sb.append("\t* @param caller the {@link IAnswer<A>} to which this {@link "
 				+ c.getName() + "} node is applied\n");
 		sb.append("\t*/");

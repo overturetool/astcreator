@@ -11,13 +11,12 @@ public class QuestionAnswerAdaptorDefaultNodeMethod extends
 
 	}
 
-	
 	@Override
 	protected void prepare(Environment env)
 	{
 		addReturnToBody = true;
 		super.prepare(env);
-		this.returnType="A";
+		this.returnType = "A";
 	}
 
 	@Override
