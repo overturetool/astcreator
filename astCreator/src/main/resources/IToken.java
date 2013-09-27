@@ -6,19 +6,6 @@ import java.util.Map;
  */
 @SuppressWarnings("nls")
 public interface %IToken% extends %INode% {
-//	/**
-//	 * Returns the {@link TokenEnum} corresponding to the
-//	 * type of this {@link Token} node.
-//	 * @return the {@link TokenEnum} for this node
-//	 */
-//	public abstract TokenEnum kindToken();
-
-	/**
-	 * Returns the {@link String} corresponding to the
-	 * type of this {@link Node} node.
-	 * @return the {@link String} for this node
-	 */
-	public String kindNode();
 
 	/**
 	 * Returns the text from the input file from which this token was made.

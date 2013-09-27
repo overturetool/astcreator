@@ -13,4 +13,6 @@ git commit -m "deploy"
 echo Hit enter to push
 pause
 git push
+cd ..
+cd ..
 

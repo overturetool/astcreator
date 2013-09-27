@@ -19,13 +19,7 @@ public class AnalysisUtil
 				case SubProduction:
 					return env.getInterfaceForCommonTreeNode(c);
 				case Token:
-//					if (c instanceof ExternalJavaClassDefinition)
-//					{
 					return env.iToken;
-//					} else
-//					{
-//						return env.getInterfaceForCommonTreeNode(c.getSuperDef());
-//					}
 				default:
 					break;
 			}

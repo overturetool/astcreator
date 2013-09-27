@@ -19,7 +19,6 @@ import org.overture.tools.astcreator.definitions.InterfaceDefinition;
 import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
-import org.overture.tools.astcreator.methods.KindMethod;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
@@ -77,8 +76,15 @@ public class ExtensionGenerator2
 		return false;
 	}
 
-	// 1) Include all class definition and interfaces from the base tree
-	// - Create function: void addBaseAstClassAndInterfaces(result, baseEnv);
+	/**
+	 * 1) Include all class definition and interfaces from the base tree
+	 * <ul>
+	 * <li>Create function: void addBaseAstClassAndInterfaces(result, baseEnv);</li>
+	 * </ul>
+	 * 
+	 * @param result
+	 * @param baseEnv
+	 */
 	private static void addBaseAstClassesAndInterfaces(Environment result,
 			Environment baseEnv)
 	{
@@ -92,17 +98,24 @@ public class ExtensionGenerator2
 			result.getInterfaces().add(idef);
 	}
 
-	// 2) Include all classes from the extension tree we will not generate
-	// an extend-version of or take from the base tree. E.g. PExpBase
-	// from the ext env should not be copied over as we are going to
-	// replace that with PCmlExpBase in the example
-	//
-	// NB! The root tree nodes and utility classes (NodeList, GraphList etc...)
-	// are the nodes to be taken from the base tree.
-	//
-	// - Create function: boolean willGenerateExtensionFor(iDef,baseEnv)
-	// - Create function: boolean isUtilityOrTemplateClass(iDef, env)
-	// - Create function: void includeClassesFromExtension(result, extEnv)
+	/**
+	 * 2) Include all classes from the extension tree we will not generate an extend-version of or take from the base
+	 * tree. E.g. PExpBase from the ext env should not be copied over as we are going to replace that with PCmlExpBase
+	 * in the example
+	 * <p>
+	 * NB! The root tree nodes and utility classes (NodeList, GraphList etc...) are the nodes to be taken from the base
+	 * tree.
+	 * </p>
+	 * <ul>
+	 * <li>Create function: boolean willGenerateExtensionFor(iDef,baseEnv)</li>
+	 * <li>Create function: boolean isUtilityOrTemplateClass(iDef, env)</li>
+	 * <li>Create function: void includeClassesFromExtension(result, extEnv)</li>
+	 * </ul>
+	 * 
+	 * @param iDef
+	 * @param base
+	 * @return
+	 */
 	private static boolean willGenerateExtensionFor(IInterfaceDefinition iDef,
 			Environment base)
 	{
@@ -128,7 +141,6 @@ public class ExtensionGenerator2
 			{
 				if (!isUtilityOrTemplateClass(cDef, ext))
 				{
-					System.out.println("Including extension class: "+cDef);
 					cDef.setIsExtTree(true);
 					result.getClasses().add(cDef);
 				}
@@ -136,9 +148,17 @@ public class ExtensionGenerator2
 		}
 	}
 
-	// 3) Include all interfaces from the extension that are not going to be
-	// extended
-	// - Create function: void includeInterfacesFromExtension(result, extEnv);
+	
+	/**
+	 * 3) Include all interfaces from the extension that are not going to be extended
+	 * <ul>
+	 * <li>Create function: void includeInterfacesFromExtension(result, extEnv);</li>
+	 * </ul>
+	 * 
+	 * @param result
+	 * @param extEnv
+	 * @param base
+	 */
 	private static void includeInterfacesFromExtension(Environment result,
 			Environment extEnv, Environment base)
 	{
@@ -166,13 +186,6 @@ public class ExtensionGenerator2
 		return newName;
 	}
 
-	// private static String computeExtensionPackageName(Environment ext,
-	// Environment base, IInterfaceDefinition baseProduction) {
-	// String cmlPackage = ext.getAstPackage()
-	// + baseProduction.getName().getPackageName()
-	// .replace(base.getAstPackage(), "");
-	// return cmlPackage;
-	// }
 
 	// 4) Generate interfaces and base classes for the interfaces to be extended
 	// in the ext env
@@ -239,7 +252,6 @@ public class ExtensionGenerator2
 			Map<String, IInterfaceDefinition> replacementMap)
 	{
 		Map<String, IClassDefinition> classReplacementMap = new HashMap<String, IClassDefinition>();
-		final String extentionName = ext.getName();
 		// Generate the base classes
 		for (Entry<String, IInterfaceDefinition> e : replacementMap.entrySet())
 		{
@@ -281,43 +293,7 @@ public class ExtensionGenerator2
 			extensionProductionBase.setIsExtTree(true);
 			extensionProductionBase.getName().setTag(baseProductionBase.getName().getTag());
 			extensionProductionBase.addInterface(extProduction);
-			class LocalKindMethod extends KindMethod
-			{
 
-				public LocalKindMethod(IClassDefinition c,
-						boolean isAbstractKind)
-				{
-					super(c, isAbstractKind);
-
-				}
-
-				@Override
-				public String getJavaSourceCode(Environment env)
-				{
-					StringBuilder result = new StringBuilder();
-
-					returnType = "String";
-					name = "kind" + baseProduction.getName().getPrefix()
-							+ baseProduction.getName().getRawName();
-
-					result.append("public " + returnType + " " + name + "()");
-					// result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
-					String nodeNameString = "\"" + extentionName
-							+ baseProduction.getName().getRawName() + "\"";
-					result.append("{ return " + name + "; }\n");
-					result.append("public static final " + returnType + " "
-							+ name + " = " + nodeNameString + ";\n");
-					return result.toString();
-				}
-
-			}
-
-			if (!"S".equals(newName.getPrefix()))
-			{
-				// Add kindMethod that throw RuntimeException
-				Method kindMethod = new LocalKindMethod(baseProductionBase, false);
-				extensionProductionBase.addMethod(kindMethod);
-			}
 			// Add mapping from the extensionProductionBase production to the
 			// extProduction
 			result.treeNodeInterfaces.put(extensionProductionBase, extProduction);
@@ -635,25 +611,6 @@ public class ExtensionGenerator2
 				return qaacm;
 			}
 
-//			@Override
-//			public void updateApplyMethod(IClassDefinition cdef,
-//					String newAnalysisName)
-//			{
-//
-////				QuestionAnswerAcceptMethod qaam = findMethodType(QuestionAnswerAcceptMethod.class, cdef);
-////				if (qaam != null)
-////				{
-////					String newBody = "\t\treturn (A)(("
-////							+ newAnalysisName
-////							+ "<Q,A>)caller).case"
-////							+ AnalysisUtil.getCaseClass(result, cdef).getName().getName()
-////							+ "(this, question);";
-////					
-////					qaam.setPrivilegedBody(newBody);
-//////					qaam.setPrivilegedBody(createIf(2, "caller instanceof "+newAnalysisName, newBody, elseStm));
-////				}
-//
-//			}
 
 			@Override
 			public Method createDefaultCaseMethod(IClassDefinition cdef)
@@ -774,18 +731,6 @@ public class ExtensionGenerator2
 		
 	}
 
-	/*
-	 * Find the first occurrence in the list of methods for cdef that is of class c. Returns null if no method is found
-	 * Throws NullPointerException it either argument is null.
-	 */
-	private static <T extends Method> T findMethodType(Class<T> c,
-			IClassDefinition cdef)
-	{
-		for (Method m : cdef.getMethods())
-			if (c.isInstance(m))
-				return c.cast(m);
-		return null;
-	}
 
 	/*
 	 * Create the IExtAnalysis interface.
@@ -805,18 +750,6 @@ public class ExtensionGenerator2
 
 			}
 
-//			@Override
-//			public void updateApplyMethod(final IClassDefinition cdef,
-//					final String newAnalysisName) {
-//				AnalysisAcceptMethod aam = findMethodType(
-//						AnalysisAcceptMethod.class, cdef);
-//				if (aam != null)
-//					aam.setPrivilegedBody("\t\t ( ("
-//							+ newAnalysisName
-//							+ ") analysis).case"
-//							+ AnalysisUtil.getCaseClass(result, cdef).getName()
-//									.getName() + "(this);");
-//			}
 
 			@Override
 			public Method createDefaultCaseMethod(IClassDefinition cdef) {
@@ -978,35 +911,6 @@ public class ExtensionGenerator2
 
 		}
 
-		// {
-		// AnalysisAdaptorDefaultNodeMethod mOut = new
-		// AnalysisAdaptorDefaultNodeMethod();
-		// mOut.setDefaultPostfix("Out");
-		// // mOut.setEnvironment(source);
-		// extAdaptor.addMethod(mOut);
-		//
-		// AnalysisAdaptorDefaultNodeMethod mIn = new
-		// AnalysisAdaptorDefaultNodeMethod();
-		// mIn.setDefaultPostfix("In");
-		// // mIn.setEnvironment(source);
-		// extAdaptor.addMethod(mIn);
-		// }
-		//
-		// {
-		// AnalysisAdaptorDefaultTokenMethod mOut = new
-		// AnalysisAdaptorDefaultTokenMethod();
-		// mOut.setDefaultPostfix("Out");
-		// // mOut.setEnvironment(source);
-		// extAdaptor.addMethod(mOut);
-		//
-		// AnalysisAdaptorDefaultTokenMethod mIn = new
-		// AnalysisAdaptorDefaultTokenMethod();
-		// mIn.setDefaultPostfix("In");
-		// // mIn.setEnvironment(source);
-		// extAdaptor.addMethod(mIn);
-		// }
-		//
-		// // FIXME adaptor.getImports().addAll(source.getAllDefinitions());
 	}
 
 	private static void createAnalysisInterface(List<String> genericArguments,

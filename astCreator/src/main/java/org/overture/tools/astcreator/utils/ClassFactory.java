@@ -20,10 +20,6 @@ import org.overture.tools.astcreator.methods.ConstructorTreeFieldsOnlyMethod;
 import org.overture.tools.astcreator.methods.DefaultConstructorMethod;
 import org.overture.tools.astcreator.methods.EqualsMethod;
 import org.overture.tools.astcreator.methods.GetChildrenMethod;
-import org.overture.tools.astcreator.methods.KindMethod;
-import org.overture.tools.astcreator.methods.KindNodeMethod;
-import org.overture.tools.astcreator.methods.KindNodeString;
-import org.overture.tools.astcreator.methods.KindString;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.RemoveChildMethod;
 import org.overture.tools.astcreator.methods.ToStringMethod;
@@ -100,27 +96,27 @@ public class ClassFactory {
 
 		methods.add(new EqualsMethod(classDef));
 
-		switch (type) {
-		case Alternative:
-		case Custom:
-			methods.add(new KindMethod(classDef, false));
-			methods.add(new KindString(classDef, false));
-			break;
-		case Production:
-			methods.add(new KindNodeMethod(classDef));
-			methods.add(new KindNodeString(classDef));
-			methods.add(new KindMethod(classDef, true));
-			break;
-		case SubProduction:
-			methods.add(new KindMethod(classDef, false));
-			methods.add(new KindString(classDef, false));
-			methods.add(new KindMethod(classDef, true));
-			break;
-		case Token:
-			break;
-		default:
-			break;
-		}
+//		switch (type) {
+//		case Alternative:
+//		case Custom:
+//			methods.add(new KindMethod(classDef, false));
+//			methods.add(new KindString(classDef, false));
+//			break;
+//		case Production:
+//			methods.add(new KindNodeMethod(classDef));
+//			methods.add(new KindNodeString(classDef));
+//			methods.add(new KindMethod(classDef, true));
+//			break;
+//		case SubProduction:
+//			methods.add(new KindMethod(classDef, false));
+//			methods.add(new KindString(classDef, false));
+//			methods.add(new KindMethod(classDef, true));
+//			break;
+//		case Token:
+//			break;
+//		default:
+//			break;
+//		}
 		return methods;
 	}
 

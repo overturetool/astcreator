@@ -12,22 +12,6 @@ public abstract class %Token% extends %Node% implements %IToken% {
 	private int line;
 	private int pos;
 
-//	/**
-//	 * Returns the {@link TokenEnum} corresponding to the
-//	 * type of this {@link Token} node.
-//	 * @return the {@link TokenEnum} for this node
-//	 */
-//	public abstract TokenEnum kindToken();
-
-	/**
-	 * Returns the {@link String} corresponding to the
-	 * type of this {@link Node} node.
-	 * @return the {@link String} for this node
-	 */
-	@Override public String kindNode() {
-		return kindNode;
-	}
-        public static final String kindNode = "Token";
 
 	/**
 	 * Returns the text from the input file from which this token was made.

@@ -26,13 +26,6 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	public abstract %INode% clone(Map<%INode%,%INode%> oldToNewMap);
 	
 	/**
-	 * Returns the {@link String} corresponding to the
-	 * type of this {@link Node} node.
-	 * @return the {@link String} for this node
-	 */
-	public abstract String kindNode();
-	
-	/**
 	 * Returns the parent node of this node.
 	 * @return the parent node of this node
 	 */

@@ -97,10 +97,6 @@ public abstract class AbstractAcceptMethod extends Method
 				superDef = superDef.getSuperDef();
 			}
 			
-//			if(!superDef.getInterfaces().isEmpty())
-//			{
-//				System.out.println();
-//			}
 				
 			String thenStm = null;
 			String elseStm = null;
