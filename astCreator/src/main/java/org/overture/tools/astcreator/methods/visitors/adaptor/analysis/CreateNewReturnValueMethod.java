@@ -38,6 +38,7 @@ public class CreateNewReturnValueMethod extends Method
 			this.arguments.add(arg);
 		}
 		this.name = "createNewReturnValue";
+		throwsDefinitions.add(env.analysisException);
 		this.isAbstract = true;
 	}
 
