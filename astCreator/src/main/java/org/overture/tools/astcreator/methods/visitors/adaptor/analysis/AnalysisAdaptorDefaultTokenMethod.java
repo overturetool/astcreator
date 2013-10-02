@@ -2,6 +2,7 @@ package org.overture.tools.astcreator.methods.visitors.adaptor.analysis;
 
 import java.util.Set;
 
+import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.utils.NameUtil;
@@ -12,12 +13,17 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 	{
 		super(null);
 	}
+	
+	protected IInterfaceDefinition getDefinition(Environment env)
+	{
+		return env.iToken;
+	}
 
 	@Override
 	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> temp = super.getRequiredImports(env);
-		temp.add(env.iToken.getName().getCanonicalName());
+		temp.add(getDefinition(env).getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
@@ -26,7 +32,7 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 	public Set<String> getRequiredImportsSignature(Environment env)
 	{
 		Set<String> temp = super.getRequiredImportsSignature(env);
-		temp.add(env.iToken.getName().getCanonicalName());
+		temp.add(getDefinition(env).getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
@@ -35,7 +41,11 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 	protected void prepare(Environment env)
 	{
 		super.prepare(env);
-		intf = env.iToken;
+		intf = getDefinition(env);
+		if(intf instanceof IClassDefinition)
+		{
+			setClassDefinition((IClassDefinition) intf);
+		}
 		IInterfaceDefinition c = intf;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
@@ -51,8 +61,20 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 				+ NameUtil.getClassName(c.getName().getName());
 		setupArguments(env);
 
-		this.body = "\t\t" + (addReturnToBody ? "return null;" : "")
-				+ "//nothing to do";
+		this.body = getBody();
 
+	}
+
+	protected String getBody()
+	{
+		if (addReturnToBody)
+		{
+			return "\t\treturn createNewReturnValue("
+					+ getAdditionalBodyCallArguments() + ");";
+		} else
+		{
+			return "\t\t" + (addReturnToBody ? "return null;" : "")
+					+ "//nothing to do";
+		}
 	}
 }

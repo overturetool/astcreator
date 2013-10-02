@@ -307,7 +307,6 @@ public class GenerateTree extends AstCreatorBaseMojo
 			if (o instanceof Plugin)
 			{
 				Plugin p = (Plugin) o;
-				System.out.println(p);
 				if (p.getGroupId().equals(PLUGIN_GROUPID)
 						&& p.getArtifactId().equals(PLUGIN_ARTIFACTID))
 				{

@@ -141,7 +141,7 @@ public class Generator
 		dconfig.caseM = AnalysisAdaptorCaseMethod.class;
 		dconfig.defaultNode = AnalysisAdaptorDefaultNodeMethod.class;
 		dconfig.defaultToken = AnalysisAdaptorDefaultTokenMethod.class;
-		createdepthFirstAdaptor(env, dconfig, isBaseTree);
+		createDepthFirstAdaptor(env, dconfig, isBaseTree);
 
 		dconfig.interfaceTag = env.TAG_IAnswer;
 		dconfig.type = "Answer";
@@ -152,7 +152,7 @@ public class Generator
 		dconfig.defaultNode = AnswerAdaptorDefaultNodeMethod.class;
 		dconfig.defaultToken = AnswerAdaptorDefaultTokenMethod.class;
 		dconfig.returnType = "A";
-		createdepthFirstAdaptor(env, dconfig, isBaseTree);
+		createDepthFirstAdaptor(env, dconfig, isBaseTree);
 
 		dconfig.interfaceTag = env.TAG_IQuestion;
 		dconfig.type = "Question";
@@ -163,7 +163,7 @@ public class Generator
 		dconfig.defaultNode = QuestionAdaptorDefaultNodeMethod.class;
 		dconfig.defaultToken = QuestionAdaptorDefaultTokenMethod.class;
 		dconfig.returnType = null;
-		createdepthFirstAdaptor(env, dconfig, isBaseTree);
+		createDepthFirstAdaptor(env, dconfig, isBaseTree);
 
 		dconfig.interfaceTag = env.TAG_IQuestionAnswer;
 		dconfig.type = "QuestionAnswer";
@@ -174,7 +174,7 @@ public class Generator
 		dconfig.defaultNode = QuestionAnswerAdaptorDefaultNodeMethod.class;
 		dconfig.defaultToken = QuestionAnswerAdaptorDefaultTokenMethod.class;
 		dconfig.returnType = "A";
-		createdepthFirstAdaptor(env, dconfig, isBaseTree);
+		createDepthFirstAdaptor(env, dconfig, isBaseTree);
 
 		System.out.println();
 
@@ -302,7 +302,7 @@ public class Generator
 			throws InstantiationException, IllegalAccessException
 	{
 
-		extendedVisitor(isBaseTree, "Analysis", new Vector<String>(), AnalysisAcceptMethod.class, AnalysisAdaptorCaseMethod.class, AnalysisAdaptorDefaultMethod.class, AnalysisAdaptorDefaultNodeMethod.class, AnalysisAdaptorDefaultTokenMethod.class, env, env.TAG_IAnalysis);
+		extendedVisitor(isBaseTree, "Analysis", new Vector<String>(), AnalysisAcceptMethod.class, AnalysisAdaptorCaseMethod.class, AnalysisAdaptorDefaultMethod.class, AnalysisAdaptorDefaultNodeMethod.class, AnalysisAdaptorDefaultTokenMethod.class, env, env.TAG_IAnalysis,null);
 	}
 
 	private static void createAnswer(Environment env, boolean isBaseTree)
@@ -310,7 +310,7 @@ public class Generator
 	{
 		List<String> genericArguments = new Vector<String>();
 		genericArguments.add("A");
-		extendedVisitor(isBaseTree, "Answer", genericArguments, AnswerAcceptMethod.class, AnswerAdaptorCaseMethod.class, AnswerAdaptorDefaultMethod.class, AnswerAdaptorDefaultNodeMethod.class, AnswerAdaptorDefaultTokenMethod.class, env, env.TAG_IAnswer);
+		extendedVisitor(isBaseTree, "Answer", genericArguments, AnswerAcceptMethod.class, AnswerAdaptorCaseMethod.class, AnswerAdaptorDefaultMethod.class, AnswerAdaptorDefaultNodeMethod.class, AnswerAdaptorDefaultTokenMethod.class, env, env.TAG_IAnswer,"A");
 	}
 
 	private static void createQuestion(Environment env, boolean isBaseTree)
@@ -318,7 +318,7 @@ public class Generator
 	{
 		List<String> genericArguments = new Vector<String>();
 		genericArguments.add("Q");
-		extendedVisitor(isBaseTree, "Question", genericArguments, QuestionAcceptMethod.class, QuestionAdaptorCaseMethod.class, QuestionAdaptorDefaultMethod.class, QuestionAdaptorDefaultNodeMethod.class, QuestionAdaptorDefaultTokenMethod.class, env, env.TAG_IQuestion);
+		extendedVisitor(isBaseTree, "Question", genericArguments, QuestionAcceptMethod.class, QuestionAdaptorCaseMethod.class, QuestionAdaptorDefaultMethod.class, QuestionAdaptorDefaultNodeMethod.class, QuestionAdaptorDefaultTokenMethod.class, env, env.TAG_IQuestion,null);
 	}
 
 	private static void createQuestionAnswer(Environment env, boolean isBaseTree)
@@ -327,7 +327,7 @@ public class Generator
 		List<String> genericArguments = new Vector<String>();
 		genericArguments.add("Q");
 		genericArguments.add("A");
-		extendedVisitor(isBaseTree, "QuestionAnswer", genericArguments, QuestionAnswerAcceptMethod.class, QuestionAnswerAdaptorCaseMethod.class, QuestionAnswerAdaptorDefaultMethod.class, QuestionAnswerAdaptorDefaultNodeMethod.class, QuestionAnswerAdaptorDefaultTokenMethod.class, env, env.TAG_IQuestionAnswer);
+		extendedVisitor(isBaseTree, "QuestionAnswer", genericArguments, QuestionAnswerAcceptMethod.class, QuestionAnswerAdaptorCaseMethod.class, QuestionAnswerAdaptorDefaultMethod.class, QuestionAnswerAdaptorDefaultNodeMethod.class, QuestionAnswerAdaptorDefaultTokenMethod.class, env, env.TAG_IQuestionAnswer,"A");
 	}
 
 	public static void extendedVisitor(boolean isBaseTree, String intfName,
@@ -335,7 +335,7 @@ public class Generator
 			Class<? extends Method> caseM, Class<? extends Method> defaultCase,
 			Class<? extends Method> defaultNodeMethod,
 			Class<? extends Method> defaultTokenMethod, Environment env,
-			String tag) throws InstantiationException, IllegalAccessException
+			String tag, String returnType) throws InstantiationException, IllegalAccessException
 	{
 		InterfaceDefinition answerIntf = new InterfaceDefinition(new JavaName(env.getTemplateAnalysisPackage()
 				+ ".intf", "I" + intfName), env.getAstPackage());
@@ -391,6 +391,8 @@ public class Generator
 		answerClass.setIsBaseTree(isBaseTree);
 		answerClass.setGenericArguments(answerIntf.getGenericArguments());
 		answerClass.addInterface(answerIntf);
+		answerClass.setAnnotation("@SuppressWarnings({\"all\"})");
+		answerClass.setAbstract(true);
 
 		for (IClassDefinition c : env.getClasses())
 		{
@@ -425,6 +427,13 @@ public class Generator
 		answerClass.addMethod(m);
 		m = Method.newMethod(defaultTokenMethod, null);
 		answerClass.addMethod(m);
+		
+		if (returnType!=null)
+		{
+			answerClass.addMethod(new CreateNewReturnValueMethod(env.iNode, returnType, genericArguments.size() > 1));
+			answerClass.addMethod(new CreateNewReturnValueMethod(new PredefinedClassDefinition("", "Object"), returnType, genericArguments.size() > 1));
+			answerClass.setAbstract(true);
+		}
 	}
 
 	public static List<IClassDefinition> getClasses(
@@ -454,7 +463,7 @@ public class Generator
 		public String returnType = null;
 	}
 
-	private void createdepthFirstAdaptor(Environment source,
+	private void createDepthFirstAdaptor(Environment source,
 			final DepthFirstGeneratorConfig config, boolean isBaseTree)
 			throws InstantiationException, IllegalAccessException
 	{
@@ -488,7 +497,8 @@ public class Generator
 
 		adaptor.addField(thisField);
 
-		adaptor.setAnnotation("@SuppressWarnings({\"rawtypes\",\"unchecked\"})");
+		adaptor.setAnnotation("@SuppressWarnings({\"all\"})");
+		adaptor.setAbstract(true);
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
 		{

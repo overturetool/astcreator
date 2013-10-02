@@ -821,6 +821,8 @@ public class ExtensionGenerator2
 		// newly created one
 		IClassDefinition baseAdaptor = result.lookUp("DepthFirstAnalysisAdaptor");
 		extAdaptor.setSuper(baseAdaptor);
+		extAdaptor.setAbstract(true);
+		extAdaptor.setAnnotation("@SuppressWarnings({\"all\"})");
 
 		// Find the interface I<extensions name>Analysis interface and implement it
 		IInterfaceDefinition extensionAnalysisInterface = result.lookUpInterface("I"
@@ -980,6 +982,8 @@ public class ExtensionGenerator2
 		extAnswerClass.setGenericArguments(extNewDef.getGenericArguments());
 		extAnswerClass.addInterface(extNewDef);
 		extAnswerClass.setSuper(answerClass);
+		extAnswerClass.setAbstract(true);
+		extAnswerClass.setAnnotation("@SuppressWarnings({\"all\"})");
 
 		for (IClassDefinition cdef : result.getClasses())
 		{
