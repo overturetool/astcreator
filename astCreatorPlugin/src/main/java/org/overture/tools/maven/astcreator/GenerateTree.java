@@ -100,7 +100,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 			{
 				if (isCrcEqual(new File(getResourcesDir(), extendedAst))
 						&& isCrcEqual(new File(getResourcesDir(), extendedAst))
-						&& isVersionEqual(project.getVersion()))
+						&& isVersionEqual(getDeclaredPluginVersion()))
 				{
 					getLog().info("Extended AST unchanged");
 					getLog().info("Nothing to generate, source already up-to-date");
