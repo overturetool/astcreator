@@ -8,7 +8,7 @@ LexToken = 'java:node:org.overture.ast.intf.lex.ILexToken';
   Pass = 'java:enum:org.overture.ast.typechecker.Pass'; 
  
 Abstract Syntax Tree
-exp {-> package='org.simple.ast.expressions'}
+exp {-> package='org.simple.ast.expressions'| [someTokens]:LexToken}
     =   {aa} [fNode]:LexToken [fJava]:java_Boolean [fEnum]:Pass
     ;
  

@@ -254,7 +254,7 @@ public class SourceFileWriter
 		// def.setJavaSourceWritten(true);
 	}
 
-	private static File createFolder(File src, String packageName)
+	public static File createFolder(File src, String packageName)
 	{
 		File output = null;
 		for (String s : packageName.split("\\."))
