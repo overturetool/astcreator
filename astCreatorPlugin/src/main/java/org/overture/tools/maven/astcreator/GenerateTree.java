@@ -27,6 +27,7 @@ import org.overture.tools.maven.astcreator.util.Util;
 public class GenerateTree extends AstCreatorBaseMojo
 {
 
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
@@ -92,13 +93,13 @@ public class GenerateTree extends AstCreatorBaseMojo
 		}
 
 		getLog().info("Checking if generation required.");
-		if (isCrcEqual(baseAstFile) && isCrcEqual(baseAsttoStringFile)
+		if (!isForce() && isCrcEqual(baseAstFile) && isCrcEqual(baseAsttoStringFile)
 				&& isVersionEqual(getDeclaredPluginVersion()))
 		{
 
 			if (extendedAst != null && !extendedAst.isEmpty())
 			{
-				if (isCrcEqual(new File(getResourcesDir(), extendedAst))
+				if (!isForce() && isCrcEqual(new File(getResourcesDir(), extendedAst))
 						&& isCrcEqual(new File(getResourcesDir(), extendedAst))
 						&& isVersionEqual(getDeclaredPluginVersion()))
 				{
@@ -159,6 +160,11 @@ public class GenerateTree extends AstCreatorBaseMojo
 			getLog().error("Cannot find input file: "
 					+ baseAstFile.getAbsolutePath());
 		}
+	}
+
+	protected boolean isForce()
+	{
+		return false;
 	}
 
 	private void preparebase(File baseJar, String ast)
@@ -324,7 +330,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 		try
 		{
 			FileInputStream toStringFileStream = new FileInputStream(toStringAstFile);
-			env1 = Main.create(toStringFileStream, new FileInputStream(treeName.getAbsolutePath()), generated, true, generateVdm());
+			env1 = Main.create(toStringFileStream, new FileInputStream(treeName.getAbsolutePath()), generated, !isDryRun(), generateVdm());
 			setCrc(treeName);
 			setCrc(toStringAstFile);
 			setVersion(getDeclaredPluginVersion());
@@ -367,7 +373,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		try
 		{
-			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extendedTreeOnly);
+			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extendedTreeOnly,!isDryRun());
 			setCrc(baseAstFile);
 			setCrc(baseAstToStringAstFile);
 			setCrc(extendedAstFile);
@@ -377,6 +383,11 @@ public class GenerateTree extends AstCreatorBaseMojo
 		{
 			getLog().error(e);
 		}
+	}
+
+	protected boolean isDryRun()
+	{
+		return false;
 	}
 
 	public static boolean deleteDir(File dir)

@@ -105,7 +105,7 @@ public abstract class AbstractAstCreatorTestCase extends TestCase
 			String outputPath, String name) throws Exception
 	{
 		File output = getOutput(outputPath);
-		Main.create(null, null, getInputStream(baseInputPath), getInputStream(inputPath), output, name, false, true);
+		Main.create(null, null, getInputStream(baseInputPath), getInputStream(inputPath), output, name, false, true,true);
 		testCompile(output);
 	}
 
@@ -113,7 +113,7 @@ public abstract class AbstractAstCreatorTestCase extends TestCase
 			String inputPath, String outputPath, String name) throws Exception
 	{
 		File output = getOutput(outputPath);
-		Main.create(null, null, getInputStream(baseInputPath), getInputStream(inputPath), output, name, false, true);
+		Main.create(null, null, getInputStream(baseInputPath), getInputStream(inputPath), output, name, false, true,true);
 		// testCompile(output);
 	}
 }

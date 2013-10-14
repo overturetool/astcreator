@@ -72,7 +72,7 @@ public class CmdMain
 				ast2ToStringFileStream = new FileInputStream(ast2ToStringFile);
 
 			// Fire in the hall
-			Main.create(ast1ToStringFileStream, ast2ToStringFileStream, new FileInputStream(ast1File), new FileInputStream(ast2File), output, extName, GENERATE_VDM, false);
+			Main.create(ast1ToStringFileStream, ast2ToStringFileStream, new FileInputStream(ast1File), new FileInputStream(ast2File), output, extName, GENERATE_VDM, false,true);
 
 		}
 
