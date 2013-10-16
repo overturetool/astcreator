@@ -380,8 +380,8 @@ public class Generator
 		Field thisField = new Field();
 		thisField.name = "THIS";
 
-		GenericArgumentedIInterfceDefinition relaxedAnswerIntf = new GenericArgumentedIInterfceDefinition(answerIntf, GenericArgumentedIInterfceDefinition.generateWildcardArguments(genericArguments));
-		thisField.type = relaxedAnswerIntf;
+//		GenericArgumentedIInterfceDefinition relaxedAnswerIntf = new GenericArgumentedIInterfceDefinition(answerIntf, GenericArgumentedIInterfceDefinition.generateWildcardArguments(genericArguments));
+		thisField.type = answerIntf;
 		thisField.structureType = StructureType.Java;
 		thisField.isFinal = true;
 		thisField.accessspecifier = AccessSpecifier.Protected;
@@ -488,9 +488,9 @@ public class Generator
 		adaptor.addMethod(new SetMethod(adaptor, queue));
 
 		Field thisField = new Field();
-		GenericArgumentedIInterfceDefinition relaxedAnswerIntf = new GenericArgumentedIInterfceDefinition(implementingInterface, GenericArgumentedIInterfceDefinition.generateWildcardArguments(config.genericArguments));
+//		GenericArgumentedIInterfceDefinition relaxedAnswerIntf = new GenericArgumentedIInterfceDefinition(implementingInterface, GenericArgumentedIInterfceDefinition.generateWildcardArguments(config.genericArguments));
 		thisField.name = "THIS";
-		thisField.type = relaxedAnswerIntf;
+		thisField.type = implementingInterface;
 		thisField.structureType = StructureType.Java;
 		thisField.isFinal = true;
 		thisField.accessspecifier = AccessSpecifier.Protected;
