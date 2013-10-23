@@ -18,6 +18,11 @@ public class ShowTree extends GenerateTree
 		{
 			Display.useJavaNames = true;
 		}
+		
+		if(System.getProperty("show.flatten")!=null)
+		{
+			Display.flatten = true;
+		}
 	}
 
 	@Override
