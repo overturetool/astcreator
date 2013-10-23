@@ -57,6 +57,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 //	 */
 //	abstract void replaceChild(%Node% oldChild, Node newChild);
 //
+	@SuppressWarnings("unchecked")
 	public void replaceChild(%INode% oldChild, %INode% newChild) {
 		
 		Class<?> me = getClass();
@@ -65,8 +66,30 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 			f.setAccessible(true);
 			try {
 				Object valueInF = f.get(this);
+				%INode% oldParent = oldChild.parent();
 				if (valueInF == oldChild)
+				{
 					f.set(this, newChild);
+					if(this == oldParent)
+					{
+						newChild.parent(this);
+					}
+				}else if( valueInF instanceof List)
+				{
+					@SuppressWarnings("rawtypes")
+					List list = (List) valueInF;
+					for (int i = 0; i < list.size(); i++)
+					{
+						if(list.get(i)==oldChild)
+						{
+							list.set(i, newChild);
+							if(this == oldParent)
+							{
+								newChild.parent(this);
+							}
+						}
+					}
+				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
