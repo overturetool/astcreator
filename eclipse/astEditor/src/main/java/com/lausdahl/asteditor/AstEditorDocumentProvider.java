@@ -6,7 +6,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
-public class DestecsDocumentProvider extends FileDocumentProvider
+public class AstEditorDocumentProvider extends FileDocumentProvider
 {
 	@Override
 	protected IDocument createDocument(Object element) throws CoreException

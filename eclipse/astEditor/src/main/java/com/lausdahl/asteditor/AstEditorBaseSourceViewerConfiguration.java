@@ -12,10 +12,10 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
-public abstract class DestecsBaseSourceViewerConfiguration extends
+public abstract class AstEditorBaseSourceViewerConfiguration extends
 		SourceViewerConfiguration
 {
-	private String[] commentingPrefix = new String[] { "--", "//" };
+	private String[] commentingPrefix = new String[] {  "//" };
 	public final static String SINGLELINE_COMMENT = "__contract_singleline_comment";
 
 	private ITokenScanner vdmCodeScanner = null;

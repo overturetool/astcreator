@@ -23,5 +23,52 @@
             name="AST ToString Editor">
       </editor>
    </extension>
+   
+     <extension
+        point="org.eclipse.ui.bindings">
+     <key
+           commandId="com.lausdahl.asteditor.commands.ToggleComment"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.textEditorScope"
+           sequence="M1+7">
+     </key>
+   
+  </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           categoryId="org.eclipse.ui.category.textEditor"
+           defaultHandler="com.lausdahl.asteditor.commands.ToggleComment"
+           id="com.lausdahl.asteditor.commands.ToggleComment"
+           name="Toggle Comment AST">
+     </command>
+    </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+		<handler
+            class="com.lausdahl.asteditor.commands.ToggleComment"
+            commandId="com.lausdahl.asteditor.commands.ToggleComment">
+			<activeWhen>
+				<reference
+                  definitionId="com.lausdahl.asteditor.insideAstEditor">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension
+         point="org.eclipse.core.expressions.definitions">
+		<definition
+            id="com.lausdahl.asteditor.insideAstEditor">
+			<with
+               variable="activeEditor">
+				<or>
+					<instanceof
+                     value="com.lausdahl.asteditor.AstEditor">
+					</instanceof>
+				</or>
+			</with>
+		</definition>
+	</extension>
 
 </plugin>

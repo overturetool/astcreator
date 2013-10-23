@@ -15,7 +15,7 @@ public class AstEditor extends TextEditor
 {
 
 	public static class AstSourceViewerConfiguration extends
-			DestecsBaseSourceViewerConfiguration
+			AstEditorBaseSourceViewerConfiguration
 	{
 
 		@Override
@@ -84,7 +84,7 @@ public class AstEditor extends TextEditor
 	public AstEditor()
 	{
 		super();
-		setDocumentProvider(new DestecsDocumentProvider());
+		setDocumentProvider(new AstEditorDocumentProvider());
 	}
 
 	@Override
