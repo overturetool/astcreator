@@ -60,7 +60,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	public void replaceChild(%INode% oldChild, %INode% newChild) {
 		
 		Class<?> me = getClass();
-		for (Field f : me.getDeclaredFields() )
+		for (Field f : getAllFields(new LinkedList<Field>(),me) )
 		{
 			f.setAccessible(true);
 			try {
@@ -75,6 +75,23 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 		}
 	
 	}
+	
+	
+	/**
+	 * Utility function needed because of S nodes that may have fields
+	 */
+	public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+	    for (Field field: type.getDeclaredFields()) {
+	        fields.add(field);
+	    }
+
+	    if (type.getSuperclass() != null) {
+	        fields = getAllFields(fields, type.getSuperclass());
+	    }
+
+	    return fields;
+	}
+	
 
 //	/**
 //	 * Replaces this node by {@code node} in the AST. If this node has no parent
