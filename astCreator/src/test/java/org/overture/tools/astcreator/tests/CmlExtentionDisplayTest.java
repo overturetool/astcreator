@@ -20,7 +20,7 @@ public class CmlExtentionDisplayTest extends AbstractAstCreatorTestCase
 
 	public void testBase() throws Exception
 	{
-		singleFileTest("cml/new-display/overtureII.astv2", "cml-extention-display");
+		singleFileTestCompileFail("cml/new-display/overtureII.astv2", "cml-extention-display");
 	}
 
 	public void testExtension() throws Exception
