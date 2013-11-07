@@ -343,7 +343,7 @@ public class Generator
 		answerIntf.setTag(tag);
 		answerIntf.setGenericArguments(genericArguments);
 		env.addInterface(answerIntf);
-		answerIntf.supers.add(BaseEnvironment.serializableDef);
+//		answerIntf.supers.add(BaseEnvironment.serializableDef);
 
 		for (IClassDefinition c : getClasses(env.getClasses(), env))
 		{
