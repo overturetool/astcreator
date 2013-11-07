@@ -75,6 +75,7 @@ public class ToStringAddOnReader
 										ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 										part.type = ToStringPartType.Import;
 										part.content = p.getChild(0).getText();
+										part.setLocation(p.getChild(0));
 										envAddon.parts.add(part);
 										continue;
 									}
@@ -87,7 +88,7 @@ public class ToStringAddOnReader
 									if (c == null)
 									{
 										System.err.println("Failed to lookup tostring addition with "
-												+ p + classDefName);
+												+ p + classDefName+ " @ line "+p.getLine()+" "+p.getTokenStartIndex()+":"+p.getTokenStopIndex());
 										continue;
 
 									}
@@ -111,31 +112,25 @@ public class ToStringAddOnReader
 													continue;
 												}
 
+												ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
+
 												if (aspectDclT.getText().startsWith("\""))
 												{
-													ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 													part.type = ToStringPartType.String;
-													part.content = aspectDclT.getText();
-													addon.parts.add(part);
 												} else if (aspectDclT.getText().startsWith("$"))
 												{
-													ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 													part.type = ToStringPartType.RawJava;
-													part.content = aspectDclT.getText();
-													addon.parts.add(part);
 												} else if (aspectDclT.getText().equals("+"))
 												{
-													ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 													part.type = ToStringPartType.Plus;
-													part.content = aspectDclT.getText();
-													addon.parts.add(part);
 												} else
 												{
-													ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 													part.type = ToStringPartType.Field;
-													part.content = aspectDclT.getText();
-													addon.parts.add(part);
 												}
+
+												part.content = aspectDclT.getText();
+												part.setLocation(aspectDclT);
+												addon.parts.add(part);
 
 											}
 										}

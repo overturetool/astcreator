@@ -3,6 +3,8 @@ package org.overture.tools.astcreator;
 import java.util.List;
 import java.util.Vector;
 
+import org.antlr.runtime.tree.Tree;
+
 public class ToStringAddOn
 {
 	public static class ToStringPart
@@ -14,6 +16,9 @@ public class ToStringAddOn
 
 		public ToStringPartType type = ToStringPartType.String;
 		public String content = "";
+		public int line=0;
+		public int startIndex=0;
+		public int stopIndex=0;
 
 		@Override
 		public String toString()
@@ -36,6 +41,18 @@ public class ToStringAddOn
 						&& this.content.equals(((ToStringPart) obj).content);
 			}
 			return super.equals(obj);
+		}
+
+		public String getLocation()
+		{
+			return "line "+line+" "+startIndex+":"+stopIndex;
+		}
+
+		public void setLocation(Tree c)
+		{
+			line = c.getLine();
+			startIndex = c.getTokenStartIndex();
+			stopIndex = c.getTokenStopIndex();
 		}
 	}
 

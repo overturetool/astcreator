@@ -125,9 +125,9 @@ public class ToStringMethod extends Method
 							}
 							if (!found)
 							{
-								showError("Faild to find field \"_" + p.content
+								showError("Faild to find field \"_" + p.content 
 										+ "\" in class "
-										+ classDefinition.getName());
+										+ classDefinition.getName()+" @ "+p.getLocation());
 							}
 							break;
 						case RawJava:
