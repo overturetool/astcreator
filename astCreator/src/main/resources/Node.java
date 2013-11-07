@@ -74,6 +74,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 					{
 						newChild.parent(this);
 					}
+					return;
 				}else if( valueInF instanceof List)
 				{
 					@SuppressWarnings("rawtypes")
@@ -87,6 +88,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 							{
 								newChild.parent(this);
 							}
+							return;
 						}
 					}
 				}
