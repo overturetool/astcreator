@@ -1,6 +1,5 @@
-astcreator
+astCreator
 ==========
 
-Please note: this is an experimental repository *only*.  Do not do development here — use the sf.net/p/overture repositories.
+This generates heterogenous ASTs in Java for the Overture project, and should be applicable to anything else that needs an AST.
 
---Joey/10Mar2013
