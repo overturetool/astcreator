@@ -24,6 +24,9 @@ public class AstMerger
 				case Token:
 					merge(source, extension, entry.getKey(), entry.getValue());
 					break;
+				case Production:
+					System.out.println("------------------------- "+entry.getKey().getName());//TODO
+					break;
 
 			}
 		}

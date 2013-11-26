@@ -7,12 +7,12 @@ Tokens
  
 Abstract Syntax Tree
 exp {-> package='org.overture.ast.expressions'}
-    =   {bin}
+    =   {e1} 
+    |	{e3} [field1]:e1
+    |	{e4} (field2):e1
     ;
  
 
 Aspect Declaration
-/* This section allows fields of root types to be declared e.g. exp*/
-//exp = [type]:type*
-//    ;
+
     
