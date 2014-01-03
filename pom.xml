@@ -17,8 +17,8 @@
   </organization>
 
   <modules>
-    <module>astCreator</module>
-    <module>astCreatorPlugin</module>
+    <module>core</module>
+    <module>maven</module>
     <module>eclipse</module>
   </modules>
   
