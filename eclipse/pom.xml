@@ -17,15 +17,20 @@
   <properties>
     <maven.test.skip>true</maven.test.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
-    <tycho.version>0.18.1</tycho.version>
+    <tycho.version>0.19.0</tycho.version>
   </properties>
 
   <modules>
-    <!-- Put all child Eclipse Plugin projects(modules) here -->
     <module>astEditor</module>
-    
   </modules>
 
+  <repositories>
+    <repository>
+      <id>eclipse-kepler</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/kepler</url>
+    </repository>
+  </repositories>
   
   <build>
     <pluginManagement>
@@ -81,42 +86,27 @@
       </plugin>
 
       <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <skip>true</skip>
         </configuration>
       </plugin>
-	  
-	  
-	   <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <environments>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
-                  <arch>x86</arch>
-                </environment>
-              </environments>
-            </configuration>
-          </plugin>
+      
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <environments>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>eclipse-juno</id>
-      <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
-  </repositories>
-
 
 </project>
