@@ -49,8 +49,28 @@
 
     <plugins>
       <plugin>
+        <!--
+            This plugin allows you to run
+
+            $ mvn versions:set -DnewVersion=1.6.1 -Dtycho.mode=maven
+
+            and get all the version numbers updated nearly for free.
+            The tycho bit on the end just tells tycho (used in the
+            eclipse plugin build) to piss off.
+
+            Also set the version in
+            eclipse/astEditor/META-INF/MANIFEST.MF or the build will
+            complain.
+
+            More details on the versions-maven-plugin are at
+            http://mojo.codehaus.org/versions-maven-plugin/
+        -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
+        <configuration>
+          <!-- Version control obviates the need for this. -->
+          <generateBackupPoms>false</generateBackupPoms>
+        </configuration>
       </plugin>
     </plugins>
 
