@@ -2,17 +2,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture.maven.tools</groupId>
+    <groupId>org.overture.astcreator.eclipse</groupId>
     <artifactId>eclipse</artifactId>
-    <version>1.5.1</version>
+    <version>1.6.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <packaging>eclipse-plugin</packaging>
 
-  <groupId>org.overture.maven.tools.eclipse</groupId>
-  <artifactId>org.overture.maven.tools.eclipse.asteditor</artifactId>
-  <name>AST-Editor</name>
+  <groupId>org.overture.astcreator.eclipse</groupId>
+  <artifactId>org.overture.astcreator.eclipse.asteditor</artifactId>
+  <name>Overture AstCreator Eclipse editor plugin</name>
 
   <build>
     <plugins>
@@ -39,8 +39,8 @@
 		  <version>3.5</version>
 		</artifactItem>
 		<artifactItem>
-		  <groupId>org.overture.maven.tools</groupId>
-		  <artifactId>astCreator</artifactId>
+		  <groupId>org.overture.astcreator</groupId>
+		  <artifactId>astcreator</artifactId>
 		  <version>${project.version}</version>
 		</artifactItem>
 	      </artifactItems>

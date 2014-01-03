@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.overture.maven.tools</groupId>
-  <version>1.5.1</version>
+  <groupId>org.overture.astcreator</groupId>
+  <version>1.6.0</version>
   <packaging>pom</packaging>
 
-  <artifactId>tools</artifactId>
-  <name>Overture Maven tool plugins</name>
+  <artifactId>root</artifactId>
+  <name>Overture AstCreator superpom</name>
 
   <organization>
     <name>Overture</name>
@@ -23,7 +23,7 @@
   </modules>
   
   <scm>
-    <developerConnection>scm:git:ssh//github.com:overturetool/astcreator.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
   </scm>
 
   <properties>
