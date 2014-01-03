@@ -10,22 +10,7 @@
 
   <artifactId>root</artifactId>
   <name>Overture AstCreator superpom</name>
-
-  <organization>
-    <name>Overture</name>
-    <url>http://www.overturetool.org</url>
-  </organization>
-
-  <!-- All sub-modules disabled in general, and are set up in the default profile.  This allows for another profile that doesn't do compilation. -->
-  <!-- <modules> -->
-  <!--   <module>core</module> -->
-  <!--   <module>maven</module> -->
-  <!--   <module>eclipse</module> -->
-  <!-- </modules> -->
-  
-  <scm>
-    <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
-  </scm>
+  <url>http://www.overturetool.org/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,7 +19,11 @@
     <staging.repo.target>${project.build.directory}/mvn-staging-repo</staging.repo.target>
   </properties>
 
-  <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
+  <!--
+      The setup to publish to an ad hoc mvn repo on GitHub is based on
+      the stackoverflow answer at
+      http://stackoverflow.com/a/14013645/753029
+  -->
   <distributionManagement>
     <repository>
       <id>mvn-repo-staging</id>
@@ -162,6 +151,7 @@
     </profile>
 
     <profile>
+      <!-- See the comment above about publishing to ad hoc mvn repos. -->
       <id>dev-repo</id>
       <build>
         <defaultGoal>com.github.github:site-maven-plugin:site</defaultGoal>
@@ -185,4 +175,52 @@
       </build>
     </profile>
   </profiles>
+
+  <organization>
+    <name>The Overture Project</name>
+    <url>http://www.overturetool.org</url>
+  </organization>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/overturetool/astcreator/issues</url>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/gpl.txt</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/overturetool/astcreator.git</url>
+    <connection>scm:git:https://github.com/overturetool/astcreator.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>kel</id>
+      <name>Kenneth Lausdahl</name>
+      <email>kel@eng.au.dk</email>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jwc</id>
+      <name>Joey Coleman</name>
+      <email>jwc@eng.au.dk</email>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+      <roles>
+        <role>coordinator</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
 </project>
