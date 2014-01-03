@@ -16,11 +16,12 @@
     <url>http://www.overturetool.org</url>
   </organization>
 
-  <modules>
-    <module>core</module>
-    <module>maven</module>
-    <module>eclipse</module>
-  </modules>
+  <!-- All sub-modules disabled in general, and are set up in the default profile.  This allows for another profile that doesn't do compilation. -->
+  <!-- <modules> -->
+  <!--   <module>core</module> -->
+  <!--   <module>maven</module> -->
+  <!--   <module>eclipse</module> -->
+  <!-- </modules> -->
   
   <scm>
     <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
@@ -28,13 +29,18 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <github.global.server>github</github.global.server>
+    <!-- This needs to be set in the relevant child modules so they deploy into the correct staging directory. -->
+    <staging.repo.target>${project.build.directory}/mvn-staging-repo</staging.repo.target>
   </properties>
 
   <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
   <distributionManagement>
     <repository>
-      <id>mvn-repo</id>
-      <url>file://${project.build.directory}/mvn-repo</url>
+      <id>mvn-repo-staging</id>
+      <name>Temporary Staging Repository</name>
+      <!-- This value will change in submodules depending on the value of ${staging.repo.target}. -->
+      <url>file://${staging.repo.target}</url>
     </repository>
   </distributionManagement>
 
@@ -121,4 +127,42 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>core</module>
+        <module>maven</module>
+        <module>eclipse</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>dev-repo</id>
+      <build>
+        <defaultGoal>com.github.github:site-maven-plugin:site</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>com.github.github</groupId>
+            <artifactId>site-maven-plugin</artifactId>
+            <version>0.9</version>
+            <configuration>
+              <message>Maven artifacts for ${project.version}</message>
+              <outputDirectory>${project.build.directory}/mvn-staging-repo</outputDirectory>
+              <branch>refs/heads/mvn-dev-repo</branch>
+              <includes><include>**/*</include></includes>
+              <repositoryOwner>overturetool</repositoryOwner>
+              <repositoryName>astcreator</repositoryName>
+              <merge>true</merge>
+              <noJekyll>true</noJekyll>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
