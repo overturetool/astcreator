@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.overture.astcreator</groupId>
+  <version>1.6.0</version>
+  <packaging>pom</packaging>
+
+  <artifactId>root</artifactId>
+  <name>Overture AstCreator superpom</name>
+
+  <organization>
+    <name>Overture</name>
+    <url>http://www.overturetool.org</url>
+  </organization>
+
+  <!-- All sub-modules disabled in general, and are set up in the default profile.  This allows for another profile that doesn't do compilation. -->
+  <!-- <modules> -->
+  <!--   <module>core</module> -->
+  <!--   <module>maven</module> -->
+  <!--   <module>eclipse</module> -->
+  <!-- </modules> -->
+  
+  <scm>
+    <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <github.global.server>github</github.global.server>
+    <!-- This needs to be set in the relevant child modules so they deploy into the correct staging directory. -->
+    <staging.repo.target>${project.build.directory}/mvn-staging-repo</staging.repo.target>
+  </properties>
+
+  <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
+  <distributionManagement>
+    <repository>
+      <id>mvn-repo-staging</id>
+      <name>Temporary Staging Repository</name>
+      <!-- This value will change in submodules depending on the value of ${staging.repo.target}. -->
+      <url>file://${staging.repo.target}</url>
+    </repository>
+  </distributionManagement>
+
+  <build>
+    <defaultGoal>install</defaultGoal>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+	<!-- Configure the compiler for all Overture Projects -->
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-compiler-plugin</artifactId>
+	  <version>3.1</version>
+	  <configuration>
+	    <source>1.6</source>
+	    <target>1.6</target>
+	  </configuration>
+	</plugin>
+
+	<!-- Attatch sources to all installed jars -->
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-source-plugin</artifactId>
+	  <version>2.2.1</version>
+	  <configuration>
+	    <attach>true</attach>
+	  </configuration>
+	</plugin>
+
+	<!-- Enable JavaDoc but dont fail on error. This must be disabled for
+             the Eclipse project in the IDE -->
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-javadoc-plugin</artifactId>
+	  <version>2.9.1</version>
+	  <executions>
+	    <execution>
+	      <id>attach-javadocs</id>
+	      <goals>
+		<goal>jar</goal>
+	      </goals>
+	    </execution>
+	  </executions>
+	  <configuration>
+	    <failOnError>false</failOnError>
+	  </configuration>
+	</plugin>
+
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-surefire-plugin</artifactId>
+	  <version>2.13</version>
+	  <configuration>
+	    <testFailureIgnore>true</testFailureIgnore>
+	    <!-- required for java7 to avoid verifier errors-->
+	    <argLine>-XX:-UseSplitVerifier -Djava.awt.headless=true</argLine>
+	  </configuration>
+	</plugin>
+
+        <plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+
+        <plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-clean-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>core</module>
+        <module>maven</module>
+        <module>eclipse</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>repo-on-github</id>
+      <build>
+        <defaultGoal>com.github.github:site-maven-plugin:site</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>com.github.github</groupId>
+            <artifactId>site-maven-plugin</artifactId>
+            <version>0.9</version>
+            <configuration>
+              <message>Maven artifacts for ${project.version}</message>
+              <outputDirectory>${project.build.directory}/mvn-staging-repo</outputDirectory>
+              <branch>refs/heads/mvn-dev-repo</branch>
+              <includes><include>**/*</include></includes>
+              <repositoryOwner>overturetool</repositoryOwner>
+              <repositoryName>astcreator</repositoryName>
+              <merge>true</merge>
+              <noJekyll>true</noJekyll>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overture.astcreator</groupId>
+    <artifactId>root</artifactId>
+    <version>1.6.0</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <packaging>maven-plugin</packaging>
+
+  <artifactId>astcreator-plugin</artifactId>  
+  <name>Overture AstCreator Maven Plugin</name>
+
+  <properties>
+    <!-- This is set to deploy maven artifacts into the correct staging directory. -->
+    <staging.repo.target>${project.basedir}/../target/mvn-staging-repo</staging.repo.target>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-resources-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.overture.astcreator</groupId>
+      <artifactId>astcreator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-project-info-reports-plugin</artifactId>
+      <version>2.1.1</version>
+      <type>maven-plugin</type>
+    </dependency>
+  </dependencies>
+</project>
