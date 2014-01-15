@@ -24,7 +24,7 @@ import java.util.*;
  *  <code>ConcurrentModificationException</code>.<p>
  *
  */
-@SuppressWarnings("serial")
+@SuppressWarnings("all")
 public class %GraphNodeList%<E extends %INode%> extends %NodeList%<E> {
 	
 	@Override
@@ -35,6 +35,10 @@ public class %GraphNodeList%<E extends %INode%> extends %NodeList%<E> {
 			n.parent(parent);
 		}
 		
+	}
+	
+	private %GraphNodeList%() {
+		super(null);
 	}
 	
 	public %GraphNodeList%(%INode% parent) {
