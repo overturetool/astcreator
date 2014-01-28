@@ -146,6 +146,12 @@
       <modules>
         <module>core</module>
         <module>maven</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>With-IDE</id>
+      <modules>
         <module>eclipse</module>
       </modules>
     </profile>
