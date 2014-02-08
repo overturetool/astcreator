@@ -83,7 +83,7 @@ public class ClassFactory
 	{
 		Set<Method> methods = new HashSet<Method>();
 
-		methods.add(new ConstructorMethod(classDef));
+		methods.add(new ConstructorMethod(classDef,true));
 		methods.add(new ConstructorTreeFieldsOnlyMethod(classDef));
 		if (type != ClassType.Token)
 		{
@@ -146,7 +146,7 @@ public class ClassFactory
 	public static IClassDefinition createCustom(JavaName name, Environment env)
 	{
 		IClassDefinition c = new BaseClassDefinition(name, env.getAstPackage());
-		c.addMethod(new ConstructorMethod(c));
+		c.addMethod(new ConstructorMethod(c,false));
 		c.addMethod(new DefaultConstructorMethod(c));
 		env.addClass(c);
 		env.classToType.put(c, ClassType.Custom);
