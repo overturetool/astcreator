@@ -20,6 +20,7 @@ import org.overture.tools.astcreator.methods.ConstructorTreeFieldsOnlyMethod;
 import org.overture.tools.astcreator.methods.DefaultConstructorMethod;
 import org.overture.tools.astcreator.methods.EqualsMethod;
 import org.overture.tools.astcreator.methods.GetChildrenMethod;
+import org.overture.tools.astcreator.methods.HashCodeMethod;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.RemoveChildMethod;
 import org.overture.tools.astcreator.methods.ToStringMethod;
@@ -98,6 +99,7 @@ public class ClassFactory
 		methods.add(new CloneWithMapMethod(classDef, type));
 
 		methods.add(new EqualsMethod(classDef));
+		methods.add(new HashCodeMethod(classDef));
 
 		// switch (type) {
 		// case Alternative:
