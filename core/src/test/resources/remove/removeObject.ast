@@ -1,0 +1,17 @@
+//TODO1: maybe generate classes with the Comparable interface
+Packages
+base remove.ast.node;
+analysis remove.ast.analysis;
+
+Tokens
+  java_File = 'java:java.io.File';
+  java_Stream = 'java:java.io.InputStream';
+
+
+Abstract Syntax Tree
+
+source {->  package='eu.compassresearch.ast.program'
+       }
+    = {file} [files]: java_Stream (file): java_File [f]: file 
+    ;
+
