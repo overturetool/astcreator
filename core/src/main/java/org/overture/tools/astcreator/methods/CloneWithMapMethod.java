@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.tools.astcreator.definitions.ExternalEnumJavaClassDefinition;
+import org.overture.tools.astcreator.definitions.ExternalJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.Field;
 import org.overture.tools.astcreator.definitions.Field.StructureType;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
@@ -92,7 +93,7 @@ public class CloneWithMapMethod extends CloneMethod
 						{
 
 							if (JavaTypes.isPrimitiveType(f.getType(env))
-									|| f.type instanceof ExternalEnumJavaClassDefinition)
+									|| f.type instanceof ExternalEnumJavaClassDefinition|| (f.type instanceof ExternalJavaClassDefinition &&!((ExternalJavaClassDefinition)f.type).extendsNode))
 							{
 								tmp += ("\t\t\t" + name + ",\n");
 							} else
