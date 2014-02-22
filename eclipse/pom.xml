@@ -98,6 +98,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
+          <!-- <pomDependencies>consider</pomDependencies> -->
           <environments>
             <environment>
               <os>win32</os>

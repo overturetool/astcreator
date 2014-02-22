@@ -4,34 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.overturetool.astcreator</groupId>
-  <version>1.6.1</version>
+  <!-- Needed to make deployment work -->
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <packaging>pom</packaging>
 
+  <groupId>org.overturetool.astcreator</groupId>
   <artifactId>root</artifactId>
+  <version>1.6.1</version>
+
   <name>Overture AstCreator superpom</name>
   <url>http://www.overturetool.org/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <github.global.server>github</github.global.server>
-    <!-- This needs to be set in the relevant child modules so they deploy into the correct staging directory. -->
-    <staging.repo.target>${project.build.directory}/mvn-staging-repo</staging.repo.target>
   </properties>
-
-  <!--
-      The setup to publish to an ad hoc mvn repo on GitHub is based on
-      the stackoverflow answer at
-      http://stackoverflow.com/a/14013645/753029
-  -->
-  <distributionManagement>
-    <repository>
-      <id>mvn-repo-staging</id>
-      <name>Temporary Staging Repository</name>
-      <!-- This value will change in submodules depending on the value of ${staging.repo.target}. -->
-      <url>file://${staging.repo.target}</url>
-    </repository>
-  </distributionManagement>
 
   <build>
     <defaultGoal>install</defaultGoal>
@@ -154,31 +145,6 @@
       <modules>
         <module>eclipse</module>
       </modules>
-    </profile>
-
-    <profile>
-      <!-- See the comment above about publishing to ad hoc mvn repos. -->
-      <id>dev-repo</id>
-      <build>
-        <defaultGoal>com.github.github:site-maven-plugin:site</defaultGoal>
-        <plugins>
-          <plugin>
-            <groupId>com.github.github</groupId>
-            <artifactId>site-maven-plugin</artifactId>
-            <version>0.9</version>
-            <configuration>
-              <message>Maven artifacts for ${project.version}</message>
-              <outputDirectory>${project.build.directory}/mvn-staging-repo</outputDirectory>
-              <branch>refs/heads/mvn-dev-repo</branch>
-              <includes><include>**/*</include></includes>
-              <repositoryOwner>overturetool</repositoryOwner>
-              <repositoryName>astcreator</repositoryName>
-              <merge>true</merge>
-              <noJekyll>true</noJekyll>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 
