@@ -1,4 +1,4 @@
-# The Overture AstCreator Tool
+# The Overture AstCreator Tool [![Build Status](https://travis-ci.org/overturetool/astcreator.png?branch=master)](https://travis-ci.org/overturetool/astcreator)
 
 This generates heterogenous ASTs in Java for the Overture project, and should be applicable to anything else that needs an AST.
 
