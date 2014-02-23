@@ -1,43 +1,38 @@
-astCreator
-==========
+# The Overture AstCreator Tool
 
 This generates heterogenous ASTs in Java for the Overture project, and should be applicable to anything else that needs an AST.
 
+## Using releases as a Maven plugin
 
+~~~xml
+<plugin>
+  <groupId>org.overturetool.astcreator</groupId>
+  <artifactId>astcreator-plugin</artifactId>  
+  <version>1.6.4</version>
+  <artifactId>root</artifactId>
+  <executions>
+    <execution>
+      <id>java</id>
+      <phase>generate-sources</phase>
+      <goals>
+        <goal>generate</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <ast>overtureII.astv2</ast>
+  </configuration>
+</plugin>
+~~~
 
-Steps to release a new vertion to the online repository
---------------
-The releasing procedure is a three step procedure:
+## Using snapshot versions
 
-	1. Increment version number
-	2. Local deploy
-	3. Upload of the deployed artifacts into the online repository
-	
+..._to be filled in_
 
-### Incrementing the version numbers
+## Using the core jar
 
-There are two tasks to perform:
+The `jar` produced from the `core/` directory is embeddable; please contact us if you plan to use it.
 
-	1. update the maven version numbers
-	2. update the asteditor Manifest bundle-version
-	
-In this example the current version is "1.6.0" and the new version is "1.6.1".
-First run the following commend in the root of the repository to update all maven versions
-```
-mvn versions:set -DnewVersion=1.6.1 -Dtycho.mode=maven
-```
-Next go to "eclipse\astEditor\META-INF\MANIFEST.MF" and update the line bundle-version to match "Bundle-Version: 1.6.1".
+## Making a release
 
-### Local Deploy
-
-To build the new release version run:
-```
-mvn deploy
-```
-
-### Upload of the deployed artifacts into the online repository
-The final step is to upload the newly deployed release version to the online repository. This is done by running the following command in the root of the repository:
-
-```
-mvn -N -Pdev-repo 
-```
+See https://github.com/overturetool/astcreator/wiki/Release-Procedure
