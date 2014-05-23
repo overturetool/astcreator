@@ -39,8 +39,8 @@ public interface %INode%
 	 * If {%code oldChild} pointed to by any field of this {@link %INode%} instance
 	 * replace it with {@code newChild}.
 	 * 
-	 * @param %INode% oldChild 
-	 * @param %INode% newChild
+	 * @param oldChild 
+	 * @param newChild
 	 * @throws RuntimeException in particular if {@code newChild} has an improper type 
 	 * for the field pointing to {@code oldChild}.
 	 */

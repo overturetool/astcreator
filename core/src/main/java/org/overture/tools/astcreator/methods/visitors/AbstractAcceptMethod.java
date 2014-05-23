@@ -34,13 +34,51 @@ public abstract class AbstractAcceptMethod extends Method
 			String visitorName);
 
 	protected abstract String getElseTemplate(String visitorName);
+	
+	protected String getJavaDoc(String argName, String caseClassName)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t/**\n");
+		sb.append("\t* Calls the {@link " + argName
+				+ "#case"
+				+ caseClassName + "("
+				+ caseClassName
+				+ ")} of the {@link " + argName
+				+ "} {@code caller}.\n");
+		sb.append("\t* @param caller the {@link " + argName
+				+ "} to which this {@link "
+				+ caseClassName
+				+ "} node is applied\n");
+		sb.append(getAdditionalJavaDocParameters());
+		sb.append("\t*/");
+		return sb.toString();
+	}
+	
+	protected String getJavaDocQuestion(String argName, String caseClassName)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t/**\n");
+		sb.append("\t* Calls the {@link " + argName
+				+ "#case"
+				+ caseClassName + "("
+				+ caseClassName
+				+ ", Object)} of the {@link " + argName
+				+ "} {@code caller}.\n");
+		sb.append("\t* @param caller the {@link " + argName
+				+ "} to which this {@link "
+				+ caseClassName
+				+ "} node is applied\n");
+		sb.append(getAdditionalJavaDocParameters());
+		sb.append("\t*/");
+		return sb.toString();
+	}
 
 	@Override
 	protected void prepare(Environment env)
 	{
 		environment = env;
 		IClassDefinition c = classDefinition;
-		StringBuilder sb = new StringBuilder();
+		
 		IInterfaceDefinition argDef = env.getTaggedDef(getAnalysisTag());
 
 		if (env instanceof ExtendedEnvironment)
@@ -48,20 +86,8 @@ public abstract class AbstractAcceptMethod extends Method
 			argDef = ((ExtendedEnvironment) env).getTaggedBaseDef(getAnalysisTag());
 		}
 
-		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link " + argDef.getName().getName()
-				+ "#case"
-				+ AnalysisUtil.getCaseClass(env, c).getName().getName() + "("
-				+ AnalysisUtil.getCaseClass(env, c).getName().getName()
-				+ ")} of the {@link " + argDef.getName().getName()
-				+ "} {@code caller}.\n");
-		sb.append("\t* @param caller the {@link " + argDef.getName().getName()
-				+ "} to which this {@link "
-				+ AnalysisUtil.getCaseClass(env, c).getName().getName()
-				+ "} node is applied\n");
-		sb.append(getAdditionalJavaDocParameters());
-		sb.append("\t*/");
-		this.javaDoc = sb.toString();
+		
+		this.javaDoc = getJavaDoc(argDef.getName().getName(),AnalysisUtil.getCaseClass(env, c).getName().getName());
 		name = "apply";
 		annotation = "@Override";
 		// returnType = "<A> A";

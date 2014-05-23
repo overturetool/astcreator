@@ -21,7 +21,7 @@ public class AnalysisAcceptMethod extends AbstractAcceptMethod
 	@Override
 	protected void retAndArgPrepare(IInterfaceDefinition argDef)
 	{
-		arguments.add(new Argument(NameUtil.getGenericName(argDef), "analysis"));
+		arguments.add(new Argument(NameUtil.getGenericName(argDef), "caller"));
 	}
 
 	@Override
