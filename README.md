@@ -2,7 +2,7 @@
 
 This generates heterogenous ASTs in Java for the Overture project, and should be applicable to anything else that needs an AST.
 
-## Using releases as a Maven plugin
+## Using AstCreator as a Maven plugin
 
 ~~~xml
 <plugin>
@@ -25,10 +25,6 @@ This generates heterogenous ASTs in Java for the Overture project, and should be
 </plugin>
 ~~~
 
-## Using snapshot versions
-
-..._to be filled in_
-
 ## Using the core jar
 
 The `jar` produced from the `core/` directory is embeddable; please contact us if you plan to use it.
@@ -36,3 +32,5 @@ The `jar` produced from the `core/` directory is embeddable; please contact us i
 ## Making a release
 
 See https://github.com/overturetool/astcreator/wiki/Release-Procedure
+
+
