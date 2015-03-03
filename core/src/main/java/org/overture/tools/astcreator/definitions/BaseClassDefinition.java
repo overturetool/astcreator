@@ -61,7 +61,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	{
 		Set<String> imports = new HashSet<String>();
 
-		if (getSuperDef() != null)
+		if (getSuperDef() != null && !getSuperDef().getName().getName().equals(getName().getName()))
 		{
 			imports.add(getSuperDef().getName().getCanonicalName());
 		}
@@ -126,7 +126,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		if (hasSuper())
 		{
-			sb.append(" extends " + getSuperDef().getName().getName()
+			sb.append(" extends " + getSuperDef().getName().getCanonicalName()
 					+ getSuperDef().getGenericsString());
 
 		}

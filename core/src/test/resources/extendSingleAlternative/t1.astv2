@@ -1,0 +1,19 @@
+Packages
+base org.base.node;
+analysis org.base.analysis;
+Tokens
+
+ 
+ 
+Abstract Syntax Tree
+exp {-> package='org.base.expressions'}
+    =   {aa} [type]:bb
+    |   {bb} 
+    ;
+ 
+
+Aspect Declaration
+/* This section allows fields of root types to be declared e.g. exp*/
+//exp = [type]:type*
+//    ;
+    

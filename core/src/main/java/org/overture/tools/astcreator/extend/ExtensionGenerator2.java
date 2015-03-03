@@ -120,8 +120,44 @@ public class ExtensionGenerator2
 			Environment base)
 	{
 		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef.getName().getName());
-		boolean hasSameTag = overtureEquivalent == null ? false
-				: iDef.getName().getTag().equals(overtureEquivalent.getName().getTag());
+		boolean hasSameTag;
+		
+		if (overtureEquivalent == null)
+		{
+			hasSameTag = false;
+		}
+		else
+		{
+			hasSameTag = iDef.getName().getTag().equals(overtureEquivalent.getName().getTag());
+			
+			if(iDef instanceof IClassDefinition)
+			{
+				IClassDefinition cdef = (IClassDefinition) iDef;
+				
+				if (overtureEquivalent instanceof IClassDefinition)
+				{
+
+					for (Field newField : cdef.getFields())
+					{
+						boolean found = false;
+						for (Field originField : ((IClassDefinition)overtureEquivalent).getFields())
+						{
+							if(newField.name.equals(originField.name))
+							{
+								found = true;
+								break;
+							}
+						}
+						
+						if(!found)
+						{
+							hasSameTag = false;
+							break;
+						}
+					}
+				}
+			}
+		}
 		return hasSameTag && !isUtilityOrTemplateClass(iDef, base);
 	}
 
@@ -415,6 +451,17 @@ public class ExtensionGenerator2
 		for (IClassDefinition cdef : ext.getClasses())
 		{
 			IClassDefinition superDef = cdef.getSuperDef();
+			
+			//FIXME: here we may have a super class but when this class is identical to a base version 
+			//in the result tree then we need to set the super class to its identical base in result
+			
+			IClassDefinition baseMatchDef = base.lookUp(cdef.getName().getName());
+			if(ext.classToType.get(cdef)==ClassType.Alternative&& baseMatchDef!=null)
+			{
+				superDef = baseMatchDef;
+				cdef.setSuper(superDef);
+			}
+			
 			if (superDef != null)
 			{
 

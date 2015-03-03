@@ -32,7 +32,7 @@ public class Field
 	public boolean isList = false;
 	public static String fieldPrefic = "_";
 	private String unresolvedType;
-	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
+	public AccessSpecifier accessspecifier = AccessSpecifier.Protected;
 	public boolean isDoubleList = false;
 	public StructureType structureType = StructureType.Tree;
 	private String customInitializer = "";
