@@ -18,6 +18,7 @@ import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.definitions.InterfaceDefinition;
 import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
+import org.overture.tools.astcreator.env.ExtendedEnvironment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
@@ -121,35 +122,34 @@ public class ExtensionGenerator2
 	{
 		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef.getName().getName());
 		boolean hasSameTag;
-		
+
 		if (overtureEquivalent == null)
 		{
 			hasSameTag = false;
-		}
-		else
+		} else
 		{
 			hasSameTag = iDef.getName().getTag().equals(overtureEquivalent.getName().getTag());
-			
-			if(iDef instanceof IClassDefinition)
+
+			if (iDef instanceof IClassDefinition)
 			{
 				IClassDefinition cdef = (IClassDefinition) iDef;
-				
+
 				if (overtureEquivalent instanceof IClassDefinition)
 				{
 
 					for (Field newField : cdef.getFields())
 					{
 						boolean found = false;
-						for (Field originField : ((IClassDefinition)overtureEquivalent).getFields())
+						for (Field originField : ((IClassDefinition) overtureEquivalent).getFields())
 						{
-							if(newField.name.equals(originField.name))
+							if (newField.name.equals(originField.name))
 							{
 								found = true;
 								break;
 							}
 						}
-						
-						if(!found)
+
+						if (!found)
 						{
 							hasSameTag = false;
 							break;
@@ -451,17 +451,12 @@ public class ExtensionGenerator2
 		for (IClassDefinition cdef : ext.getClasses())
 		{
 			IClassDefinition superDef = cdef.getSuperDef();
-			
-			//FIXME: here we may have a super class but when this class is identical to a base version 
-			//in the result tree then we need to set the super class to its identical base in result
-			
+
+			// FIXME: here we may have a super class but when this class is identical to a base version
+			// in the result tree then we need to set the super class to its identical base in result
+
 			IClassDefinition baseMatchDef = base.lookUp(cdef.getName().getName());
-			if(ext.classToType.get(cdef)==ClassType.Alternative&& baseMatchDef!=null)
-			{
-				superDef = baseMatchDef;
-				cdef.setSuper(superDef);
-			}
-			
+
 			if (superDef != null)
 			{
 
@@ -504,6 +499,23 @@ public class ExtensionGenerator2
 					}
 				cdef.getSuperDefs().removeAll(tbr);
 				cdef.getSuperDefs().addAll(tba);
+
+			}
+
+			// check if it's just a leaf extension
+			if (ext.classToType.get(cdef) == ClassType.Alternative
+					&& baseMatchDef != null)
+			{
+				for (IInterfaceDefinition i : superDef.getInterfaces())
+				{
+					IInterfaceDefinition rI = iReplacementMap.get(i.getName().getName());
+					if (rI != null)
+					{
+						cdef.addInterface(rI);
+					}
+				}
+				superDef = baseMatchDef;
+				cdef.setSuper(superDef);
 
 			}
 
@@ -890,6 +902,15 @@ public class ExtensionGenerator2
 		 */
 		for (IClassDefinition c : getExtClasses(result.getClasses(), extEnv.getName(), result))
 		{
+			if (result instanceof ExtendedEnvironment)
+			{
+				ExtendedEnvironment er = (ExtendedEnvironment) result;
+
+				if (er.baseEnv.getClasses().contains(c))
+				{
+					continue;
+				}
+			}
 			switch (result.classToType.get(c))
 			{
 
@@ -929,20 +950,41 @@ public class ExtensionGenerator2
 
 			}
 
-			AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c);
-			mIn.setMethodNamePrefix("in");
-			mIn.setDefaultPostfix("In");
-			mIn.setClassDefinition(c);
-			// mIn.setEnvironment(source);
-			extAdaptor.addMethod(mIn);
+			// FIXME LEAF Stuff
+			// check for leaf and make it defaultInPNewExp(node);
+			if (extEnv.classToType.get(c) == ClassType.Alternative
+					&& result.lookUp(c.getName().getName()) != null
+					&& c.getInterfaces().size() == 1)
+			{
+				AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(c);
+				mIn.setDefaultPostfix("InNew");
+				mIn.setClassDefinition(c);
+				// mIn.setEnvironment(source);
+				extAdaptor.addMethod(mIn);
 
-			AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
-			mOut.setMethodNamePrefix("out");
-			mOut.setDefaultPostfix("Out");
-			mOut.setClassDefinition(c);
-			// mOut.setEnvironment(source);
-			extAdaptor.addMethod(mOut);
+				AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(c);
+				mOut.setDefaultPostfix("OutNew");
+				mOut.setClassDefinition(c);
+				// mOut.setEnvironment(source);
+				extAdaptor.addMethod(mOut);
+			}
 
+			else
+			{
+				AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c);
+				mIn.setMethodNamePrefix("in");
+				mIn.setDefaultPostfix("In");
+				mIn.setClassDefinition(c);
+				// mIn.setEnvironment(source);
+				extAdaptor.addMethod(mIn);
+
+				AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
+				mOut.setMethodNamePrefix("out");
+				mOut.setDefaultPostfix("Out");
+				mOut.setClassDefinition(c);
+				// mOut.setEnvironment(source);
+				extAdaptor.addMethod(mOut);
+			}
 			// Remove the case for the existing adaptor
 			List<Method> toBeRemoved = new LinkedList<Method>();
 			for (Method method : baseAdaptor.getMethods())
@@ -953,10 +995,10 @@ public class ExtensionGenerator2
 				}
 			}
 			baseAdaptor.getMethods().removeAll(toBeRemoved);
-
 		}
 
 	}
+
 
 	private static void createAnalysisInterface(List<String> genericArguments,
 			String name, String tag, MethodFactory extMf, Environment extEnv,
