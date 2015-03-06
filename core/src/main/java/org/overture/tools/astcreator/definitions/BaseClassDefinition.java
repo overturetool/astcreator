@@ -61,7 +61,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	{
 		Set<String> imports = new HashSet<String>();
 
-		if (getSuperDef() != null && !getSuperDef().getName().getName().equals(getName().getName()))
+		if (getSuperDef() != null
+				&& !getSuperDef().getName().getName().equals(getName().getName()))
 		{
 			imports.add(getSuperDef().getName().getCanonicalName());
 		}
@@ -389,6 +390,12 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	public boolean isBaseTree()
 	{
 		return this.isBaseTree;
+	}
+
+	@Override
+	public void setName(JavaName newName)
+	{
+		this.name = newName;
 	}
 
 }

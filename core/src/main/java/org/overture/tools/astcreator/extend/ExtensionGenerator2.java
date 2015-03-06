@@ -22,6 +22,7 @@ import org.overture.tools.astcreator.env.ExtendedEnvironment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
+import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnAdCaseMethLeafExtension;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.answer.AnswerAdaptorCaseMethod;
@@ -452,7 +453,7 @@ public class ExtensionGenerator2
 		{
 			IClassDefinition superDef = cdef.getSuperDef();
 
-			// FIXME: here we may have a super class but when this class is identical to a base version
+			// here we may have a super class but when this class is identical to a base version
 			// in the result tree then we need to set the super class to its identical base in result
 
 			IClassDefinition baseMatchDef = base.lookUp(cdef.getName().getName());
@@ -516,7 +517,8 @@ public class ExtensionGenerator2
 				}
 				superDef = baseMatchDef;
 				cdef.setSuper(superDef);
-
+				JavaName newName = makeExtensionJavaName(cdef, ext, ext, cdef.getName().getPackageName());
+				cdef.setName(newName);
 			}
 
 		}
@@ -950,20 +952,21 @@ public class ExtensionGenerator2
 
 			}
 
-			// FIXME LEAF Stuff
-			// check for leaf and make it defaultInPNewExp(node);
+			// check for leaf extensions and treat them accordingly
 			if (extEnv.classToType.get(c) == ClassType.Alternative
 					&& result.lookUp(c.getName().getName()) != null
 					&& c.getInterfaces().size() == 1)
-			{
-				AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(c);
-				mIn.setDefaultPostfix("InNew");
+			{	
+				AnAdCaseMethLeafExtension mIn = new AnAdCaseMethLeafExtension(c);
+				mIn.setMethodNamePrefix("in");
+				mIn.setDefaultPostfix("In");
 				mIn.setClassDefinition(c);
 				// mIn.setEnvironment(source);
 				extAdaptor.addMethod(mIn);
 
-				AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(c);
-				mOut.setDefaultPostfix("OutNew");
+				AnAdCaseMethLeafExtension mOut = new AnAdCaseMethLeafExtension(c);
+				mOut.setMethodNamePrefix("out");
+				mOut.setDefaultPostfix("Out");
 				mOut.setClassDefinition(c);
 				// mOut.setEnvironment(source);
 				extAdaptor.addMethod(mOut);
@@ -998,7 +1001,6 @@ public class ExtensionGenerator2
 		}
 
 	}
-
 
 	private static void createAnalysisInterface(List<String> genericArguments,
 			String name, String tag, MethodFactory extMf, Environment extEnv,

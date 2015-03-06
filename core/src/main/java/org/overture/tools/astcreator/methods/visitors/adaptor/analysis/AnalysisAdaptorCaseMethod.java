@@ -89,11 +89,11 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 					
 					if(env.classToType.get(c.getSuperDef()) == ClassType.Alternative)
 					{
-						elseCaseMethodName = "case";	
+						elseCaseMethodName = getAlternativeBodyCallPrefix();	
 					}
 					
 					methodCall += defaultPostFix
-							+ AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
+							+ getSuperClassForDefault(env, c);
 					break;
 				}
 				default:
@@ -114,6 +114,16 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 		{
 			this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
 		}
+	}
+
+	protected String getAlternativeBodyCallPrefix()
+	{
+		return "case";
+	}
+
+	protected String getSuperClassForDefault(Environment env, IClassDefinition c)
+	{
+		return AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
 	}
 
 	public void setMethodNamePrefix(String nm)
