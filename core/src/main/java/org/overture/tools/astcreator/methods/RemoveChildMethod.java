@@ -44,10 +44,17 @@ public class RemoveChildMethod extends Method
 
 		for (Field field : fields)
 		{
+			//If primitive then it is impossible to detect which field
 			if (JavaTypes.isPrimitiveType(field.type.getName().getName()))
 			{
 				continue;
 			}
+			
+			if ((field.isTokenField && !(field.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition) field.type).extendsNode)))
+			{
+				continue;
+			}
+			
 			if (field.structureType == StructureType.Graph)
 			{
 				if (!field.isList)
@@ -69,10 +76,7 @@ public class RemoveChildMethod extends Method
 				}
 			}
 
-			if ((field.isTokenField && !(field.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition) field.type).extendsNode)))
-			{
-				continue;
-			}
+			
 			if (!field.isList)
 			{
 				sb.append("\t\tif (this." + field.getName(env)

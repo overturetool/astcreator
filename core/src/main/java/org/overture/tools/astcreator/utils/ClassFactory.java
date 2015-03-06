@@ -20,6 +20,7 @@ import org.overture.tools.astcreator.methods.ConstructorTreeFieldsOnlyMethod;
 import org.overture.tools.astcreator.methods.DefaultConstructorMethod;
 import org.overture.tools.astcreator.methods.EqualsMethod;
 import org.overture.tools.astcreator.methods.GetChildrenMethod;
+import org.overture.tools.astcreator.methods.HashCodeMethod;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.RemoveChildMethod;
 import org.overture.tools.astcreator.methods.ToStringMethod;
@@ -83,7 +84,7 @@ public class ClassFactory
 	{
 		Set<Method> methods = new HashSet<Method>();
 
-		methods.add(new ConstructorMethod(classDef));
+		methods.add(new ConstructorMethod(classDef,true));
 		methods.add(new ConstructorTreeFieldsOnlyMethod(classDef));
 		if (type != ClassType.Token)
 		{
@@ -98,6 +99,7 @@ public class ClassFactory
 		methods.add(new CloneWithMapMethod(classDef, type));
 
 		methods.add(new EqualsMethod(classDef));
+		methods.add(new HashCodeMethod(classDef));
 
 		// switch (type) {
 		// case Alternative:
@@ -146,7 +148,7 @@ public class ClassFactory
 	public static IClassDefinition createCustom(JavaName name, Environment env)
 	{
 		IClassDefinition c = new BaseClassDefinition(name, env.getAstPackage());
-		c.addMethod(new ConstructorMethod(c));
+		c.addMethod(new ConstructorMethod(c,false));
 		c.addMethod(new DefaultConstructorMethod(c));
 		env.addClass(c);
 		env.classToType.put(c, ClassType.Custom);

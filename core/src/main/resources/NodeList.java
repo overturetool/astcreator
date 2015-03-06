@@ -25,7 +25,7 @@ import java.util.*;
  *  <code>ConcurrentModificationException</code>.<p>
  *
  */
-@SuppressWarnings("serial")
+@SuppressWarnings("all")
 public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 	%INode% parent;
 	
@@ -35,6 +35,11 @@ public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 			p.removeChild(n);
 		}
 		n.parent(parent);
+	}
+	
+	private %NodeList%() {
+		super();
+		this.parent = null;
 	}
 	
 	public %NodeList%(%INode% parent) {

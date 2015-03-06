@@ -46,6 +46,12 @@ public class QuestionAcceptMethod extends AbstractAcceptMethod
 	}
 
 	@Override
+	protected String getJavaDoc(String argName, String caseClassName)
+	{
+		return super.getJavaDocQuestion(argName, caseClassName);
+	}
+
+	@Override
 	protected void prepareVdm(Environment env)
 	{
 		optionalVdmArgument = false;
@@ -54,7 +60,7 @@ public class QuestionAcceptMethod extends AbstractAcceptMethod
 		sb.append("\t/**\n");
 		sb.append("\t* Calls the {@link IQuestion<Q>#case" + c.getName() + "("
 				+ c.getName()
-				+ ")} of the {@link IQuestion<Q>} {@code caller}.\n");
+				+ ", Object)} of the {@link IQuestion<Q>} {@code caller}.\n");
 		sb.append("\t* @param caller the {@link IQuestion<Q>} to which this {@link "
 				+ c.getName() + "} node is applied\n");
 		sb.append("\t* @param question the question provided to {@code caller}\n");

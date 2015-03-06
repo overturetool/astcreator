@@ -14,7 +14,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 {
 	public ConstructorTreeFieldsOnlyMethod(IClassDefinition c)
 	{
-		super(c);
+		super(c,true);
 		this.name = classDefinition.getName().getName();
 	}
 

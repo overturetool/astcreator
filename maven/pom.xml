@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture.astcreator</groupId>
+    <groupId>org.overturetool.astcreator</groupId>
     <artifactId>root</artifactId>
     <version>1.6.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
@@ -13,13 +13,10 @@
   <artifactId>astcreator-plugin</artifactId>  
   <name>Overture AstCreator Maven Plugin</name>
 
-  <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
-  <distributionManagement>
-    <repository>
-      <id>mvn-repo</id>
-      <url>file://${project.build.directory}/../../target/mvn-repo</url>
-    </repository>
-  </distributionManagement>
+  <properties>
+    <!-- This is set to deploy maven artifacts into the correct staging directory. -->
+    <staging.repo.target>${project.basedir}/../target/mvn-staging-repo</staging.repo.target>
+  </properties>
 
   <build>
     <plugins>
@@ -32,7 +29,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.overture.astcreator</groupId>
+      <groupId>org.overturetool.astcreator</groupId>
       <artifactId>astcreator</artifactId>
       <version>${project.version}</version>
     </dependency>

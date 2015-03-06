@@ -47,7 +47,7 @@ public class JavaName implements Cloneable
 	public String getCanonicalName()
 	{
 		return this.packageName
-				+ (this.packageName != null || this.packageName.isEmpty() ? "."
+				+ (this.packageName != null || (this.packageName!=null &&this.packageName.isEmpty()) ? "."
 						: "") + getName();
 	}
 
@@ -107,9 +107,4 @@ public class JavaName implements Cloneable
 		return getName() + (tag.length() > 0 ? " TAG=" + tag : "");
 	}
 
-	// @Override
-	// public int hashCode()
-	// {
-	// return getCanonicalName().hashCode();
-	// }
 }

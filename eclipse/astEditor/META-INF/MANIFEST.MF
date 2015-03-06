@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AstEditor
 Bundle-SymbolicName: org.overture.astcreator.eclipse.asteditor;singleton:=true
-Bundle-Version: 1.6.0
+Bundle-Version: 1.6.5.qualifier
 Bundle-Activator: com.lausdahl.asteditor.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -15,4 +15,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  jars/antlr-runtime.jar,
- jars/astCreator.jar
+ jars/astcreator.jar

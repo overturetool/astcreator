@@ -1,0 +1,12 @@
+# This file is in YAML syntax (see http://www.yaml.org)
+#
+# The syntax is INDENTATION-SENSITIVE.  Mess it up at your peril!
+#
+language: java
+jdk:
+  - oraclejdk7
+before_install:
+  - mvn -version
+script:
+  - mvn test -B
+  - mvn install -f eclipse/pom.xml -B

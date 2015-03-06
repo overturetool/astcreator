@@ -13,10 +13,13 @@ import org.overture.tools.astcreator.utils.NameUtil;
 
 public class ConstructorMethod extends Method
 {
-	public ConstructorMethod(IClassDefinition c)
+	private boolean deprecated;
+
+	public ConstructorMethod(IClassDefinition c, boolean deprecated)
 	{
 		super(c);
 		isConstructor = true;
+		this.deprecated = deprecated;
 	}
 
 	@Override
@@ -34,8 +37,11 @@ public class ConstructorMethod extends Method
 		sbDoc.append("* Creates a new {@code "
 				+ classDefinition.getName().getName()
 				+ "} node with the given nodes as children.\n");
-		sbDoc.append("\t");
-		sbDoc.append("* @deprecated This method should not be used, use AstFactory instead.\n");
+		if (deprecated)
+		{
+			sbDoc.append("\t");
+			sbDoc.append("* @deprecated This method should not be used, use AstFactory instead.\n");
+		}
 		sbDoc.append("\t");
 		sbDoc.append("* The basic child nodes are removed from their previous parents.\n");
 

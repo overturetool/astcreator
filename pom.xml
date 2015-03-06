@@ -1,50 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.overture.astcreator</groupId>
-  <version>1.6.7-SNAPSHOT</version>
+  <!-- Needed to make deployment work -->
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <packaging>pom</packaging>
 
+  <groupId>org.overturetool.astcreator</groupId>
   <artifactId>root</artifactId>
+  <version>1.6.7-SNAPSHOT</version>
+
   <name>Overture AstCreator superpom</name>
-
-  <organization>
-    <name>Overture</name>
-    <url>http://www.overturetool.org</url>
-  </organization>
-
-  <modules>
-    <module>core</module>
-    <module>maven</module>
-    <!--<module>eclipse</module>-->
-  </modules>
-  
-  <scm>
-    <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
-  </scm>
+  <description>This is the Overture AstCreator project.  AstCreator allows the automatic creation of heterogeneous ASTs in Java based on an input specification.  Created along with the AST classes are visitors that allow for functionality to be implemented over the AST.
+  </description>
+  <url>http://overturetool.org/astcreator/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <!-- http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
-  <distributionManagement>
-    <repository>
-      <id>mvn-repo</id>
-      <url>file://${project.build.directory}/mvn-repo</url>
-    </repository>
-  </distributionManagement>
 
   <build>
     <defaultGoal>install</defaultGoal>
 
     <plugins>
       <plugin>
+        <!--
+            This plugin allows you to run
+
+            $ mvn versions:set -DnewVersion=1.6.1 -Dtycho.mode=maven
+
+            and get all the version numbers updated nearly for free.
+            The tycho bit on the end just tells tycho (used in the
+            eclipse plugin build) to piss off.
+
+            Also set the version in
+            eclipse/astEditor/META-INF/MANIFEST.MF or the build will
+            complain.
+
+            More details on the versions-maven-plugin are at
+            http://mojo.codehaus.org/versions-maven-plugin/
+        -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
+        <configuration>
+          <!-- Version control obviates the need for this. -->
+          <generateBackupPoms>false</generateBackupPoms>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4.2</version>
+        <configuration>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+        </configuration>
       </plugin>
     </plugins>
 
@@ -121,4 +136,73 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>core</module>
+        <module>maven</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>With-IDE</id>
+      <modules>
+        <module>eclipse</module>
+      </modules>
+    </profile>
+  </profiles>
+
+  <organization>
+    <name>The Overture Project</name>
+    <url>http://www.overturetool.org</url>
+  </organization>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/overturetool/astcreator/issues</url>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/gpl.txt</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>git@github.com/overturetool/astcreator.git</url>
+    <connection>scm:git:https://github.com/overturetool/astcreator.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>kel</id>
+      <name>Kenneth Lausdahl</name>
+      <email>lausdahl@eng.au.dk</email>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jwc</id>
+      <name>Joey Coleman</name>
+      <email>jwc@eng.au.dk</email>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+      <roles>
+        <role>coordinator</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
 </project>

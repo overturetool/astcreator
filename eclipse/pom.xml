@@ -2,15 +2,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture.astcreator</groupId>
+    <groupId>org.overturetool.astcreator</groupId>
     <artifactId>root</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <packaging>pom</packaging>
 
-  <groupId>org.overture.astcreator.eclipse</groupId>
+  <groupId>org.overturetool.astcreator.eclipse</groupId>
   <artifactId>eclipse</artifactId>
   <name>Overture AstCreator Eclipse superpom</name>
   <description>Super POM for all IDE (Eclipse) artifacts.</description>
@@ -98,6 +98,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
+          <!-- <pomDependencies>consider</pomDependencies> -->
           <environments>
             <environment>
               <os>win32</os>
