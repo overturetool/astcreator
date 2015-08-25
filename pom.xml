@@ -137,17 +137,13 @@
     </pluginManagement>
   </build>
 
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
+ <modules>
         <module>core</module>
         <module>maven</module>
       </modules>
-    </profile>
+
+
+  <profiles>
 
     <profile>
       <id>With-IDE</id>
