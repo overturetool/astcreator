@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool.astcreator.eclipse</groupId>
     <artifactId>eclipse</artifactId>
-    <version>1.6.5-SNAPSHOT</version>
+    <version>1.6.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
