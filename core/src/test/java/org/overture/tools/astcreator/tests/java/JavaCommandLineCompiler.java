@@ -22,7 +22,8 @@ public class JavaCommandLineCompiler
 	public static boolean compile(File dir, File cpJar)
 	{
 		String javaHome = System.getenv("JAVA_HOME");
-		File javac = new File(new File(javaHome, "bin"), "javac");
+		File javac = javaHome == null ? new File("javac")
+				: new File(new File(javaHome, "bin"), "javac");
 		return compile(javac, dir, cpJar);
 	}
 
@@ -36,8 +37,6 @@ public class JavaCommandLineCompiler
 
 		List<File> files = getFiles(dir);
 
-		String arguments = buildFileArgs(files);
-
 		// printCompileMessage(files, cpJar);
 
 		StringBuilder out = new StringBuilder();
@@ -46,25 +45,32 @@ public class JavaCommandLineCompiler
 		{
 			String line;
 			ProcessBuilder pb = null;
-			String arg = "";
+			pb = new ProcessBuilder(javac.getPath());
 
-			if (isWindows())
-
-				pb = new ProcessBuilder(javac.getAbsolutePath(), (cpJar == null ? ""
-						: " -cp " + cpJar.getAbsolutePath()), arguments.trim());
-			else
-				arg = javac.getAbsolutePath()
-						+ (cpJar == null ? "" : " -cp "
-								+ cpJar.getAbsolutePath()) + " "
-						+ arguments.trim();
-
-			if (pb != null)
+			if (cpJar != null)
 			{
-				pb.directory(dir);
-				pb.redirectErrorStream(true);
-				p = pb.start();
+				pb.command().add("-cp");
+				pb.command().add(cpJar.getAbsolutePath());
 			} else
-				p = Runtime.getRuntime().exec(arg, null, dir);
+			{
+				pb.command().add("-cp");
+				pb.command().add(".");
+			}
+
+			for (File file : files)
+			{
+				if (isWindows())
+				{
+					pb.command().add("\"" + file.getAbsolutePath() + "\" ");
+				} else
+				{
+					pb.command().add(file.getAbsolutePath());
+				}
+			}
+
+			pb.directory(dir);
+			pb.redirectErrorStream(true);
+			p = pb.start();
 
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String secondLastLine = "";
@@ -85,7 +91,9 @@ public class JavaCommandLineCompiler
 		} finally
 		{
 			if (p != null)
+			{
 				p.destroy();
+			}
 		}
 
 		if (compileOk)
@@ -96,7 +104,6 @@ public class JavaCommandLineCompiler
 			System.err.println("Compliation Failed");
 			System.err.println(out.toString());
 		}
-
 		return compileOk;
 
 	}
@@ -119,27 +126,18 @@ public class JavaCommandLineCompiler
 
 	}
 
-	private static String buildFileArgs(List<File> files)
-	{
-		StringBuilder sb = new StringBuilder();
-
-		for (File file : files)
-		{
-			sb.append("\"" + file.getAbsolutePath() + "\" ");
-		}
-
-		return sb.toString();
-	}
-
 	private static List<File> getFiles(File file)
 	{
 		List<File> files = new Vector<File>();
 		for (File f : file.listFiles())
 		{
 			if (f.isDirectory())
+			{
 				files.addAll(getFiles(f));
-			else if (f.getName().toLowerCase().endsWith(".java"))
+			} else if (f.getName().toLowerCase().endsWith(".java"))
+			{
 				files.add(f);
+			}
 		}
 		return files;
 	}
