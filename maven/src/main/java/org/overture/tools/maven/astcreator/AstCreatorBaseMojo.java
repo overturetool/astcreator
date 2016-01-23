@@ -104,6 +104,13 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	// * @parameter
 	// */
 	// protected List<String> names;
+	
+	/**
+	 * Suppress warnings
+	 * 
+	 * @parameter
+	 */
+	protected boolean suppressWarnings = false;
 
 	/**
 	 * @parameter expression="${project}"

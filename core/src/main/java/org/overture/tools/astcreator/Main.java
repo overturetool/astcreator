@@ -38,6 +38,8 @@ public class Main
 
 	public final static RunType run = RunType.Test;
 
+	public static boolean suppressWarnings = false;
+
 	public final static boolean GENERATE_VDM = false;
 
 	/**
@@ -125,7 +127,7 @@ public class Main
 				{
 					System.out.println("Generator starting with input: "
 							+ input1);
-					Main.create(null, null, new FileInputStream(input1), new FileInputStream(input2), generated, "Interpreter", GENERATE_VDM, false,true);
+					Main.create(null, null, new FileInputStream(input1), new FileInputStream(input2), generated, "Interpreter", GENERATE_VDM, false, true);
 					System.out.println("Done.");
 				}
 					break;
@@ -198,6 +200,7 @@ public class Main
 		Generator generator = new Generator();
 		Environment env = generator.generate(toStringFile, inputFile, "Base", true, true);
 		generator.runPostGeneration(env, false);
+		generator.suppressWarnings(env, suppressWarnings);
 
 		if (write)
 		{
@@ -227,7 +230,7 @@ public class Main
 	public static void create(InputStream ast1ToString,
 			InputStream ast2ToString, InputStream ast1, InputStream ast2,
 			File generated, String extendName, boolean generateVdm,
-			boolean extOnly,boolean write) throws Exception
+			boolean extOnly, boolean write) throws Exception
 	{
 		System.out.println("Generating base and extension tree, standby ... ");
 		System.out.println("Extension tree only: " + extOnly);
@@ -254,12 +257,13 @@ public class Main
 		Environment envResolvedExt = extGen.extend(envExtOnly);
 
 		generator.runPostGeneration(envResolvedExt, true);
+		generator.suppressWarnings(envResolvedExt, suppressWarnings);
 		extGen.runPostGeneration(envExtOnly, envResolvedExt);
 
 		System.out.println("Writing sources to the file system, standby ... ");
 		System.out.println("Destination: " + generated.getAbsolutePath());
 		// write sources for the two trees
-		if(write)
+		if (write)
 		{
 			SourceFileWriter.write(generated, envResolvedExt, generateVdm, extOnly);
 		}

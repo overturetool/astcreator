@@ -624,4 +624,12 @@ public class Generator
 		}
 		return false;
 	}
+
+	public void suppressWarnings(Environment env,boolean suppressWarnings)
+	{
+		for (IClassDefinition cls : env.getClasses())
+		{
+			cls.setAnnotation("@SuppressWarnings({\"all\"})");
+		}
+	}
 }

@@ -330,6 +330,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 		try
 		{
 			FileInputStream toStringFileStream = new FileInputStream(toStringAstFile);
+			Main.suppressWarnings = suppressWarnings;
 			env1 = Main.create(toStringFileStream, new FileInputStream(treeName.getAbsolutePath()), generated, !isDryRun(), generateVdm());
 			setCrc(treeName);
 			setCrc(toStringAstFile);
@@ -373,6 +374,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		try
 		{
+			Main.suppressWarnings = suppressWarnings;
 			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extendedTreeOnly,!isDryRun());
 			setCrc(baseAstFile);
 			setCrc(baseAstToStringAstFile);
