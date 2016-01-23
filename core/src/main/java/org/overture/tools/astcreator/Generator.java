@@ -21,6 +21,7 @@ import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.env.BaseEnvironment;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
+import org.overture.tools.astcreator.methods.ConstructorTreeFieldsOnlyMethod;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.SetMethod;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
@@ -180,6 +181,7 @@ public class Generator
 
 		// TODO test
 		// createQuestionAnswerDepthFirst(env);
+		validateClassMethods(env.getClasses());
 	}
 
 	public void createInterfacesForNodePoints(Environment env)
@@ -580,5 +582,46 @@ public class Generator
 			adaptor.setAbstract(true);
 		}
 		// FIXME adaptor.getImports().addAll(source.getAllDefinitions());
+	}
+	
+	
+	
+	/**
+	 * validates that only valid combination of methods is contained within each class
+	 * @param classes
+	 */
+	public void validateClassMethods(List<IClassDefinition> classes)
+	{
+		for (IClassDefinition cls : classes)
+		{
+			Method treeFieldOnlyConstructor = null;
+			if (!hasTreeFields(cls))
+			{
+				for (Method m : cls.getMethods())
+				{
+					if (m.getClass() == ConstructorTreeFieldsOnlyMethod.class)
+					{
+						treeFieldOnlyConstructor = m;
+						break;
+					}
+				}
+				cls.getMethods().remove(treeFieldOnlyConstructor);
+			}
+		}
+	}
+
+	/**
+	 * Method to check is a class contains a tree field
+	 * @param cls
+	 * @return
+	 */
+	private boolean hasTreeFields(IClassDefinition cls)
+	{
+		for (Field field : cls.getFields())
+		{
+			if (field.structureType == StructureType.Tree)
+				return true;
+		}
+		return false;
 	}
 }
