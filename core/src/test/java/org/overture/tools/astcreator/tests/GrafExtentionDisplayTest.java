@@ -20,12 +20,13 @@ public class GrafExtentionDisplayTest extends AbstractAstCreatorTestCase
 
 	public void testBase() throws Exception
 	{
-		singleFileTest("grafext/t1.astv2", "grafext-display");
+		singleFileTest("grafext/t1.astv2", "grafext-display-base");
 	}
 
 	public void testExtension() throws Exception
 	{
-		extensionFileTest("grafext/t1.astv2", "grafext/t2.astv2", "grafext-display", "graf");
+		singleFileTest("grafext/t1.astv2", "grafext-display-ext");
+		extensionFileTest("grafext/t1.astv2", "grafext/t2.astv2", "grafext-display-ext", "graf");
 	}
 
 }
