@@ -34,7 +34,7 @@ public class ConstructorMethod extends Method
 		sbDoc.append("\t");
 		sbDoc.append("/**\n");
 		sbDoc.append("\t");
-		sbDoc.append("* Creates a new {@code "
+		sbDoc.append("* Creates a new complete constructor {@code "
 				+ classDefinition.getName().getName()
 				+ "} node with the given nodes as children.\n");
 		if (deprecated)

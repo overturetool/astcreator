@@ -20,7 +20,7 @@ public class DefaultConstructorMethod extends Method
 		this.returnType = "";
 
 		javaDoc = "\t/**\n";
-		javaDoc += "\t * Creates a new {@link " + c.getName().getName()
+		javaDoc += "\t * Creates a new default constructor {@link " + c.getName().getName()
 				+ "} node with no children.\n";
 		javaDoc += "\t */";
 
