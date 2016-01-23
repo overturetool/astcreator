@@ -75,6 +75,8 @@ public class BaseEnvironment
 		addClass(node);
 		addClass(nodeList);
 		addClass(nodeListList);
+		addClass(graphNodeList);
+		addClass(graphNodeListList);
 		addClass(token);
 		addClass(externalNode);
 
