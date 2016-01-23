@@ -1,0 +1,11 @@
+Packages
+base org.base.ast.node;
+analysis org.base.ast.analysis;
+Tokens
+  int = 'int';
+ 
+ 
+Abstract Syntax Tree
+exp {-> package='org.base.ast.expressions'}
+    =   {exp1} 
+	;

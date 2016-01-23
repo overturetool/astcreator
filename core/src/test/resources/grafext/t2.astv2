@@ -1,0 +1,15 @@
+Packages
+base org.extended.ast.node;
+analysis org.extended.ast.analysis;
+
+
+Abstract Syntax Tree
+exp {-> package='org.extended.ast.expressions'}
+    =  
+      #exp2
+    ;
+    
+#exp2
+={extendedExp2}|
+ {extendedExp}  (extGrafField1):exp.#exp2.extendedExp2*
+;
