@@ -63,12 +63,6 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 */
 	protected String extendedName;
 
-	// /**
-	// * The package of the generated classes.
-	// *
-	// * @parameter
-	// */
-	// protected String packageName;
 
 	/**
 	 * The use src folder instead of generate-sources for the generated classes.
@@ -80,7 +74,7 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	/**
 	 * Name of the directory into which the astCreatorPlugin should dump the ast files.
 	 * 
-	 * @parameter expression="${project.build.directory}/generated-sources/astCreator"
+	 * @parameter property="outputDirectory" default-value="${project.build.directory}/generated-sources/astCreator"
 	 */
 	protected File outputDirectory;
 
@@ -98,13 +92,6 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 */
 	protected List<String> deletePackageOnGenerate;
 
-	// /**
-	// * My top level of tree.
-	// *
-	// * @parameter
-	// */
-	// protected List<String> names;
-	
 	/**
 	 * Suppress warnings
 	 * 
@@ -113,7 +100,7 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	protected boolean suppressWarnings = false;
 
 	/**
-	 * @parameter expression="${project}"
+	 * @parameter default-value="${project}"
 	 * @required
 	 * @readonly
 	 */
@@ -158,14 +145,6 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 		File resources = new File(project.getFile().getParentFile(), "src/main/resources".replace('/', File.separatorChar));
 		return resources;
 	}
-
-	// protected List<File> getGrammas()
-	// {
-	// List<File> grammas = new Vector<File>();
-	// grammas.add(new File(getResourcesDir(), ast));
-	// System.out.println("AST file: " + grammas.get(0).getAbsolutePath());
-	// return grammas;
-	// }
 
 	public abstract void execute() throws MojoExecutionException,
 			MojoFailureException;
