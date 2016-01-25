@@ -1,0 +1,8 @@
+Packages
+base org.destecs.script.ast.node;
+analysis org.destecs.script.ast.analysis;
+ 
+Abstract Syntax Tree
+exp {-> package='field.name.check'}
+    =   {a} [class]:a
+    ;

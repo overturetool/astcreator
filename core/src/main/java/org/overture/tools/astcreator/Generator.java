@@ -112,7 +112,7 @@ public class Generator
 	}
 
 	public void runPostGeneration(Environment env, boolean isBaseTree)
-			throws InstantiationException, IllegalAccessException
+			throws InstantiationException, IllegalAccessException, AstCreatorException
 	{
 		System.out.println("Generating enumerations...");
 		createNodeEnum(env);
@@ -182,6 +182,22 @@ public class Generator
 		// TODO test
 		// createQuestionAnswerDepthFirst(env);
 		validateClassMethods(env.getClasses());
+		validateClassFields(env.getClasses(),env);
+	}
+
+	private void validateClassFields(List<IClassDefinition> classes, Environment env) throws AstCreatorException
+	{
+		for (IClassDefinition cl : classes)
+		{
+			for (Field f : cl.getFields())
+			{
+				if(f.getName(env).equals("_class"))
+				{
+					throw new AstCreatorException("Illegal field name: "+f.getName(env) + " in "+cl.getName(), null,true);
+				}
+				
+			}
+		}
 	}
 
 	public void createInterfacesForNodePoints(Environment env)
