@@ -27,7 +27,6 @@ import org.overture.tools.maven.astcreator.util.Util;
 public class GenerateTree extends AstCreatorBaseMojo
 {
 
-
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
@@ -41,11 +40,11 @@ public class GenerateTree extends AstCreatorBaseMojo
 				+ Main.TO_STRING_FILE_NAME_EXT);
 
 		// Extended tree
-		File extendedAstFile = (extendedAst == null ? null
-				: new File(getResourcesDir(), extendedAst));
-		File extendedAstToStringFile = (extendedAstFile == null ? null
+		File extendedAstFile = extendedAst == null ? null
+				: new File(getResourcesDir(), extendedAst);
+		File extendedAstToStringFile = extendedAstFile == null ? null
 				: new File(extendedAstFile.getAbsolutePath()
-						+ Main.TO_STRING_FILE_NAME_EXT));
+						+ Main.TO_STRING_FILE_NAME_EXT);
 
 		if (extendedAstFile != null)
 		{
@@ -93,13 +92,15 @@ public class GenerateTree extends AstCreatorBaseMojo
 		}
 
 		getLog().info("Checking if generation required.");
-		if (!isForce() && isCrcEqual(baseAstFile) && isCrcEqual(baseAsttoStringFile)
+		if (!isForce() && isCrcEqual(baseAstFile)
+				&& isCrcEqual(baseAsttoStringFile)
 				&& isVersionEqual(getDeclaredPluginVersion()))
 		{
 
 			if (extendedAst != null && !extendedAst.isEmpty())
 			{
-				if (!isForce() && isCrcEqual(new File(getResourcesDir(), extendedAst))
+				if (!isForce()
+						&& isCrcEqual(new File(getResourcesDir(), extendedAst))
 						&& isCrcEqual(new File(getResourcesDir(), extendedAst))
 						&& isVersionEqual(getDeclaredPluginVersion()))
 				{
@@ -329,7 +330,19 @@ public class GenerateTree extends AstCreatorBaseMojo
 	{
 		try
 		{
-			FileInputStream toStringFileStream = new FileInputStream(toStringAstFile);
+			FileInputStream toStringFileStream = null;
+
+			if (toStringAstFile.canRead())
+			{
+				toStringFileStream = new FileInputStream(toStringAstFile);
+			}
+
+			if (!treeName.canRead())
+			{
+				getLog().error("Unable to read AST file: " + treeName);
+				throw new MojoExecutionException("Unable to read AST file: "
+						+ treeName);
+			}
 			Main.suppressWarnings = suppressWarnings;
 			env1 = Main.create(toStringFileStream, new FileInputStream(treeName.getAbsolutePath()), generated, !isDryRun(), generateVdm());
 			setCrc(treeName);
@@ -364,10 +377,14 @@ public class GenerateTree extends AstCreatorBaseMojo
 		try
 		{
 			if (baseAstToStringAstFile.canRead())
+			{
 				toStringAstFileStream = new FileInputStream(baseAstToStringAstFile);
+			}
 
 			if (extendedAstToStringFile.canRead())
+			{
 				toStringExtendedFileInputStream = new FileInputStream(extendedAstToStringFile);
+			}
 		} catch (FileNotFoundException e)
 		{
 		}
@@ -375,7 +392,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 		try
 		{
 			Main.suppressWarnings = suppressWarnings;
-			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extendedTreeOnly,!isDryRun());
+			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extendedTreeOnly, !isDryRun());
 			setCrc(baseAstFile);
 			setCrc(baseAstToStringAstFile);
 			setCrc(extendedAstFile);
