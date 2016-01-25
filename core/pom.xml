@@ -14,18 +14,19 @@
   <properties>
     <!-- This is set to deploy maven artifacts into the correct staging directory. -->
     <staging.repo.target>${project.basedir}/../target/mvn-staging-repo</staging.repo.target>
+		<antlr.version>3.5.2</antlr.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr</artifactId>
-      <version>3.5</version>
+      <version>${antlr.version}</version>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr-runtime</artifactId>
-      <version>3.5</version>
+      <version>${antlr.version}</version>
     </dependency>
 
     <dependency>
@@ -39,54 +40,54 @@
   <build>
     <resources>
       <resource>
-	<directory>src/main/resources</directory>
-	<filtering>false</filtering>
-	<excludes>
-	  <exclude>**/*.pdf</exclude>
-	  <exclude>**/doc/</exclude>
-	</excludes>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.pdf</exclude>
+					<exclude>**/doc/</exclude>
+				</excludes>
       </resource>
     </resources>
 
     <plugins>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-surefire-plugin</artifactId>
-	<configuration>
-	  <!-- the tests use std out a lot so we dont want that in the console -->
-	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
-	</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- the tests use std out a lot so we dont want that in the console -->
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+				</configuration>
       </plugin>
 
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-source-plugin</artifactId>
-	<configuration>
-	  <attach>true</attach>
-	</configuration>
-	<executions>
-	  <execution>
-	    <id>attach-sources</id>
-	    <phase>verify</phase>
-	    <goals>
-	      <goal>jar-no-fork</goal>
-	    </goals>
-	  </execution>
-	</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
       </plugin>
 
       <plugin>
-	<groupId>org.antlr</groupId>
-	<artifactId>antlr3-maven-plugin</artifactId>
-	<version>3.5</version>
-	<executions>
-	  <execution>
-	    <phase>process-resources</phase>
-	    <goals>
-	      <goal>antlr</goal>
-	    </goals>
-	  </execution>
-	</executions>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr3-maven-plugin</artifactId>
+				<version>${antlr.version}</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>antlr</goal>
+						</goals>
+					</execution>
+				</executions>
       </plugin>
     </plugins>
   </build>
