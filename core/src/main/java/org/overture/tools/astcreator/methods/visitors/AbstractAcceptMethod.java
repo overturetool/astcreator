@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.overture.tools.astcreator.definitions.IClassDefinition;
+import org.overture.tools.astcreator.definitions.IClassDefinition.ClassType;
 import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.env.ExtendedEnvironment;
@@ -140,8 +141,14 @@ public abstract class AbstractAcceptMethod extends Method
 				String strippedRetType = returnType.substring(returnType.lastIndexOf(' ')).trim();
 				thenStm = String.format(TEMPLATE, strippedRetType, "case", AnalysisUtil.getCaseClass(env, c).getName().getName());
 			}
+			
+			String elseCaseMethodName = "default";
+			if(env.classToType.get(superDef) == ClassType.Alternative)
+			{
+				elseCaseMethodName = "case";	
+			}
 
-			elseStm = String.format(TEMPLATE_ELSE, "default", AnalysisUtil.getCaseClass(env, superDef).getName().getName());
+			elseStm = String.format(TEMPLATE_ELSE, elseCaseMethodName, AnalysisUtil.getCaseClass(env, superDef).getName().getName());
 
 			body = JavaSyntax.createIf(2, visitorName + " instanceof "
 					+ argDefExt.getName().getName(), thenStm, elseStm/* "assert false: \"Invalid use\"; return null;" */);

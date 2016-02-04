@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.overture.tools.astcreator.definitions.ExternalJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
+import org.overture.tools.astcreator.definitions.IClassDefinition.ClassType;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.astcreator.methods.visitors.AnalysisUtil;
 import org.overture.tools.astcreator.utils.NameUtil;
@@ -67,27 +68,39 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 		if (c.getSuperDef() != null
 				&& !(c instanceof ExternalJavaClassDefinition))
 		{
-			this.body = "\t\t" + (addReturnToBody ? "return " : "") + "default";
 
+			String elseCaseMethodName = "default";
+		
+			String methodCall="";
+			
 			switch (env.classToType.get(c))
 			{
 				case Production:
 				case SubProduction:
-					this.body += defaultPostFix
+					methodCall += defaultPostFix
 							+ AnalysisUtil.getClass(env, c).getSuperDefs().iterator().next().getName().getName();
 					break;
 				case Token:
-					this.body += defaultPostFix
+					methodCall += defaultPostFix
 							+ AnalysisUtil.getClass(env, c).getName().getName();
 					break;
 				case Alternative:
-					this.body += defaultPostFix
-							+ AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
+				{
+					
+					if(env.classToType.get(c.getSuperDef()) == ClassType.Alternative)
+					{
+						elseCaseMethodName = getAlternativeBodyCallPrefix();	
+					}
+					
+					methodCall += defaultPostFix
+							+ getSuperClassForDefault(env, c);
 					break;
+				}
 				default:
-					this.body += c.getSuperDef().getName().getName();
+					methodCall += c.getSuperDef().getName().getName();
 					break;
 			}
+			this.body = "\t\t" + (addReturnToBody ? "return " : "") +elseCaseMethodName+methodCall;
 			// + NameUtil.getClassName(c.getSuperDef().getName().getName()
 
 			this.body += "(" + getAdditionalBodyCallArguments() + ");";
@@ -101,6 +114,16 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 		{
 			this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
 		}
+	}
+
+	protected String getAlternativeBodyCallPrefix()
+	{
+		return "case";
+	}
+
+	protected String getSuperClassForDefault(Environment env, IClassDefinition c)
+	{
+		return AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
 	}
 
 	public void setMethodNamePrefix(String nm)

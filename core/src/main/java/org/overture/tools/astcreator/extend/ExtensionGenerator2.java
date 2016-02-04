@@ -18,9 +18,11 @@ import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
 import org.overture.tools.astcreator.definitions.InterfaceDefinition;
 import org.overture.tools.astcreator.definitions.PredefinedClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
+import org.overture.tools.astcreator.env.ExtendedEnvironment;
 import org.overture.tools.astcreator.java.definitions.JavaName;
 import org.overture.tools.astcreator.methods.Method;
 import org.overture.tools.astcreator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
+import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnAdCaseMethLeafExtension;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
 import org.overture.tools.astcreator.methods.visitors.adaptor.answer.AnswerAdaptorCaseMethod;
@@ -120,8 +122,43 @@ public class ExtensionGenerator2
 			Environment base)
 	{
 		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef.getName().getName());
-		boolean hasSameTag = overtureEquivalent == null ? false
-				: iDef.getName().getTag().equals(overtureEquivalent.getName().getTag());
+		boolean hasSameTag;
+
+		if (overtureEquivalent == null)
+		{
+			hasSameTag = false;
+		} else
+		{
+			hasSameTag = iDef.getName().getTag().equals(overtureEquivalent.getName().getTag());
+
+			if (iDef instanceof IClassDefinition)
+			{
+				IClassDefinition cdef = (IClassDefinition) iDef;
+
+				if (overtureEquivalent instanceof IClassDefinition)
+				{
+
+					for (Field newField : cdef.getFields())
+					{
+						boolean found = false;
+						for (Field originField : ((IClassDefinition) overtureEquivalent).getFields())
+						{
+							if (newField.name.equals(originField.name))
+							{
+								found = true;
+								break;
+							}
+						}
+
+						if (!found)
+						{
+							hasSameTag = false;
+							break;
+						}
+					}
+				}
+			}
+		}
 		return hasSameTag && !isUtilityOrTemplateClass(iDef, base);
 	}
 
@@ -415,6 +452,12 @@ public class ExtensionGenerator2
 		for (IClassDefinition cdef : ext.getClasses())
 		{
 			IClassDefinition superDef = cdef.getSuperDef();
+
+			// here we may have a super class but when this class is identical to a base version
+			// in the result tree then we need to set the super class to its identical base in result
+
+			IClassDefinition baseMatchDef = base.lookUp(cdef.getName().getName());
+
 			if (superDef != null)
 			{
 
@@ -458,6 +501,24 @@ public class ExtensionGenerator2
 				cdef.getSuperDefs().removeAll(tbr);
 				cdef.getSuperDefs().addAll(tba);
 
+			}
+
+			// check if it's just a leaf extension
+			if (ext.classToType.get(cdef) == ClassType.Alternative
+					&& baseMatchDef != null)
+			{
+				for (IInterfaceDefinition i : superDef.getInterfaces())
+				{
+					IInterfaceDefinition rI = iReplacementMap.get(i.getName().getName());
+					if (rI != null)
+					{
+						cdef.addInterface(rI);
+					}
+				}
+				superDef = baseMatchDef;
+				cdef.setSuper(superDef);
+				JavaName newName = makeExtensionJavaName(cdef, ext, ext, cdef.getName().getPackageName());
+				cdef.setName(newName);
 			}
 
 		}
@@ -843,6 +904,15 @@ public class ExtensionGenerator2
 		 */
 		for (IClassDefinition c : getExtClasses(result.getClasses(), extEnv.getName(), result))
 		{
+			if (result instanceof ExtendedEnvironment)
+			{
+				ExtendedEnvironment er = (ExtendedEnvironment) result;
+
+				if (er.baseEnv.getClasses().contains(c))
+				{
+					continue;
+				}
+			}
 			switch (result.classToType.get(c))
 			{
 
@@ -882,20 +952,42 @@ public class ExtensionGenerator2
 
 			}
 
-			AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c);
-			mIn.setMethodNamePrefix("in");
-			mIn.setDefaultPostfix("In");
-			mIn.setClassDefinition(c);
-			// mIn.setEnvironment(source);
-			extAdaptor.addMethod(mIn);
+			// check for leaf extensions and treat them accordingly
+			if (extEnv.classToType.get(c) == ClassType.Alternative
+					&& result.lookUp(c.getName().getName()) != null
+					&& c.getInterfaces().size() == 1)
+			{	
+				AnAdCaseMethLeafExtension mIn = new AnAdCaseMethLeafExtension(c);
+				mIn.setMethodNamePrefix("in");
+				mIn.setDefaultPostfix("In");
+				mIn.setClassDefinition(c);
+				// mIn.setEnvironment(source);
+				extAdaptor.addMethod(mIn);
 
-			AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
-			mOut.setMethodNamePrefix("out");
-			mOut.setDefaultPostfix("Out");
-			mOut.setClassDefinition(c);
-			// mOut.setEnvironment(source);
-			extAdaptor.addMethod(mOut);
+				AnAdCaseMethLeafExtension mOut = new AnAdCaseMethLeafExtension(c);
+				mOut.setMethodNamePrefix("out");
+				mOut.setDefaultPostfix("Out");
+				mOut.setClassDefinition(c);
+				// mOut.setEnvironment(source);
+				extAdaptor.addMethod(mOut);
+			}
 
+			else
+			{
+				AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c);
+				mIn.setMethodNamePrefix("in");
+				mIn.setDefaultPostfix("In");
+				mIn.setClassDefinition(c);
+				// mIn.setEnvironment(source);
+				extAdaptor.addMethod(mIn);
+
+				AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
+				mOut.setMethodNamePrefix("out");
+				mOut.setDefaultPostfix("Out");
+				mOut.setClassDefinition(c);
+				// mOut.setEnvironment(source);
+				extAdaptor.addMethod(mOut);
+			}
 			// Remove the case for the existing adaptor
 			List<Method> toBeRemoved = new LinkedList<Method>();
 			for (Method method : baseAdaptor.getMethods())
@@ -906,7 +998,6 @@ public class ExtensionGenerator2
 				}
 			}
 			baseAdaptor.getMethods().removeAll(toBeRemoved);
-
 		}
 
 	}

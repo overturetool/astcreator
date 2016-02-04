@@ -13,6 +13,8 @@ public interface IClassDefinition extends IInterfaceDefinition
 	Set<IInterfaceDefinition> getInterfaces();
 
 	JavaName getName();
+	
+	void setName(JavaName newName);
 
 	List<Field> getFields();
 
