@@ -1,0 +1,32 @@
+Packages
+base org.overture.base.cgast;
+analysis org.overture.base.cgast.analysis;
+
+Tokens
+  //Java
+  java_Boolean = 'java:java.lang.Boolean';
+  java_String = 'java:java.lang.String';
+  java_Object = 'java:java.lang.Object';
+  
+     
+Abstract Syntax Tree
+/* This section declares the AST by giving root nodes and their possible sub classe */
+
+CG {-> package='org.overture.codegen.cgast'
+	| (tag):java_Object}
+	= #decl
+	;
+
+    
+#decl {-> package='org.overture.codegen.cgast.declarations'}
+	=	{func}
+		[name]:java_String
+   	|	#klass
+	;
+
+#klass {-> package='org.overture.codegen.cgast.declarations'}
+    = {subclass1}
+      [private]:java_Boolean
+    | {subclass2}
+      [subname]:java_String
+    ;
