@@ -1,0 +1,30 @@
+Packages
+
+base org.overture.extension.extast.node;
+analysis org.overture.extension.extast.analysis;
+
+Tokens
+
+Abstract Syntax Tree
+
+CG = #decl
+    ;
+
+exp {-> package='org.overture.extension.exp'}
+  = {sexp} [s]:java_String
+   | #binexp
+   ;
+
+binexp {-> package='org.overture.extension.exp'
+    | [extf] : java_String }
+   = {bar} [m3]:java_String
+   |   #decl
+   ;
+
+#decl {-> package='org.overture.extension.extast.declarations'}
+       = {mrFuncGroup}
+          [funcs]:CG.#decl.func*
+       | {extClass}
+           [baseClass]:CG.#decl.class
+                     [mutrecfuncs]:CG.#decl.mrFuncGroup*
+       ;
