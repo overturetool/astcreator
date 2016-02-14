@@ -13,6 +13,7 @@ import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.overture.tools.astcreator.AstCreatorException;
 import org.overture.tools.astcreator.Main;
 import org.overture.tools.astcreator.env.Environment;
 import org.overture.tools.maven.astcreator.util.Util;
@@ -326,7 +327,8 @@ public class GenerateTree extends AstCreatorBaseMojo
 	}
 
 	public void generateSingleAst(File treeName, File toStringAstFile,
-			File generated, Environment env1)
+			File generated, Environment env1) throws MojoExecutionException,
+			MojoFailureException
 	{
 		try
 		{
@@ -348,9 +350,14 @@ public class GenerateTree extends AstCreatorBaseMojo
 			setCrc(treeName);
 			setCrc(toStringAstFile);
 			setVersion(getDeclaredPluginVersion());
+		} catch (AstCreatorException e)
+		{
+			getLog().error(e);
+			throw new MojoFailureException(e, e.getMessage(), e.getMessage());
 		} catch (Exception e)
 		{
 			getLog().error(e);
+			throw new MojoExecutionException("Error in ast generator", e);
 		}
 		if (env1 != null)
 		{
@@ -361,7 +368,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 	public void generateExtendedAst(File baseAstFile, File extendedAstFile,
 			File baseAstToStringAstFile, File extendedAstToStringFile,
-			File generated)
+			File generated) throws MojoFailureException, MojoExecutionException
 	{
 		getLog().info("Generator starting with extension input: "
 				+ extendedAstFile);
@@ -398,9 +405,14 @@ public class GenerateTree extends AstCreatorBaseMojo
 			setCrc(extendedAstFile);
 			setCrc(extendedAstToStringFile);
 			setVersion(getDeclaredPluginVersion());
+		} catch (AstCreatorException e)
+		{
+			getLog().error(e);
+			throw new MojoFailureException(e, e.getMessage(), e.getMessage());
 		} catch (Exception e)
 		{
 			getLog().error(e);
+			throw new MojoExecutionException("Error in ast generator", e);
 		}
 	}
 
