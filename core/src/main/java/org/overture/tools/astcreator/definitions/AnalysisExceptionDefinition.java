@@ -16,6 +16,8 @@ public class AnalysisExceptionDefinition extends BaseClassDefinition
 		addMethod(new SuperConstructorMethod(this, new Argument("String", "message")));
 		addMethod(new SuperConstructorMethod(this, new Argument("String", "message"), new Argument("Throwable", "cause")));
 		addMethod(new SuperConstructorMethod(this, new Argument("Throwable", "cause")));
+		addMethod(new SuperConstructorMethod(this, new Argument("String", "message"), new Argument("Throwable", "cause"),
+				new Argument("boolean", "enableSuppression"), new Argument("boolean", "writableStackTrace")));
 	}
 
 	public AnalysisExceptionDefinition(String packageName, String name,
