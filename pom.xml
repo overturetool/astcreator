@@ -13,7 +13,7 @@
 
   <groupId>org.overturetool.astcreator</groupId>
   <artifactId>root</artifactId>
-  <version>1.6.9-SNAPSHOT</version>
+  <version>1.6.10</version>
 
   <name>Overture AstCreator superpom</name>
   <description>This is the Overture AstCreator project.  AstCreator allows the automatic creation of heterogeneous ASTs in Java based on an input specification.  Created along with the AST classes are visitors that allow for functionality to be implemented over the AST.
@@ -171,7 +171,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
     <url>git@github.com/overturetool/astcreator.git</url>
     <connection>scm:git:https://github.com/overturetool/astcreator.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/overturetool/astcreator.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v1.6.10</tag>
   </scm>
 
   <developers>
